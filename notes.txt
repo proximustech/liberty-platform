@@ -4,9 +4,11 @@ npm install koa-router
 npm install typescript
 npm install ts-node
 npm install ts-node-dev
+npm install @koa/ejs
 npm install "@types/koa"
 npm install "@types/koa-router"
 npm install "@types/koa-node"
+npm install "@types/koa-ejs"
 
 ./node_modules/.bin/tsc -v
 ./node_modules/.bin/tsc --init 

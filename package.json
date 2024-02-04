@@ -9,7 +9,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@koa/ejs": "^5.1.0",
     "@types/koa": "^2.14.0",
+    "@types/koa-ejs": "^4.3.3",
     "@types/koa-router": "^7.4.8",
     "@types/node": "^20.11.16",
     "koa": "^2.15.0",
