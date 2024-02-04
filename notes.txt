@@ -3,6 +3,7 @@ npm install koa
 npm install koa-router
 npm install typescript
 npm install ts-node
+npm install ts-node-dev
 npm install "@types/koa"
 npm install "@types/koa-router"
 npm install "@types/koa-node"
