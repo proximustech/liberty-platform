@@ -1,5 +1,5 @@
 import Koa from "koa"
-import testRoutes from "./routes/test"
+import testRoutes from "./routes/test_route"
 
 const app = new Koa()
 
