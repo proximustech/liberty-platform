@@ -1,4 +1,3 @@
-.vscode
 **/*.sqlite
 node_modules
 tests.js
