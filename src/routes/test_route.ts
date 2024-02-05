@@ -1,7 +1,9 @@
 import Router from "koa-router"
 import {Test} from "../services/test_service"
+import {TestDependence} from "../services/test_dependence_service"
 
-const testService = new Test()
+const testDependenceService = new TestDependence()
+const testService = new Test(testDependenceService)
 
 const router = new Router();
 router.get('/test', async (ctx) => {

@@ -1,8 +1,14 @@
 import {ITest} from "../interfaces/test_interface"
+import { TestDependence } from "./test_dependence_service";
 
 export class Test implements ITest {
-    data="";
+    testDependence: TestDependence;
+
+    constructor(testDependence: TestDependence){
+        this.testDependence = testDependence
+    }
+
     testMethod(){
-        return "**"
+        return this.testDependence.data
     }
 }
