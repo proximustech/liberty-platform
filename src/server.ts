@@ -1,14 +1,18 @@
 import Koa from "koa"
 const render = require("@koa/ejs");
 import testRoutes from "./routes/test_route"
-import firstRoutes from "./plugins/first/routes/first_route"
-import secondRoutes from "./plugins/second/routes/second_route"
+import {routePlugins} from "./values/routePlugins"
 
 const app = new Koa()
 
+let routePlugin={}
+routePlugins.forEach(pluginName => {
+    routePlugin = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
+    // @ts-ignore
+    app.use(routePlugin.default.routes())
+});
+
 app.use(testRoutes.routes())
-app.use(firstRoutes.routes())
-app.use(secondRoutes.routes())
 
 render(app, {
     root: __dirname,
