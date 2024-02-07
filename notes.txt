@@ -10,6 +10,7 @@ npm install "@types/koa-router"
 npm install "@types/koa-node"
 npm install "@types/koa-ejs"
 npm install reflect-metadata tsyringe
+npm install js-middleware 
 
 ./node_modules/.bin/tsc -v
 ./node_modules/.bin/tsc --init 

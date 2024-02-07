@@ -1,4 +1,5 @@
 export let routePlugins = [
     'first',
-    'second'
+    'second',
+    'third'
 ]
