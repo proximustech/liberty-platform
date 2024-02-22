@@ -1,0 +1,1 @@
+export {ThirdMiddleware_1} from "../services/third_service_middleware_1"
