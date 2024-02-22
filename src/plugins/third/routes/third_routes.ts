@@ -6,12 +6,11 @@ import {ThirdMiddleware_2} from "../services/third_service_middleware_2"
 import {MiddlewareManager} from 'js-middleware';
 
 const thirdService = new Third()
-const middlewareManager = new MiddlewareManager(thirdService);
-middlewareManager.use(new ThirdMiddleware_1())
-middlewareManager.use(new ThirdMiddleware_2())
+const thirdServiceMiddlewareManager = new MiddlewareManager(thirdService);
+thirdServiceMiddlewareManager.use(new ThirdMiddleware_1())
+thirdServiceMiddlewareManager.use(new ThirdMiddleware_2())
 
 let viewVars ={
-    pluginData:"",
     third:"",
     headerFile:"../../../html/header.html",
     footerFile:"../../../html/footer.html",
@@ -20,7 +19,6 @@ const router = new Router();
 router.get('/third_plugin', async (ctx) => {
     try {
         viewVars.third=thirdService.thirdMethod("3")
-        viewVars.pluginData=await thirdService.getPluginData(ctx,viewVars)
         return ctx.render('plugins/third/views/third', viewVars);
     } catch (error) {
         console.error(error)
