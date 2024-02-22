@@ -8,10 +8,10 @@ let viewVars ={
     footerFile:"../../../html/footer.html",
 }
 const router = new Router();
-router.get('/second_plugin', async (ctx) => {
+router.get('/basic_html', async (ctx) => {
     try {
         viewVars.second=secondService.secondMethod()
-        return ctx.render('plugins/second/views/second', viewVars);
+        return ctx.render('plugins/basic_html/views/second', viewVars);
     } catch (error) {
         console.error(error)
     }

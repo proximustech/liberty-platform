@@ -1,5 +1,5 @@
 export let routePlugins = [
-    'first',
-    'second',
-    'third'
+    'basic_html',
+    'basic_json',
+    'middleware'
 ]

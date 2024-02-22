@@ -16,10 +16,10 @@ let viewVars ={
     footerFile:"../../../html/footer.html",
 }
 const router = new Router();
-router.get('/third_plugin', async (ctx) => {
+router.get('/middleware', async (ctx) => {
     try {
         viewVars.third=thirdService.thirdMethod("3")
-        return ctx.render('plugins/third/views/third', viewVars);
+        return ctx.render('plugins/middleware/views/third', viewVars);
     } catch (error) {
         console.error(error)
     }

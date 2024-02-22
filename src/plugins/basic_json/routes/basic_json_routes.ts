@@ -4,7 +4,7 @@ import {First} from "../services/first_service"
 const firstService = new First()
 
 const router = new Router();
-router.get('/first_plugin', async (ctx) => {
+router.get('/basic_json', async (ctx) => {
     try {
         ctx.body = {
             status: 'success',
