@@ -11,15 +11,16 @@ let middlewareServiceName = "thirdService"
 import {Third} from "../plugins/middleware_target/services/third_service"
 // @ts-ignore
 middlewareTargets[middlewareServiceName]=new Third()
-
-
-///+++ Base Definition START ///
 // @ts-ignore
 middlewareBaseManagers[middlewareServiceName] = new MiddlewareManager(middlewareTargets[middlewareServiceName])
+
+/*
+///+++ Base Definition START ///
 import {ThirdMiddleware_1} from "../plugins/middleware_base/middleware/middleware_base_middleware"
 // @ts-ignore
 middlewareBaseManagers[middlewareServiceName].use(new(ThirdMiddleware_1))
 ///--- Base Definition END ///
+*/
 
 
 
