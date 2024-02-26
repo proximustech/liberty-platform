@@ -3,7 +3,6 @@ npm install koa
 npm install koa-router
 npm install typescript
 npm install ts-node
-npm install ts-node-dev
 npm install @koa/ejs
 npm install "@types/koa"
 npm install "@types/koa-router"
@@ -12,10 +11,19 @@ npm install "@types/koa-ejs"
 npm install reflect-metadata tsyringe
 npm install js-middleware 
 
+npm install --save-dev ts-node-dev
+npm install --save-dev jest
+npm install --save-dev ts-jest
+npm install --save-dev "@types/jest"
+
+# Typescript
 ./node_modules/.bin/tsc -v
-./node_modules/.bin/tsc --init 
-package.json
-  "scripts": {
-    "build": "tsc --build",
-    "start": "ts-node-dev src/server.ts"
-  },
+./node_modules/.bin/tsc --init
+
+# Jest Doc
+https://jestjs.io/docs/getting-started
+https://jestjs.io/docs/configuration
+https://jestjs.io/docs/getting-started#via-ts-jest
+
+# Create jest config for working with typescript
+npx ts-jest config:init
