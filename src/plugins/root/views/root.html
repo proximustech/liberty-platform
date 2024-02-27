@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>My Web APP</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">     
+    </head>
+    <body>
+          <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">My Web APP</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Menu
+                    </a>
+                    <ul class="dropdown-menu" id="top_menu">
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Exit</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        <li id="other_item" style="visibility: hidden;"><a class="dropdown-item" href="#">Other Item</a></li>
+        <li id="other_exit" style="visibility: hidden;"><a class="dropdown-item" href="#">Other Exit</a></li>
+        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script>
+            class app {
+                static top_menu = document.getElementById("top_menu")
+
+                static append(parent,childName){
+                    let child = document.getElementById(childName)
+                    parent.append(child)
+                    child.style.visibility = "visible"
+                }
+                static prepend(parent,childName){
+                    let child = document.getElementById(childName)
+                    parent.prepend(child)
+                    child.style.visibility = "visible"
+                }
+            }
+            app.top_menu.insertAdjacentHTML("afterbegin",`<li><a class="dropdown-item" href="#">Item</a></li>`)
+            app.prepend(app.top_menu,"other_item")
+            app.append(app.top_menu,"other_exit")
+
+        </script>      
+    </body>
+</html>
