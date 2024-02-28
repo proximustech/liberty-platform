@@ -1,0 +1,9 @@
+<script>
+    function ajax_views_add_item() {
+        app.prepend(app.top_menu,"ajax_views_menu_item")
+    }
+</script>
+---- Right ----
+
+<button onclick="ajax_views_add_item()">Add Item in Top Menu</button>
+<li id="ajax_views_menu_item" style="visibility: hidden;"><a class="dropdown-item" href="#">Item from Right</a></li>
