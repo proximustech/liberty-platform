@@ -80,6 +80,7 @@
         <li id="other_item" style="visibility: hidden;"><a class="dropdown-item" href="#">Item</a></li>
         <li id="other_exit" style="visibility: hidden;"><a class="dropdown-item" href="#">Exit</a></li>        
         <script>
+
             class app {
                 static top_menu = document.getElementById("top_menu")
 
@@ -94,8 +95,12 @@
                     child.style.visibility = "visible"
                 }
             }
-            app.prepend(app.top_menu,"other_item")
-            app.append(app.top_menu,"other_exit")
+
+            
+            app.top_menu.s_prepend = (childName) => {
+                  app.prepend(app.top_menu,childName)
+            }     
+
 
         </script>      
     </body>
