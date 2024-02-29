@@ -95,12 +95,14 @@
                     child.style.visibility = "visible"
                 }
             }
-
             
             app.top_menu.s_prepend = (childName) => {
                   app.prepend(app.top_menu,childName)
             }     
-
+            app.top_menu.s_prependItem = (title,link) => {
+              let html = `<li><a class="dropdown-item" href="${link}">${title}</a></li>`
+              app.top_menu.insertAdjacentHTML("afterbegin",html)
+            }     
 
         </script>      
     </body>
