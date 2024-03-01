@@ -16,6 +16,13 @@ npm install --save-dev jest
 npm install --save-dev ts-jest
 npm install --save-dev "@types/jest"
 
+npm install @mikro-orm/core @mikro-orm/sqlite
+npm install @mikro-orm/cli
+npx mikro-orm
+
+# Runs schema synchronization 
+npx mikro-orm schema:update --run
+
 # Typescript
 ./node_modules/.bin/tsc -v
 ./node_modules/.bin/tsc --init
