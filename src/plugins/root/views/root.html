@@ -15,7 +15,9 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+                      Menu
+                    </button>
                   </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -32,35 +34,43 @@
                 </ul>
               </div>
             </div>
-        </nav> 
+        </nav>    
         <table style="height: 100%;margin: 8px;">
           <tr>
-            <td style="border-radius: 7px;vertical-align: top;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
-              <div class="flex-shrink-0 p-3" style="width: 220px;">
-                <ul class="list-unstyled ps-0">
-                  <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                      Load Content
-                    </button>
-                    <div class="collapse show" id="home-collapse">
-                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li><a hx-get="/ajax_views/middle" hx-target="#middle_view" href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Load in Middle</a></li>
-                      </ul>
-                    </div>
-                  </li>
-                  <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                      Menu 2
-                    </button>
-                    <div class="collapse" id="dashboard-collapse">
-                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Module 1</a></li>
-                      </ul>
-                    </div>
-                  </li>
-                  <!-- <li class="border-top my-3"></li> -->
-                </ul>
-              </div>              
+            <td>
+              <span class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false" style="margin-top:63px">
+                <div class="offcanvas-header">
+                    <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body px-0">
+                  <div class="flex-shrink-0 p-3" style="width: 220px;">
+                    <ul class="list-unstyled ps-0">
+                      <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                          Load Content
+                        </button>
+                        <div class="collapse show" id="home-collapse">
+                          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a hx-get="/ajax_views/middle" hx-target="#middle_view" href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Load in Middle</a></li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                          Menu 2
+                        </button>
+                        <div class="collapse" id="dashboard-collapse">
+                          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Module 1</a></li>
+                          </ul>
+                        </div>
+                      </li>
+                      <!-- <li class="border-top my-3"></li> -->
+                    </ul>
+                  </div>             
+                </div>
+              </span>
             </td>
             <td style="vertical-align: top;height: 100%;">
               <div id="middle_view" style="border-radius: 7px; padding: 21px;resize: both;overflow: auto;height: 90%; margin: 0px; margin-top: -1px; margin-left: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
