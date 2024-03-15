@@ -1,13 +1,16 @@
 import Koa from "koa"
 const render = require("@koa/ejs");
 import testRoutes from "./routes/test_route"
-import {routePlugins} from "./values/routePlugins"
+import {routePlugins} from "./values/route_plugins"
+import { EventEmitter } from "node:events";
 
 import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
 export let globalEntityManager : EntityManager
+export let eventEmitter : EventEmitter
 
 (async () => {
 
+    eventEmitter = new EventEmitter()
     const orm = await MikroORM.init();
 
     globalEntityManager = orm.em
