@@ -9,7 +9,7 @@
     <body>
           <nav class="navbar navbar-expand-lg bg-body-tertiary" style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
             <div class="container-fluid">
-              <button onclick="toogleBar()" class="btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+              <button onclick="app.toogleBar()" class="btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
                 <i class="bi bi-menu-button-wide" style="font-size: x-large;"></i>
               </button>
               <a class="navbar-brand" href="#">My Web APP</a>
@@ -36,7 +36,7 @@
               <span class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false" style="max-width: 250px !important;margin-top:63px">
                 <div class="offcanvas-header">
                     <h6 class="offcanvas-title d-sm-block" id="offcanvas">APP Menu</h6>
-                    <button onclick="toogleBar()" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <button onclick="app.toogleBar()" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body px-0">
                   <div class="flex-shrink-0 p-3" style="width: 220px;">
@@ -71,9 +71,9 @@
                 Content
               </div>
 
-        <div id="detail_model" style="display: none;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
+        <div id="detail_model" style="display: none;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: rgb(129, 180, 255) ;box-shadow:rgb(129, 180, 255) 0px 0px 10px; width: auto; height: auto;padding: 18px;">
           <div>
-              <button onclick="closeDetaill()" style="border-radius: 100%; background-color: transparent;">X</button>
+              <button onclick="app.closeDetail()" style="border-radius: 100%; background-color: transparent;">X</button>
               <br/>
               <br/>
           </div>
@@ -108,7 +108,7 @@
             }     
 
             let barViewVisible = false
-            function toogleBar() {
+            app.toogleBar = () => {
               if (!barViewVisible) {
                 document.getElementById("content_view").style.marginLeft = "256px";
                 barViewVisible = true
@@ -119,9 +119,9 @@
             }
 
             let tempSelectedElementForDetail={}
-            function openDetail(element) {
+            app.openDetail=(element) => {
                 try {
-                  closeDetaill()
+                  app.closeDetail()
                 } catch (error) {}
                 tempSelectedElementForDetail = element.cloneNode(true)
                 const detail = document.getElementById("detail_model").cloneNode(true);
@@ -130,11 +130,11 @@
                 element.outerHTML = detail.outerHTML
                 
             }
-            function closeDetaill() {      
+            app.closeDetail = () => {      
                 const detaill = document.getElementById("item_detail");
                 detaill.outerHTML = tempSelectedElementForDetail.outerHTML
             }
-            function loadDetail(html) {
+            app.loadDetail =(html) => {
                 const detaill = document.getElementById("item_detail");
                 detaill.insertAdjacentHTML("beforeend",html)
             }

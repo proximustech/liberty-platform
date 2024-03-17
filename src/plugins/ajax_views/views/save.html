@@ -1,0 +1,4 @@
+<div onclick="app.openDetail(this);htmx.ajax('GET', '/ajax_views/detail?id=<%= id  %>', {target:'#deteail_content', swap:'innerHTML'});" style="cursor: pointer;">
+    <div><%= title  %></div> 
+</div>   
+ 

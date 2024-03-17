@@ -1,8 +1,7 @@
+<% for (const [id, title] of Object.entries(data)) { %>
+  <hr/>
+  <div onclick="app.openDetail(this);htmx.ajax('GET', '/ajax_views/detail?id=<%= id  %>', {target:'#deteail_content', swap:'innerHTML'});" style="cursor: pointer;">
+    <div><%= title  %></div> 
+  </div>   
+<%}%>
 <hr/>
-<div onclick="openDetail(this);htmx.ajax('GET', '/ajax_views/detail', {target:'#deteail_content', swap:'innerHTML'});" style="cursor: pointer;">
-    <div>1st Row: Load detail</div> 
-</div>
-<hr/>
-<div onclick="openDetail(this);htmx.ajax('GET', '/ajax_views/detail', {target:'#deteail_content', swap:'innerHTML'});" style="cursor: pointer;">
-    <div>2nd Row: Load detail</div> 
-</div>
