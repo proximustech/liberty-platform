@@ -77,12 +77,12 @@
           </tr>
         </table>
 
-        <div id="detaill_model" style="visibility: hidden;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
+        <div id="detail_model" style="visibility: hidden;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
           <div>
               <button onclick="closeDetaill()" style="border-radius: 100%; background-color: transparent;">X</button>
               <br/>
-              <br/>
           </div>
+          <div id="deteail_content"></div>
         </div>
 
         <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>    
@@ -126,7 +126,7 @@
             let tempSelectedElementForDetail={}
             function openDetail(element) {
                 tempSelectedElementForDetail = element.cloneNode(true)
-                const detail = document.getElementById("detaill_model").cloneNode(true);
+                const detail = document.getElementById("detail_model").cloneNode(true);
                 detail.id="item_detail"
                 detail.style.visibility="visible"
                 element.outerHTML = detail.outerHTML
@@ -140,7 +140,26 @@
                 const detaill = document.getElementById("item_detail");
                 detaill.insertAdjacentHTML("beforeend",html)
             }
-            
+
+            function httpRequest(method,url,callback) {
+              const request = new XMLHttpRequest();
+              request.open(method, url);
+              request.send();
+              request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                  // Check the status of the response
+                  if (request.status == 200) {
+                    // Access the data returned by the server
+                    let data = request.responseText;
+                    callback(data)
+                    // Do something with the data
+                  } else {
+                    // Handle error
+                  }
+                }
+              };              
+            }            
+
         </script>      
     </body>
 </html>

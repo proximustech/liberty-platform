@@ -1,7 +1,7 @@
 ---- Middle ----
 <button hx-get="/ajax_views/right" hx-target="#right_view">Load Right</button>
 <hr/>
-<div onclick="openDetail(this);loadDetail('<div>Second content</div>')" style="cursor: pointer;">
+<div onclick="openDetail(this);htmx.ajax('GET', '/ajax_views/right', {target:'#deteail_content', swap:'innerHTML'});" style="cursor: pointer;">
     <div>First Content :-)</div>
 </div>
 <hr/>
