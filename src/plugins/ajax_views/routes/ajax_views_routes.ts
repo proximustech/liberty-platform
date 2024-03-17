@@ -5,16 +5,16 @@ let viewVars ={
 }
 const router = new Router();
 
-router.get('/ajax_views/middle', async (ctx) => {
+router.get('/ajax_views/content', async (ctx) => {
     try {
-        return ctx.render('plugins/ajax_views/views/middle', viewVars);
+        return ctx.render('plugins/ajax_views/views/content', viewVars);
     } catch (error) {
         console.error(error)
     }
 })
-router.get('/ajax_views/right', async (ctx) => {
+router.get('/ajax_views/detail', async (ctx) => {
     try {
-        return ctx.render('plugins/ajax_views/views/right', viewVars);
+        return ctx.render('plugins/ajax_views/views/detail', viewVars);
     } catch (error) {
         console.error(error)
     }
