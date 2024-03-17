@@ -71,7 +71,7 @@
                 Content
               </div>
 
-        <div id="detail_model" style="visibility: hidden;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
+        <div id="detail_model" style="display: none;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
           <div>
               <button onclick="closeDetaill()" style="border-radius: 100%; background-color: transparent;">X</button>
               <br/>
@@ -90,12 +90,12 @@
                 static append(parent,childName){
                     let child = document.getElementById(childName)
                     parent.append(child)
-                    child.style.visibility = "visible"
+                    child.style.display = "block"
                 }
                 static prepend(parent,childName){
                     let child = document.getElementById(childName)
                     parent.prepend(child)
-                    child.style.visibility = "visible"
+                    child.style.display = "block"
                 }
             }
             
@@ -120,10 +120,13 @@
 
             let tempSelectedElementForDetail={}
             function openDetail(element) {
+                try {
+                  closeDetaill()
+                } catch (error) {}
                 tempSelectedElementForDetail = element.cloneNode(true)
                 const detail = document.getElementById("detail_model").cloneNode(true);
                 detail.id="item_detail"
-                detail.style.visibility="visible"
+                detail.style.display="block"
                 element.outerHTML = detail.outerHTML
                 
             }
