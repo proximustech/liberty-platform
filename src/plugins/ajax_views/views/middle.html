@@ -1,33 +1,7 @@
 ---- Middle ----
 <button hx-get="/ajax_views/right" hx-target="#right_view">Load Right</button>
 <hr/>
-<div onclick="openDetail(this);loadDetail()" style="cursor: pointer;">
-    <div>First Content</div>
+<div onclick="openDetail(this);loadDetail('<div>Second content</div>')" style="cursor: pointer;">
+    <div>First Content :-)</div>
 </div>
 <hr/>
-<div id="detaill_model" style="visibility: hidden;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
-    <div>
-        <button onclick="closeDetaill()" style="border-radius: 100%; background-color: transparent;">X</button>
-        <br/>
-        <br/>
-    </div>
-</div>
-<script>
-    var tempSelectedElementForDetail={}
-    function openDetail(element) {
-        tempSelectedElementForDetail = element.cloneNode(true)
-        const detail = document.getElementById("detaill_model").cloneNode(true);
-        detail.id="item_detail"
-        detail.style.visibility="visible"
-        element.outerHTML = detail.outerHTML
-        
-    }
-    function closeDetaill() {      
-        const detaill = document.getElementById("item_detail");
-        detaill.outerHTML = tempSelectedElementForDetail.outerHTML
-    }
-    function loadDetail() {
-        const detaill = document.getElementById("item_detail");
-        detaill.insertAdjacentHTML("beforeend","<div>Second content</div>")
-    }
-</script>

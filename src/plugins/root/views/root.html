@@ -77,6 +77,14 @@
           </tr>
         </table>
 
+        <div id="detaill_model" style="visibility: hidden;border-style: solid;border-radius: 10px;border-width: 1px ;border-color: turquoise ;box-shadow:turquoise 0px 0px 10px; width: auto; height: auto;padding: 18px;">
+          <div>
+              <button onclick="closeDetaill()" style="border-radius: 100%; background-color: transparent;">X</button>
+              <br/>
+              <br/>
+          </div>
+        </div>
+
         <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>    
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>     
         <script>
@@ -115,6 +123,24 @@
               }
             }
 
+            let tempSelectedElementForDetail={}
+            function openDetail(element) {
+                tempSelectedElementForDetail = element.cloneNode(true)
+                const detail = document.getElementById("detaill_model").cloneNode(true);
+                detail.id="item_detail"
+                detail.style.visibility="visible"
+                element.outerHTML = detail.outerHTML
+                
+            }
+            function closeDetaill() {      
+                const detaill = document.getElementById("item_detail");
+                detaill.outerHTML = tempSelectedElementForDetail.outerHTML
+            }
+            function loadDetail(html) {
+                const detaill = document.getElementById("item_detail");
+                detaill.insertAdjacentHTML("beforeend",html)
+            }
+            
         </script>      
     </body>
 </html>
