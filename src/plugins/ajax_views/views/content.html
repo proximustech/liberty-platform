@@ -3,7 +3,7 @@
       app.top_menu.s_prepend("ajax_views_menu_item")
   }
 </script>
-<button class="btn btn-warning" onclick="ajax_views_add_item();app.top_menu.s_prependItem('Hello','https://yahoo.com')">Add Item in Top Menu</button>
+<button class="btn btn-success" onclick="ajax_views_add_item();app.top_menu.s_prependItem('Hello','https://yahoo.com')">Add Item in Top Menu</button>
 <li id="ajax_views_menu_item" style="display: none;"><a class="dropdown-item" href="#">Item from Right</a></li>
 
 <% for (const [id, title] of Object.entries(data)) { %>
