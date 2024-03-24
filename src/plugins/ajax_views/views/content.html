@@ -7,9 +7,7 @@
 <li id="ajax_views_menu_item" style="display: none;"><a class="dropdown-item" href="#">Item from Right</a></li>
 
 <% for (const [id, title] of Object.entries(data)) { %>
-  <hr/>
-  <div onclick="app.openDetail(this);htmx.ajax('GET', '/ajax_views/detail?id=<%= id  %>', {target:'#deteail_content', swap:'innerHTML'});" style="cursor: pointer;">
-    <div><%= title  %></div> 
-  </div>   
+  <hr>
+  <%- include('save.html', {id,title}); %>  
 <%}%>
 <hr/>
