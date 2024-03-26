@@ -131,7 +131,9 @@
 
             let barViewVisible = false
             app.toogleBar = () => {
-              navigator.vibrate(25);
+              try{
+                navigator.vibrate(25);
+              }catch{}
               if (!barViewVisible) {
                 document.getElementById("content_view").style.marginLeft = "226px";
                 document.getElementById("sidenav").style.width= "220px";
@@ -145,7 +147,9 @@
 
             let tempSelectedElementForDetail={}
             app.openDetail=(element) => {
-              navigator.vibrate(25);
+              try{
+                navigator.vibrate(25);
+              }catch{}
                 try {
                   app.closeDetail()
                 } catch (error) {}
