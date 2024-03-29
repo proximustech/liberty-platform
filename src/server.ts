@@ -16,12 +16,29 @@ export let eventEmitter : EventEmitter
     globalEntityManager = orm.em
     const app = new Koa()
     
-    let routePlugin={}
+    let getRouter={}
     routePlugins.forEach(pluginName => {
-        routePlugin = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
         // @ts-ignore
-        app.use(routePlugin.default.routes())
+        getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
+        // @ts-ignore
+        app.use(getRouter.default().routes())
     });
+    /*
+    app.use(async (ctx, next) => {
+        try {
+          viewVars.breadcrumbs = []
+          let language = ctx.session.language || "english"
+          viewVars.language = language
+          let languageLabels = require('./languages/'+language+'.js')
+          viewVars.labels = languageLabels.labels
+          await next()
+        } catch(err) {
+          console.log(err.status)
+          ctx.status = err.status || 500;
+          ctx.body = err.message;
+        }
+      });   
+      */ 
     
     app.use(testRoutes.routes())
     app.use((ctx, next) => RequestContext.create(orm.em, next));
