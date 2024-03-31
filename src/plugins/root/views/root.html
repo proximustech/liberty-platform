@@ -7,7 +7,7 @@
         <link href="https://getbootstrap.com/docs/5.3/examples/sidebars/sidebars.css" rel="stylesheet">
 
       <style>
-        .sidenav {
+        .app_menu {
           height: 100%;
           width: 0;
           position: fixed;
@@ -47,7 +47,7 @@
               </div>
             </div>
         </nav>    
-        <div class="sidenav" id="sidenav" style="transition: width .3s ease-in-out;border-radius: 7px; overflow: auto;height: 100%; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+        <div class="app_menu" id="app_menu" style="transition: width .3s ease-in-out;border-radius: 7px; overflow: auto;height: 100%; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
             <div class="flex-shrink-0 p-3" style="width: 220px;">
               <div style="margin-left: 45; font-weight: bold;">
                 APP Menu
@@ -108,6 +108,8 @@
         <script>
             var app = {
                 top_menu : document.getElementById("top_menu"),
+                app_menu_visible : false,
+                temp_selected_element_for_detail:{},
                 append : (parent,childName) => {
                     let child = document.getElementById(childName)
                     parent.append(child)
@@ -117,57 +119,55 @@
                     let child = document.getElementById(childName)
                     parent.prepend(child)
                     child.style.display = "block"
+                },   
+                toogleBar : () => {
+                  try{
+                    navigator.vibrate(25);
+                  }catch{}
+                  if (!app.app_menu_visible) {
+                    document.getElementById("content_view").style.marginLeft = "226px";
+                    document.getElementById("app_menu").style.width= "220px";
+                    app.app_menu_visible = true
+                  } else {
+                    document.getElementById("content_view").style.marginLeft= "10px";
+                    document.getElementById("app_menu").style.width= "0px";
+                    app.app_menu_visible = false
+                  }
+                },
+    
+                openDetail: (element) => {
+                  try{
+                    navigator.vibrate(25);
+                  }catch{}
+                    try {
+                      app.closeDetail()
+                    } catch (error) {}
+                    app.temp_selected_element_for_detail = element.cloneNode(true)
+                    const detail = document.getElementById("detail_model").cloneNode(true);
+                    detail.id="item_detail"
+                    detail.style.display="block"
+                    element.outerHTML = detail.outerHTML
+                    setTimeout(()=>{document.getElementById("item_detail").style.opacity="1"},0)
+                    
+                },
+                closeDetail : () => {      
+                    const detaill = document.getElementById("item_detail");
+                    detaill.outerHTML = app.temp_selected_element_for_detail.outerHTML
+                },
+                loadDetail : (html) => {
+                    const detaill = document.getElementById("item_detail");
+                    detaill.insertAdjacentHTML("beforeend",html)
                 }
             }
-            
+
             app.top_menu.s_prepend = (childName) => {
                   app.prepend(app.top_menu,childName)
-            }     
+            }
+             
             app.top_menu.s_prependItem = (title,link) => {
               let html = `<li><a class="dropdown-item" href="${link}">${title}</a></li>`
               app.top_menu.insertAdjacentHTML("afterbegin",html)
-            }     
-
-            let barViewVisible = false
-            app.toogleBar = () => {
-              try{
-                navigator.vibrate(25);
-              }catch{}
-              if (!barViewVisible) {
-                document.getElementById("content_view").style.marginLeft = "226px";
-                document.getElementById("sidenav").style.width= "220px";
-                barViewVisible = true
-              } else {
-                document.getElementById("content_view").style.marginLeft= "10px";
-                document.getElementById("sidenav").style.width= "0px";
-                barViewVisible = false
-              }
-            }
-
-            let tempSelectedElementForDetail={}
-            app.openDetail=(element) => {
-              try{
-                navigator.vibrate(25);
-              }catch{}
-                try {
-                  app.closeDetail()
-                } catch (error) {}
-                tempSelectedElementForDetail = element.cloneNode(true)
-                const detail = document.getElementById("detail_model").cloneNode(true);
-                detail.id="item_detail"
-                detail.style.display="block"
-                element.outerHTML = detail.outerHTML
-                setTimeout(()=>{document.getElementById("item_detail").style.opacity="1"},0)
-                
-            }
-            app.closeDetail = () => {      
-                const detaill = document.getElementById("item_detail");
-                detaill.outerHTML = tempSelectedElementForDetail.outerHTML
-            }
-            app.loadDetail =(html) => {
-                const detaill = document.getElementById("item_detail");
-                detaill.insertAdjacentHTML("beforeend",html)
-            }
+            }                 
 
             function httpRequest(method,url,callback) {
               const request = new XMLHttpRequest();
