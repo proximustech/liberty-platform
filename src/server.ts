@@ -17,29 +17,36 @@ export let eventEmitter : EventEmitter
     const app = new Koa()
     
     let getRouter={}
-    routePlugins.forEach(pluginName => {
-        // @ts-ignore
-        getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
-        // @ts-ignore
-        app.use(getRouter.default().routes())
-    });
-    /*
+    let viewVars:any = {}
+   
     app.use(async (ctx, next) => {
         try {
+
           viewVars.breadcrumbs = []
-          let language = ctx.session.language || "english"
+          //let language = ctx.session.language || "english"
+          //viewVars.language = language
+          //let language = ctx.request.query.language
+          let language = "english"
           viewVars.language = language
           let languageLabels = require('./languages/'+language+'.js')
           viewVars.labels = languageLabels.labels
           await next()
-        } catch(err) {
+
+        } catch(err:any) {
           console.log(err.status)
           ctx.status = err.status || 500;
           ctx.body = err.message;
         }
-      });   
-      */ 
+
+      });
     
+      routePlugins.forEach(pluginName => {
+        // @ts-ignore
+        getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
+        // @ts-ignore
+        app.use(getRouter.default(viewVars).routes())
+      });    
+
     app.use(testRoutes.routes())
     app.use((ctx, next) => RequestContext.create(orm.em, next));
     
