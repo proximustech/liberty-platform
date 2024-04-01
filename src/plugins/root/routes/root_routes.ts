@@ -1,6 +1,6 @@
 import Router from "koa-router"
 
-let getRouter = (viewVars:any) => {
+let getRouter = (viewVars: any) => {
     const router = new Router();
     router.get('/', async (ctx) => {
         try {
