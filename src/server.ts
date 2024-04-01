@@ -26,10 +26,12 @@ export let eventEmitter : EventEmitter
           //let language = ctx.session.language || "english"
           //viewVars.language = language
           //let language = ctx.request.query.language
-          let language = "english"
+          let baseLanguageLabels = require('./languages/english.js')
+          let language = "spanish"
           viewVars.language = language
           let languageLabels = require('./languages/'+language+'.js')
-          viewVars.labels = languageLabels.labels
+          viewVars.labels = {...baseLanguageLabels.labels, ...languageLabels.labels};
+           
           await next()
 
         } catch(err:any) {

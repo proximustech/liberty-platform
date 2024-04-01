@@ -1,3 +1,4 @@
 exports.labels = {
-    appName:"Mi Aparatico",
+    appName:"Mi Aplicación",
+    //menu:"Menú",
 }
