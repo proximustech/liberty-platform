@@ -1,3 +1,4 @@
 exports.labels = {
-    appName:"My Web APP",
+    root_app_menu_title:"Application Menu",
+    root_content:"Content",
 }
