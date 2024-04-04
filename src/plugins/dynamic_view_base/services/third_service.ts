@@ -1,7 +1,9 @@
-import {IThird} from "../interfaces/third_interface"
+import {IDynamicView} from "../../../interfaces/dynamic_view_interface"
 
-export class Third implements IThird {
-    async getPluginData(ctx:any,viewVars:any){
-        return await ctx.render('plugins/dynamic_view_base/views/third_additional', viewVars);
+export namespace DynamicViewBase {
+    export class Third implements IDynamicView {
+        async getPluginData(ctx:any,viewVars:any){
+            return await ctx.render('plugins/dynamic_view_base/views/third_additional', viewVars);
+        }
     }
 }

@@ -54,41 +54,7 @@
                 <br/>
                 <br/>
               </div>
-              <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Ajax Content
-                    </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <ul class="list-unstyled ps-0">
-                        <li class="mb-1">
-                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                            Load Content
-                          </button>
-                          <div class="collapse show" id="home-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                              <li><a hx-get="/ajax_views/content" hx-target="#content_view" href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Load in Middle</a></li>
-                            </ul>
-                          </div>
-                        </li>
-                        <li class="mb-1">
-                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                            Menu 2
-                          </button>
-                          <div class="collapse" id="dashboard-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                              <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Module 1</a></li>
-                            </ul>
-                          </div>
-                        </li>
-                        <!-- <li class="border-top my-3"></li> -->
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+              <div class="accordion" id="modules_menu">
               </div>          
             </div>             
         </div>
@@ -108,15 +74,16 @@
         <script>
             var app = {
                 top_menu : document.getElementById("top_menu"),
+                modules_menu : document.getElementById("modules_menu"),
                 app_menu_visible : false,
                 temp_selected_element_for_detail:{},
-                append : (parent,childName) => {
-                    let child = document.getElementById(childName)
+                append : (parent,childId) => {
+                    let child = document.getElementById(childId)
                     parent.append(child)
                     child.style.display = "block"
                 },
-                prepend : (parent,childName)=> {
-                    let child = document.getElementById(childName)
+                prepend : (parent,childId)=> {
+                    let child = document.getElementById(childId)
                     parent.prepend(child)
                     child.style.display = "block"
                 },   
@@ -160,13 +127,31 @@
                 }
             }
 
-            app.top_menu.s_prepend = (childName) => {
-                  app.prepend(app.top_menu,childName)
+            app.top_menu.s_prepend = (childId) => {
+                  app.prepend(app.top_menu,childId)
             }
              
             app.top_menu.s_prependItem = (title,link) => {
               let html = `<li><a class="dropdown-item" href="${link}">${title}</a></li>`
               app.top_menu.insertAdjacentHTML("afterbegin",html)
+            } 
+
+            app.modules_menu.s_appendItem = (title,module_name,innerHtml) => {
+              let html = `
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${module_name}_module_menu" aria-expanded="false" aria-controls="${module_name}_module_menu">
+                      ${title}
+                    </button>
+                  </h2>
+                  <div id="${module_name}_module_menu" class="accordion-collapse collapse" data-bs-parent="#modules_menu">
+                    <div class="accordion-body">
+                      ${innerHtml}
+                    </div>
+                  </div>
+                </div>              
+              `
+              app.modules_menu.insertAdjacentHTML("beforeend",html)
             }                 
 
             function httpRequest(method,url,callback) {
@@ -188,6 +173,7 @@
               };              
             }            
 
-        </script>      
+        </script>
+        <%- modulesContent %> 
     </body>
 </html>

@@ -1,10 +1,17 @@
-import { Third } from "../plugins/dynamic_view_base/services/third_service";
+import { DynamicViewBase} from "../plugins/dynamic_view_base/services/third_service";
+import { AjaxViews } from "../plugins/ajax_views/services/module_menu";
+
 
 export let dynamicViewsDefinition = {
-    //"target":{view[bases]}
+    //"route_target":{viewVar[bases]}
     "dynamic_view_target":{
-        "third":[
-            new Third(),
+        "pluginData":[
+            new DynamicViewBase.Third(),
         ]
-    }
+    },
+    "root":{
+        "modulesContent":[
+            new AjaxViews.ModuleMenu(),
+        ]
+    },
 }

@@ -40,9 +40,13 @@ export let eventEmitter : EventEmitter
             app.use(getRouter.default(viewVars).routes())
             try {
               let pluginBaseLanguageLabels = require("./plugins/"+pluginName+"/languages/"+baseLanguage+".js")
-              let pluginSelectedLanguageLabels = require("./plugins/"+pluginName+"/languages/"+selectedLanguage+".js")
-              let pluginLanguageLabels = {...pluginBaseLanguageLabels.labels, ...pluginSelectedLanguageLabels.labels};
-              viewVars.labels = {...viewVars.labels, ...pluginLanguageLabels};
+              try{
+                let pluginSelectedLanguageLabels = require("./plugins/"+pluginName+"/languages/"+selectedLanguage+".js")
+                let pluginLanguageLabels = {...pluginBaseLanguageLabels.labels, ...pluginSelectedLanguageLabels.labels};
+                viewVars.labels = {...viewVars.labels, ...pluginLanguageLabels};
+              }catch(error){
+                viewVars.labels = {...viewVars.labels, ...pluginBaseLanguageLabels.labels};
+              }
             } catch (error) {}
 
           });             
