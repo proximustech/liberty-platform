@@ -9,7 +9,7 @@ export class DynamicViews  {
                     // @ts-ignore
                     for (let index = 0; index < dynamicViewsDefinition[route][viewVar].length; index++) {
                         // @ts-ignore
-                        viewVars[viewVar] = await dynamicViewsDefinition[route][viewVar][index].getPluginData(ctx, viewVars)
+                        viewVars[viewVar] += await dynamicViewsDefinition[route][viewVar][index].getPluginData(ctx, viewVars)
     
                     }
                 }
