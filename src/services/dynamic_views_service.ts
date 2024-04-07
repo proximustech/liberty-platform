@@ -1,7 +1,5 @@
-import { dynamicViewsDefinition } from "../values/dynamic_views"
-
 export class DynamicViews  {
-    public static async addViewVarContent(route:any,viewVar:string,viewVars:any,ctx:any){
+    public static async addViewVarContent(dynamicViewsDefinition:any,route:any,viewVar:string,viewVars:any,ctx:any){
         try {
             if (route in dynamicViewsDefinition) {
                 //@ts-ignore
