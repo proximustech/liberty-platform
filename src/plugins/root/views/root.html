@@ -152,6 +152,7 @@
                 </div>              
               `
               app.modules_menu.insertAdjacentHTML("beforeend",html)
+              document.getElementById(`${module_name}_module_menu_content`).style.display="block"
             }                 
 
             function httpRequest(method,url,callback) {
