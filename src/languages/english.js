@@ -1,4 +1,4 @@
 exports.labels = {
-    appName:"My Web APP",
+    appName:"Web Console",
     menu:"Menu",
 }

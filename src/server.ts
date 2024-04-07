@@ -19,7 +19,7 @@ export let eventEmitter : EventEmitter
     let getRouter={}
     let viewVars:any = {}
     let baseLanguage = "english"
-    let selectedLanguage = "spanish"
+    let selectedLanguage = "english"
    
     app.use(async (ctx, next) => {
         try {
