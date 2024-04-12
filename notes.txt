@@ -3,14 +3,14 @@ npm install koa
 npm install koa-router
 npm install typescript
 npm install ts-node
-npm install @koa/ejs
+npm install "koa-body"
+npm install reflect-metadata tsyringe
+npm install js-middleware 
+npm install "@koa/ejs"
 npm install "@types/koa"
 npm install "@types/koa-router"
 npm install "@types/koa-node"
 npm install "@types/koa-ejs"
-npm install "koa-body"
-npm install reflect-metadata tsyringe
-npm install js-middleware 
 
 npm install --save-dev ts-node-dev
 npm install --save-dev jest
