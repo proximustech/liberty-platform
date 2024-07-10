@@ -1,5 +1,6 @@
 export let routePlugins = [
     'root',
+    'reactjs',
     'events',
     'ajax_views',
     'basic_html',
