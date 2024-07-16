@@ -1,5 +1,4 @@
 **/*.sqlite
 node_modules
 tests.js
-static/
 src/plugins/_*
