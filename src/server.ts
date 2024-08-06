@@ -3,6 +3,9 @@ const render = require("@koa/ejs");
 const path = require('path');
 const mount = require('koa-mount')
 const serve = require('koa-static')
+const session = require('koa-session');
+const passport = require('koa-passport');
+import koaBody from "koa-body"
 import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
@@ -23,7 +26,16 @@ export let eventEmitter : EventEmitter
   let viewVars:any = {}
   let baseLanguage = "english"
   let selectedLanguage = "english"
+
+  app.use(koaBody())
+
+  app.keys = ['lkaweob923jkpselld34k'];
+  app.use(session(app))
   
+  require('./local_auth')
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.use(async (ctx, next) => {
       try {
 
