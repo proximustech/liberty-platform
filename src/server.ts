@@ -32,7 +32,7 @@ export let eventEmitter : EventEmitter
   app.keys = ['lkaweob923jkpselld34k'];
   app.use(session(app))
   
-  require('./local_auth')
+  require('./auth/local_auth')
   app.use(passport.initialize());
   app.use(passport.session());
 

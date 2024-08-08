@@ -1,30 +1,25 @@
 import {IAuthenticator} from "../interfaces/authenticator_interface"
-/*
-import passport from "passport";
-var LocalStrategy = require('passport-local');
 
 export class UserPasswordAuthenticator implements IAuthenticator {
-    private userName: string;
+    private username: string;
     private password: string;
-    private localUser: string;
-    private localPassword: string;
     
-    constructor(user:string,password:string){
-        this.userName=user
+    constructor(username:string,password:string){
+        this.username=username
         this.password=password
-
-        this.localUser = "myuser"
-        this.localPassword = "mypassword"
-
-        passport.use(new LocalStrategy(function verify(username:string, password:string, cb:any) { 
-
-        }));        
-
     }
 
     authenticate(){
-        return passport.authenticate("local",{});
+        let user ={
+            id : 1,
+            username : 'user',
+            password : 'password'
+          }
+        if (this.password === user.password && this.username === user.username) {
+            return true;
+        } else {
+            return false;
+        }
     };
     
 }
-*/
