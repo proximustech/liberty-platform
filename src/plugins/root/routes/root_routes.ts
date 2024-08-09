@@ -28,12 +28,11 @@ let getRouter = (viewVars: any) => {
         // @ts-ignore
         return passport.authenticate('local', (err, user, info, status) => {
             if (user) {
-              // @ts-ignore
-              ctx.login(user);
-              ctx.redirect('/');
+                // @ts-ignore
+                ctx.login(user);
+                ctx.redirect('/');
             } else {
-              ctx.status = 400;
-              ctx.body = { status: 'error' };
+                ctx.redirect('/login');
             }
           })(ctx);
     })
@@ -51,11 +50,8 @@ let getRouter = (viewVars: any) => {
         if (ctx.isAuthenticated()) {
             // @ts-ignore
             ctx.logout();
-            ctx.redirect('/login');
-          } else {
-            ctx.body = { success: false };
-            ctx.throw(401);
-          }
+        }
+        ctx.redirect('/login');
     })
 
     return router
