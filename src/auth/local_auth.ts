@@ -4,25 +4,20 @@ import {UserPasswordAuthenticator} from "../services/authenticator_user_password
 
 const auth_options = {};
 
-let user ={
-  id : 1,
-  username : 'user',
-  password : 'password'
-}
-
-passport.serializeUser((user:any, done:any) => { done(null, user.id); });
-passport.deserializeUser((id:any, done:any) => {
+passport.serializeUser((user:any, done:any) => { done(null, user); });
+passport.deserializeUser((user:any, done:any) => {
   return done(null, user);
 });
 
 passport.use(new LocalStrategy(auth_options, (username:string, password:string, done:any) => {
 
   const authenticator = new UserPasswordAuthenticator(username,password)
+  let authenticatedUser = authenticator.authenticate()
 
-  if (authenticator.authenticate()) {
-    return done(null, user);
-  } else {
+  if ( authenticatedUser === false) {
     return done(null, false);
+  } else {
+    return done(null, authenticatedUser);
   }  
 
 }));

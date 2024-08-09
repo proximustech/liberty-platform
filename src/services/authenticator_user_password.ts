@@ -10,13 +10,17 @@ export class UserPasswordAuthenticator implements IAuthenticator {
     }
 
     authenticate(){
-        let user ={
-            id : 1,
+        let dbUser ={
+            id : 40,
             username : 'user',
             password : 'password'
           }
-        if (this.password === user.password && this.username === user.username) {
-            return true;
+        if (this.password === dbUser.password && this.username === dbUser.username) {
+            return {
+                id : 40,
+                username : 'user',                
+                role : 'admin',                
+            };
         } else {
             return false;
         }
