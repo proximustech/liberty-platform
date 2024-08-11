@@ -1,6 +1,8 @@
 import Router from "koa-router"
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
+import { authPagePaths } from "../../../auth/local_auth"
+
 const passport = require('koa-passport')
 
 let getRouter = (viewVars: any) => {
@@ -16,7 +18,7 @@ let getRouter = (viewVars: any) => {
             }
             else
             {
-                return ctx.render('plugins/root/views/login', viewVars);
+                ctx.redirect(authPagePaths.loginUrl);
             }
 
         } catch (error) {
@@ -32,12 +34,12 @@ let getRouter = (viewVars: any) => {
                 ctx.login(user);
                 ctx.redirect('/');
             } else {
-                ctx.redirect('/login');
+                ctx.redirect(authPagePaths.loginUrl);
             }
           })(ctx);
     })
 
-    router.get('/login', async (ctx) => {
+    router.get(authPagePaths.loginUrl, async (ctx) => {
         try {
             return ctx.render('plugins/root/views/login', viewVars);
         } catch (error) {
@@ -51,7 +53,7 @@ let getRouter = (viewVars: any) => {
             // @ts-ignore
             ctx.logout();
         }
-        ctx.redirect('/login');
+        ctx.redirect(authPagePaths.loginUrl);
     })
 
     return router

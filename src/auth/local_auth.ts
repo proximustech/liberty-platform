@@ -21,3 +21,7 @@ passport.use(new LocalStrategy(auth_options, (username:string, password:string, 
   }  
 
 }));
+
+export let authPagePaths = {
+  loginUrl : "/login",
+}
