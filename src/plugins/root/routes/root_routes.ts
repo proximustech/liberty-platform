@@ -1,7 +1,7 @@
 import Router from "koa-router"
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
-import { authPagePaths } from "../../../auth/local_auth"
+import { passportAuthExports } from "../../../auth/local_auth"
 
 const passport = require('koa-passport')
 
@@ -10,15 +10,13 @@ let getRouter = (viewVars: any) => {
     viewVars.modulesContent = "--"
     router.get('/', async (ctx) => {
         try {
-
-            // @ts-ignore
             if (ctx.isAuthenticated()) {
                 await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
                 return ctx.render('plugins/root/views/root', viewVars);
             }
             else
             {
-                ctx.redirect(authPagePaths.loginUrl);
+                ctx.redirect(passportAuthExports.loginUrl);
             }
 
         } catch (error) {
@@ -27,37 +25,37 @@ let getRouter = (viewVars: any) => {
     })
 
     router.post('/login', async (ctx) => {
-        // @ts-ignore
-        return passport.authenticate('local', (err, user, info, status) => {
+        return passport.authenticate('local', (err:any, user:any, info:any, status:any) => {
             if (user) {
-                // @ts-ignore
                 ctx.login(user);
                 ctx.redirect('/');
             } else {
-                ctx.redirect(authPagePaths.loginUrl);
+                ctx.redirect(passportAuthExports.loginUrl);
             }
           })(ctx);
     })
 
-    router.get(authPagePaths.loginUrl, async (ctx) => {
+    router.get(passportAuthExports.loginUrl, async (ctx) => {
         try {
-            return ctx.render('plugins/root/views/login', viewVars);
+            if (ctx.isAuthenticated()) {
+                return ctx.render('plugins/root/views/root', viewVars);
+            }
+            else {
+                return ctx.render('plugins/root/views/login', viewVars);
+            }
         } catch (error) {
             console.error(error)
         }
     })
 
     router.get('/logout', async (ctx) => {
-        // @ts-ignore
         if (ctx.isAuthenticated()) {
-            // @ts-ignore
             ctx.logout();
         }
-        ctx.redirect(authPagePaths.loginUrl);
+        ctx.redirect(passportAuthExports.loginUrl);
     })
 
     return router
 }
-
 
 export default getRouter
