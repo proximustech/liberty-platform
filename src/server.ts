@@ -10,11 +10,15 @@ import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
 
+import {AuthorizerCasbin} from "./services/authorizer_casbin";
+
 import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
 export let globalEntityManager : EntityManager
 export let eventEmitter : EventEmitter
 
 (async () => {
+
+  const authorizer: AuthorizerCasbin = new AuthorizerCasbin()
 
   eventEmitter = new EventEmitter()
   const orm = await MikroORM.init();
@@ -38,6 +42,8 @@ export let eventEmitter : EventEmitter
 
   app.use(async (ctx, next) => {
       try {
+
+        ctx.authorizer = authorizer
 
         viewVars.breadcrumbs = []
         //let language = ctx.session.language || "english"

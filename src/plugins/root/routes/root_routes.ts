@@ -11,6 +11,8 @@ let getRouter = (viewVars: any) => {
     router.get('/', async (ctx) => {
         try {
             if (ctx.isAuthenticated()) {
+                // @ts-ignore
+                await ctx.authorizer.authorize("aldo","data2","write",undefined)
                 await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
                 return ctx.render('plugins/root/views/root', viewVars);
             }

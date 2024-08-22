@@ -1,0 +1,3 @@
+p, data2_admin, data2, write
+g, alice, data2_admin
+g, bernard, data2_admin

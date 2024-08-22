@@ -11,6 +11,7 @@ npm install js-middleware
 npm install koa-session
 npm install koa-passport
 npm install passport-local
+npm install casbin
 npm install "@koa/ejs"
 npm install "@types/koa"
 npm install "@types/koa-router"
