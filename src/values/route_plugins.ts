@@ -1,4 +1,5 @@
 export let routePlugins = [
+    'swagger',
     'root',
     'reactjs',
     'events',
