@@ -10,6 +10,16 @@ let getRouter = (viewVars: any) => {
 
     const router = new Router({ prefix: '/api' });
     router.get('/docs', koaSwagger({ routePrefix: false, swaggerOptions: { spec }}));
+    router.get('/status', async (ctx) => {
+        try {
+            ctx.body = {
+                status: 'success'
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    })
+
 
     return router
 }
