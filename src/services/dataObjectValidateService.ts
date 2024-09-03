@@ -1,18 +1,18 @@
-export const validateFunction: any = (data:any,validateData:any) => {
+export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => {
     let fieldRegexp = ""
     let fieldValue = ""
     let result = []
     let regexpValidator = undefined
 
-    for (const [fieldName, fieldData] of Object.entries(validateData)) {
-        fieldRegexp = validateData[fieldName]["regexp"]
+    for (const [fieldName, fieldSchema] of Object.entries(validateSchema)) {
+        fieldRegexp = validateSchema[fieldName]["regexp"]
         fieldValue = data[fieldName]
 
         regexpValidator = new RegExp(fieldRegexp);
         if (!regexpValidator.test(fieldValue)) {
             result.push({
                 field:fieldName,
-                message:validateData[fieldName]["message"]
+                message:validateSchema[fieldName]["message"]
             })
         }
     }
