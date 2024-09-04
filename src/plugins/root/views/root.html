@@ -97,12 +97,15 @@
                 app_menu_visible : false,
                 temp_selected_element_for_detail:{},
                 module_data : {}, //used for any porpouse by the loaded module
-                append : (parent,childId) => {
+                modal_window : {},
+                append : (parentId,childId) => {
+                    let parent = document.getElementById(parentId)
                     let child = document.getElementById(childId)
                     parent.append(child)
                     child.style.display = "block"
                 },
-                prepend : (parent,childId)=> {
+                prepend : (parentId,childId)=> {
+                    let parent = document.getElementById(parentId)
                     let child = document.getElementById(childId)
                     parent.prepend(child)
                     child.style.display = "block"
@@ -150,7 +153,7 @@
             }
 
             app.top_menu.s_prepend = (childId) => {
-                  app.prepend(app.top_menu,childId)
+                  app.prepend(app.top_menu.id,childId)
             }
              
             app.top_menu.s_prependItem = (title,link) => {
@@ -177,6 +180,20 @@
               try{
                 document.getElementById(`${module_name}_module_menu_content`).style.display="block"
               }catch{}
+            }
+
+            app.modal_window.clear = () => {
+              document.getElementById(`general_modal_title`).innerHTML=""
+              document.getElementById(`general_modal_body`).innerHTML=""
+              document.getElementById(`general_modal_footer`).innerHTML=""
+            }
+
+            app.modal_window.setContent = (titleElementId,bodyElementId,footerElementId) => {
+              app.append(`general_modal_title`,titleElementId)
+              app.append(`general_modal_body`,bodyElementId)
+              app.append(`general_modal_footer`,footerElementId)
+
+              document.getElementById('general_modal_body').insertAdjacentHTML("beforeend",'<br>')
             }                 
 
             function httpRequest(method,url,callback) {
