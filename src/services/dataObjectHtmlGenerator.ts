@@ -13,6 +13,8 @@ export const HtmlDataObjectFieldRender: any = (fieldName:string,fieldValue:any,f
         <label>${label}</label>
         <input id='${fieldName}_id' class='form-control' type='text' value='${fieldValue}' />
         <label id='${fieldName}_validation_message'></label>
+        <br>
+        <br>
         `       
     }
 
