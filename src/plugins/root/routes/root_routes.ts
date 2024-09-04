@@ -7,7 +7,6 @@ const passport = require('koa-passport')
 
 let getRouter = (viewVars: any) => {
     const router = new Router();
-    viewVars.modulesContent = "--"
     router.get('/', async (ctx) => {
         try {
             if (ctx.isAuthenticated()) {
