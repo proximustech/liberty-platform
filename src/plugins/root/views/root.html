@@ -72,8 +72,7 @@
                 <br/>
                 <br/>
               </div>
-              <div class="accordion" id="modules_menu">
-              </div>          
+              <div class="accordion" id="modules_menu"></div>          
             </div>             
         </div>
         <div id="content_view" style="position: fixed; width: 100%; transition: margin-left .3s ease-in-out,width .3s ease-in-out;border-radius: 7px; padding: 21px;overflow: auto;height: 93%; margin: 0px; margin-top: 63px; margin-left: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);background-color: #fbfbfb"></div>
@@ -162,14 +161,22 @@
             } 
 
             app.modules_menu.s_appendItem = (title,module_name,innerHtml) => {
+              // Chcek This item will be the first item in order to show the content
+              let headerCollapsed = "collapsed"
+              let show = ""
+              if (app.modules_menu.innerHTML==="") {
+                headerCollapsed = ""
+                show="show"
+              }
+
               let html = `
                 <div class="accordion-item">
                   <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${module_name}_module_menu" aria-expanded="false" aria-controls="${module_name}_module_menu">
+                    <button class="accordion-button ${headerCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#${module_name}_module_menu" aria-expanded="false" aria-controls="${module_name}_module_menu">
                       ${title}
                     </button>
                   </h2>
-                  <div id="${module_name}_module_menu" class="accordion-collapse collapse">
+                  <div id="${module_name}_module_menu" class="accordion-collapse collapse ${show}">
                     <div class="accordion-body">
                       ${innerHtml}
                     </div>
