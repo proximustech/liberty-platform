@@ -1,20 +1,36 @@
-export const HtmlDataObjectFieldRender: any = (fieldName:string,fieldValue:any,fieldMetadata:any) => {
+export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:string,fieldValue:any,fieldMetadata:any) => {
     let html:any = ""
-    let regexp:any = ""
+    let validationRegexp:any = ""
+    let validationMessage:any = ""
     let label:any = ""
     let inputType:any = ""
 
-    regexp = fieldMetadata["regexp"]
+    validationRegexp = fieldMetadata["validationRegexp"]
+    validationMessage = fieldMetadata["validationMessage"]
     label = fieldMetadata["label"]
     inputType = fieldMetadata["inputType"]
 
     if (inputType=="text") {
         html+=`
-        <label>${label}</label>
-        <input id='${fieldName}_id' class='form-control' type='text' value='${fieldValue}' />
-        <label id='${fieldName}_validation_message'></label>
+        <label style='margin-bottom:7px;font-size:17px'>${label}</label>
+        <input id='${dataObjectName}_${fieldName}' class='form-control' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" />
+        <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:12px'></label>
         <br>
         <br>
+
+        <script>
+            function ${dataObjectName}_${fieldName}_listener(element){
+                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
+
+                regexpValidator = new RegExp("${validationRegexp}")
+                if(!regexpValidator.test(element.value)){
+                    document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
+                }
+                else {
+                    document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                }
+            }
+        </script>
         `       
     }
 
@@ -22,11 +38,11 @@ export const HtmlDataObjectFieldRender: any = (fieldName:string,fieldValue:any,f
     return html
 }
 
-export const HtmlDataObjectRender: any = (dataObjectData:any,dataObjectMetadata:any) => {
+export const HtmlDataObjectRender: any = (dataObjectName:any,dataObjectData:any,dataObjectMetadata:any) => {
     let html:any = ""
 
     for (const [fieldName, fieldMetadata] of Object.entries(dataObjectMetadata)) {
-        html += HtmlDataObjectFieldRender(fieldName,dataObjectData[fieldName],fieldMetadata)
+        html += HtmlDataObjectFieldRender(dataObjectName,fieldName,dataObjectData[fieldName],fieldMetadata)
     }
 
     return html
