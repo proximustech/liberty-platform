@@ -1,4 +1,5 @@
 import Router from "koa-router"
+import koaBody from "koa-body"
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
 import { passportAuthExports } from "../../../auth/local_auth"
@@ -26,7 +27,7 @@ let getRouter = (viewVars: any) => {
         }
     })
 
-    router.post('/login', async (ctx) => {
+    router.post('/login',koaBody(), async (ctx) => {
         return passport.authenticate('local', (err:any, user:any, info:any, status:any) => {
             if (user) {
                 ctx.login(user);
