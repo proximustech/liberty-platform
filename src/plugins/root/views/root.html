@@ -177,12 +177,7 @@
               try{
                 document.getElementById(`${module_name}_module_menu_content`).style.display="block"
               }catch{}
-            }
-
-            app.dialogClear = () => {
-              app.dialog.innerHTML=""
-              app.dialog.label=""
-            }    
+            }  
 
             function httpRequest(method,url,callback) {
               const request = new XMLHttpRequest();
