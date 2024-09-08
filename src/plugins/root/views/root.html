@@ -181,6 +181,17 @@
               try{
                 document.getElementById(`${module_name}_module_menu_content`).style.display="block"
               }catch{}
+            }
+            app.confirmDelete = (title,body,deleteFunctionCall) => {
+              app.dialog.innerHTML=body
+              app.dialog.label=title
+              app.dialog.insertAdjacentHTML('beforeend',`
+                <div slot="footer">
+                  <button type="button" class="btn btn-secondary" onclick="app.dialog.hide()">Close</button>
+                  <button type="button" class="btn btn-danger" onclick="${deleteFunctionCall};">Delete</button>
+                </div>
+              `)
+              app.dialog.show()
             }  
 
             function httpRequest(method,url,callback) {
