@@ -158,6 +158,7 @@
               const toastHeader = document.getElementById('app_toast_header')
               const toastBody = document.getElementById('app_toast_body')
               let timeout = 7000
+              let autohide = false
 
               toastHeader.style.backgroundColor="white"
               toastHeader.style.color="black"              
@@ -169,12 +170,13 @@
                 if (options['closable']==true) {
                   toastHeader.insertAdjacentHTML("beforeend",`<button id="toast_close_button" type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>`)
                 }
-              }
+                else autohide = true
+              } else autohide = true
               if ('timeout' in options){
                 timeout = options['timeout']
               }
-              if ('autohide' in options){
-                if (options['autohide']==true) {
+              if ('autohide' in options || autohide){
+                if (options['autohide']==true || autohide) {
                   setTimeout(()=>{app.toast.hide()},timeout)
                 }
               }
