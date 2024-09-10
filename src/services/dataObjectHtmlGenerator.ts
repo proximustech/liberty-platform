@@ -29,6 +29,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                     document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
                 }
             }
+            ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
         </script>
         `       
     }
@@ -51,6 +52,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                     document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
                 }
             }
+            ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
         </script>
         `       
     }
