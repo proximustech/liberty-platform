@@ -96,15 +96,8 @@
           </div>
           <div id="deteail_content"></div>
         </div>
+        <div id="toasts_container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
         <sl-drawer id="app_drawer" label="" class="drawer-overview"></sl-drawer>
-
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-          <div id="app_toast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
-            <div id="app_toast_header" class="toast-header"></div>
-            <div id="app_toast_body" class="toast-body"></div>
-          </div>
-        </div>
-
         <sl-dialog id="app_dialog" label="" class="dialog-overview" ></sl-dialog>          
         <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>    
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -116,7 +109,6 @@
             var app = {
                 drawer:document.getElementById("app_drawer"),
                 dialog:document.getElementById("app_dialog"),
-                toast: bootstrap.Toast.getOrCreateInstance(document.getElementById("app_toast")),
                 top_menu : document.getElementById("top_menu"),
                 modules_menu : document.getElementById("modules_menu"),
                 app_menu_visible : false,
@@ -180,20 +172,34 @@
             app.md = app.module_data
 
             app.toastShow = (title,body,options = {}) => {
-              const toastHeader = document.getElementById('app_toast_header')
-              const toastBody = document.getElementById('app_toast_body')
+
+              const toastsContainer = document.getElementById('toasts_container')
+              let toastIdex=toastsContainer.childElementCount
+
+              let html = `
+                <div id="app_toast_${toastIdex}" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
+                  <div id="app_toast_header_${toastIdex}" class="toast-header"></div>
+                  <div id="app_toast_body_${toastIdex}" class="toast-body"></div>
+                </div>              
+              `
+              toastsContainer.insertAdjacentHTML("beforeend",html)
+              const toastElement = document.getElementById(`app_toast_${toastIdex}`)
+              const toast = bootstrap.Toast.getOrCreateInstance(toastElement)
+
+              const toastHeader = document.getElementById(`app_toast_header_${toastIdex}`)
+              const toastBody = document.getElementById(`app_toast_body_${toastIdex}`)
               let timeout = 7000
               let autohide = false
 
               toastHeader.style.backgroundColor="white"
-              toastHeader.style.color="black"              
+              toastHeader.style.color="black"
 
               toastHeader.innerHTML=`<strong class="me-auto">${title}</strong>`
               toastBody.innerHTML=`<div>${body}</div>`
               
               if ('closable' in options){
                 if (options['closable']==true) {
-                  toastHeader.insertAdjacentHTML("beforeend",`<button id="toast_close_button" type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>`)
+                  toastHeader.insertAdjacentHTML("beforeend",`<button id="toast_close_button" type="button" class="btn-close" aria-label="Close" onclick="document.getElementById('toasts_container').removeChild(document.getElementById('app_toast_${toastIdex}'))"></button>`)
                 }
                 else autohide = true
               } else autohide = true
@@ -202,7 +208,15 @@
               }
               if ('autohide' in options || autohide){
                 if (options['autohide']==true || autohide) {
-                  setTimeout(()=>{app.toast.hide()},timeout)
+                  setTimeout(
+                    ()=>{
+                      toast.hide();
+                      setTimeout(()=>{
+                        toastsContainer.removeChild(toastElement)
+                      },timeout) 
+                    },
+                    timeout
+                  )
                 }
               }
               if ('type' in options){
@@ -220,8 +234,7 @@
                 }
 
               }
-              app.toast.show()
-              setTimeout
+              toast.show()
             }
 
             app.top_menu.s_prepend = (childId) => {
