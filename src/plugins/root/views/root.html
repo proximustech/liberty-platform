@@ -237,6 +237,11 @@
               toast.show()
             }
 
+            app.setPendingOperation = (element) => {
+                  element.insertAdjacentHTML("afterbegin",`<span class="spinner-border spinner-border-sm" aria-hidden="true" style="margin-right: 7px"></span>`)
+                  element.disabled = true
+            }
+
             app.top_menu.s_prepend = (childId) => {
                   app.prepend(app.top_menu.id,childId)
             }
@@ -280,7 +285,7 @@
               app.dialog.insertAdjacentHTML('beforeend',`
                 <div slot="footer">
                   <button type="button" class="btn btn-secondary" onclick="app.dialog.hide()">Close</button>
-                  <button type="button" class="btn btn-danger" onclick="${deleteFunctionCall};">Delete</button>
+                  <button type="button" class="btn btn-danger" onclick="${deleteFunctionCall};app.setPendingOperation(this)">Delete</button>
                 </div>
               `)
               app.dialog.show()
