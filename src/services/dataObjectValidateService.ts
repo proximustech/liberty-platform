@@ -13,14 +13,27 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
         fieldRegexp = validateSchema[fieldName]["regexp"]
         fieldValue = data[fieldName]
 
-        regexpValidator = new RegExp(fieldRegexp);
-        if (!regexpValidator.test(fieldValue)) {
-            result.isValid=false
-            result.messages.push({
-                field:fieldName,
-                message:validateSchema[fieldName]["message"]
-            })
+        if (fieldValue === "") {
+            if (validateSchema[fieldName]["required"]) {
+                result.isValid=false
+                result.messages.push({
+                    field:fieldName,
+                    message:validateSchema[fieldName]["requiredMessage"]
+                })                
+            } 
+            
+        } else {
+            regexpValidator = new RegExp(fieldRegexp);
+            if (!regexpValidator.test(fieldValue)) {
+                result.isValid=false
+                result.messages.push({
+                    field:fieldName,
+                    message:validateSchema[fieldName]["message"]
+                })
+            }
+            
         }
+
     }
     return result
 }

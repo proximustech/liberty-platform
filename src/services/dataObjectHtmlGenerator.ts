@@ -1,12 +1,16 @@
 export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:string,fieldValue:any,fieldMetadata:any) => {
     let html:any = ""
+    let validationRequired:any = false
     let validationRegexp:any = ""
     let validationMessage:any = ""
+    let validationRequiredMessage:any = ""
     let label:any = ""
     let inputType:any = ""
 
     validationRegexp = fieldMetadata["validationRegexp"]
     validationMessage = fieldMetadata["validationMessage"]
+    validationRequired = fieldMetadata["validationRequired"]
+    validationRequiredMessage = fieldMetadata["validationRequiredMessage"]
     label = fieldMetadata["label"]
     inputType = fieldMetadata["inputType"]
 
@@ -21,17 +25,27 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
             function ${dataObjectName}_${fieldName}_listener(element){
                 app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
 
-                regexpValidator = new RegExp("${validationRegexp}")
-                if(!regexpValidator.test(element.value)){
-                    document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
+                if(element.value===""){
+                    if("${validationRequired}"==="true"){
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML="${validationRequiredMessage}"
+                    }
+                    else{
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=""
+                    }                                   
+                } else {
+                    regexpValidator = new RegExp("${validationRegexp}")
+                    if(!regexpValidator.test(element.value)){
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
+                    }
+                    else {
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                    }
                 }
-                else {
-                    document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
-                }
+
             }
             ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
         </script>
-        `       
+        `
     }
     else if (inputType=="text_area") {
         html+=`
@@ -44,12 +58,22 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
             function ${dataObjectName}_${fieldName}_listener(element){
                 app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
 
-                regexpValidator = new RegExp("${validationRegexp}")
-                if(!regexpValidator.test(element.value)){
-                    document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
-                }
-                else {
-                    document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                if(element.value===""){
+                    if("${validationRequired}"==="true"){
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML="${validationRequiredMessage}"
+
+                    }
+                    else{
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=""
+                    }               
+                } else {
+                    regexpValidator = new RegExp("${validationRegexp}")
+                    if(!regexpValidator.test(element.value)){
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
+                    }
+                    else {
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                    }
                 }
             }
             ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
