@@ -11,7 +11,7 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
 
     for (const [fieldName, fieldSchema] of Object.entries(validateSchema)) {
         fieldRegexp = validateSchema[fieldName]["regexp"]
-        fieldValue = data[fieldName]
+        fieldValue = data[fieldName].toString()
 
         if (fieldValue === "") {
             if (validateSchema[fieldName]["required"]) {
