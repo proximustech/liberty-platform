@@ -237,9 +237,18 @@
               toast.show()
             }
 
-            app.setPendingOperation = (element) => {
+            app.setElementForPendingOperation = (element) => {
                   element.insertAdjacentHTML("afterbegin",`<span class="spinner-border spinner-border-sm" aria-hidden="true" style="margin-right: 7px"></span>`)
                   element.disabled = true
+            }
+            app.setViewForPendingOperation = (id) => {
+                  let element = document.getElementById(id)
+                  element.innerHTML=`
+                  <div class="text-center">
+                    <div class="spinner-border text-secondary" style="width: 3rem; height: 3rem; top:30%; position: absolute" role="status">
+                    </div>
+                  </div>
+                  `
             }
 
             app.top_menu.s_prepend = (childId) => {
@@ -285,7 +294,7 @@
               app.dialog.insertAdjacentHTML('beforeend',`
                 <div slot="footer">
                   <button type="button" class="btn btn-secondary" onclick="app.dialog.hide()">Close</button>
-                  <button type="button" class="btn btn-danger" onclick="${deleteFunctionCall};app.setPendingOperation(this)">Delete</button>
+                  <button type="button" class="btn btn-danger" onclick="${deleteFunctionCall};app.setElementForPendingOperation(this)">Delete</button>
                 </div>
               `)
               app.dialog.show()
