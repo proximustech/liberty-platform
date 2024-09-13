@@ -80,6 +80,20 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
         </script>
         `       
     }
+    else if (inputType=="switch") {
+        html+=`
+        <label style='margin-bottom:7px;font-size:17px'>${label}</label>
+        <input id="${dataObjectName}_${fieldName}" class="form-check-input" type="checkbox" role="switch" onchange="${dataObjectName}_${fieldName}_listener(this)">
+        <br>
+
+        <script>
+            function ${dataObjectName}_${fieldName}_listener(element){
+                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.checked
+            }
+            ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
+        </script>
+        `       
+    }
 
 
     return html
