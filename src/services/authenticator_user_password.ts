@@ -1,4 +1,5 @@
 import {IAuthenticator} from "../interfaces/authenticator_interface"
+import { MongoDbUserPasswordAuthenticator } from "../plugins/mongodb_authenticator_user_password/services/mongodb_authenticator_user_password";
 
 export class UserPasswordAuthenticator implements IAuthenticator {
     private username: string;
@@ -9,21 +10,9 @@ export class UserPasswordAuthenticator implements IAuthenticator {
         this.password=password
     }
 
-    authenticate(){
-        let dbUser ={
-            id : 40,
-            username : 'user@mail.com',
-            password : 'password'
-          }
-        if (this.password === dbUser.password && this.username === dbUser.username) {
-            return {
-                id : 40,
-                username : 'user',                
-                role : 'admin',                
-            };
-        } else {
-            return false;
-        }
+    async authenticate(){
+        let mongoDbUserPasswordAuthenticator = new MongoDbUserPasswordAuthenticator(this.username,this.password)
+        return await mongoDbUserPasswordAuthenticator.authenticate()
     };
     
 }

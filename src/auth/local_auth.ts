@@ -9,10 +9,10 @@ passport.deserializeUser((user:any, done:any) => {
   return done(null, user);
 });
 
-passport.use(new LocalStrategy(auth_options, (username:string, password:string, done:any) => {
+passport.use(new LocalStrategy(auth_options, async (username:string, password:string, done:any) => {
 
   const authenticator = new UserPasswordAuthenticator(username,password)
-  let authenticatedUser = authenticator.authenticate()
+  let authenticatedUser = await authenticator.authenticate()
 
   if ( authenticatedUser === false) {
     return done(null, false);
