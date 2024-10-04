@@ -1,11 +1,11 @@
 import Koa from "koa"
+import { Context } from "koa";
 const render = require("@koa/ejs");
 const path = require('path');
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const session = require('koa-session');
 const passport = require('koa-passport');
-//import koaBody from "koa-body"
 import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
@@ -40,7 +40,7 @@ export let eventEmitter : EventEmitter
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use(async (ctx, next) => {
+  app.use(async (ctx:Context, next) => {
       try {
 
         ctx.authorizer = authorizer
