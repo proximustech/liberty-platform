@@ -1,3 +1,4 @@
+import { Context } from "koa";
 import Router from "koa-router"
 import koaBody from "koa-body"
 import { DynamicViews } from "../../../services/dynamic_views_service";
@@ -9,7 +10,7 @@ const passport = require('koa-passport')
 let getRouter = (viewVars: any) => {
     const router = new Router();
     viewVars.modulesContent = ""
-    router.get('/', async (ctx) => {
+    router.get('/', async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
                 // @ts-ignore
@@ -27,7 +28,7 @@ let getRouter = (viewVars: any) => {
         }
     })
 
-    router.post('/login',koaBody(), async (ctx) => {
+    router.post('/login',koaBody(), async (ctx:Context) => {
         return passport.authenticate('local', (err:any, user:any, info:any, status:any) => {
             if (user) {
                 ctx.login(user);
@@ -38,7 +39,7 @@ let getRouter = (viewVars: any) => {
           })(ctx);
     })
 
-    router.get(passportAuthExports.loginUrl, async (ctx) => {
+    router.get(passportAuthExports.loginUrl, async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
                 return ctx.render('plugins/root/views/root', viewVars);
