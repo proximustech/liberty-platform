@@ -12,7 +12,7 @@ export class UserPasswordAuthenticator implements IAuthenticator {
     authenticate(){
         let dbUser ={
             id : 40,
-            username : 'user',
+            username : 'user@mail.com',
             password : 'password'
           }
         if (this.password === dbUser.password && this.username === dbUser.username) {
