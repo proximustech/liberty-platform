@@ -1,6 +1,6 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-import { MongoDbUserPasswordAuthenticator } from "../plugins/mongodb_authenticator_user_password/services/mongodb_authenticator_user_password";
+import { MongoDbUserPasswordAuthenticator } from "../plugins/mongodb_users_control/services/mongodb_authenticator_user_password";
 
 const auth_options = {};
 
