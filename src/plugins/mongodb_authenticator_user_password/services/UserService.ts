@@ -2,6 +2,7 @@ import { MongoService } from "./MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { UserDataObject } from "../dataObjects/UserDataObject";
 import { Uuid } from "../../../services/utilities";
+const { createHash } = require('crypto');
 
 export class UserService {
     
@@ -11,6 +12,7 @@ export class UserService {
     private mongoService:MongoService
     private dataBase:Db
     private collection:Collection
+    private hashcycles:number = 1000000
 
     constructor(){
         this.mongoService = new MongoService()
@@ -26,7 +28,12 @@ export class UserService {
 
     async create(User:UserDataObject){
         User.uuid = Uuid.createMongoUuId()
-        User._id = new ObjectId(User.uuid)        
+        User._id = new ObjectId(User.uuid)
+
+        for (let index = 0; index < this.hashcycles; index++) {
+            User.password=createHash('sha256').update(User.password).digest('base64');
+        }         
+        
         const result = await this.collection.insertOne(User)
     }
 
@@ -57,6 +64,9 @@ export class UserService {
 
     async getByEmailAndPassword(email:string,password:string) : Promise<UserDataObject> {
 
+        for (let index = 0; index < this.hashcycles; index++) {
+            password=createHash('sha256').update(password).digest('base64');
+        }
         const cursor = this.collection.find({email:email, password:password});
 
         while (await cursor.hasNext()) {
