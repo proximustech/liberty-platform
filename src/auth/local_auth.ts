@@ -1,6 +1,6 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-import {UserPasswordAuthenticator} from "../services/authenticator_user_password";
+import { MongoDbUserPasswordAuthenticator } from "../plugins/mongodb_authenticator_user_password/services/mongodb_authenticator_user_password";
 
 const auth_options = {};
 
@@ -11,7 +11,7 @@ passport.deserializeUser((user:any, done:any) => {
 
 passport.use(new LocalStrategy(auth_options, async (username:string, password:string, done:any) => {
 
-  const authenticator = new UserPasswordAuthenticator(username,password)
+  let authenticator = new MongoDbUserPasswordAuthenticator(username,password)
   let authenticatedUser = await authenticator.authenticate()
 
   if ( authenticatedUser === false) {
