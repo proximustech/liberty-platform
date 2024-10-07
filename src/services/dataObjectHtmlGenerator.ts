@@ -33,7 +33,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=""
                     }                                   
                 } else {
-                    regexpValidator = new RegExp("${validationRegexp}")
+                    regexpValidator = new RegExp(${validationRegexp})
                     if(!regexpValidator.test(element.value)){
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
                     }
@@ -67,7 +67,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=""
                     }               
                 } else {
-                    regexpValidator = new RegExp("${validationRegexp}")
+                    regexpValidator = new RegExp(${validationRegexp})
                     if(!regexpValidator.test(element.value)){
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
                     }
