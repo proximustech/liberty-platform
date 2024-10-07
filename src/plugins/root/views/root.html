@@ -241,6 +241,10 @@
                   element.insertAdjacentHTML("afterbegin",`<span class="spinner-border spinner-border-sm" aria-hidden="true" style="margin-right: 7px"></span>`)
                   element.disabled = true
             }
+            app.unsetElementForPendingOperation = (element) => {
+                  element.removeChild(element.firstChild)
+                  element.disabled = false
+            }
             app.setViewForPendingOperation = (id) => {
                   let element = document.getElementById(id)
                   element.innerHTML=`
