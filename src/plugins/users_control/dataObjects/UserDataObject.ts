@@ -1,6 +1,5 @@
 import { DataObjectValidateFunction } from "../../../services/dataObjectValidateService";
 import { HtmlDataObjectFieldRender,HtmlDataObjectRender } from "../../../services/dataObjectHtmlGenerator";
-
 export class UserDataObject {
     _id:any = ""
     uuid:string = ""
@@ -16,25 +15,25 @@ export const UserDataObjectValidator:any = {
 
     validateSchema : {
         email : {
-            regexp: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            regexp: String.raw`^.+@.+\..+$`,
             message:"Email must have a valid e-mail format",
             required:true,
             requiredMessage : "E-Mail is required."
         },
         password : {
-            regexp:/^----------|.{3,30}$/,
+            regexp:"^----------|.{3,30}$",
             message:"Password must be in the range of 3 and 30 characters.",
             required:true,
             requiredMessage : "Password is required."
         },
         name : {
-            regexp:/^.{3,30}$/,
+            regexp:"^.{3,30}$",
             message:"Name name must be in the range of 3 and 30 characters.",
             required:true,
             requiredMessage : "Name is required."
         },
         last_name : {
-            regexp:/^.{3,30}$/,
+            regexp:"^.{3,30}$",
             message:"Last name name must be in the range of 3 and 30 characters.",
             required:true,
             requiredMessage : "Last name is required."

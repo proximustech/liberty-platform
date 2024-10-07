@@ -1,7 +1,7 @@
 <script>
     app.module_data.user_form={}
     app.module_data.user_form.user=JSON.parse(`<%- JSON.stringify(user) %>`)
-    app.module_data.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema) %>`)
+    app.module_data.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- userValidateFunction %>`)
    
     function submitUser(triggerElement) {
@@ -20,7 +20,6 @@
             })
             .done(function() {
                 setTimeout(() => {
-                    //$("#content_view").load("<%= prefix %>/users");
                     app.setViewForPendingOperation('content_view') 
                     htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
                     app.drawer.hide();
