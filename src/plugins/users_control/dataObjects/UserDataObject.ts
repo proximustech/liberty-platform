@@ -15,7 +15,7 @@ export const UserDataObjectValidator:any = {
 
     validateSchema : {
         email : {
-            regexp: String.raw`^.+@.+\..+$`,
+            regexp: String.raw`^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`,
             message:"Email must have a valid e-mail format",
             required:true,
             requiredMessage : "E-Mail is required."
