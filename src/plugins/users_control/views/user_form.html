@@ -1,0 +1,115 @@
+<script>
+    app.module_data.user_form={}
+    app.module_data.user_form.user=JSON.parse(`<%- JSON.stringify(user) %>`)
+    app.module_data.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema) %>`)
+    eval(`<%- userValidateFunction %>`)
+   
+    function submitUser(triggerElement) {
+
+        let user = app.module_data.user_form.user
+        let userValidationResult = app.module_data.user_form.userValidateFunction(user,app.module_data.user_form.userValidateSchema)
+       
+        if (userValidationResult.isValid) {
+            app.setElementForPendingOperation(triggerElement)
+            let result = $.ajax({
+                type:"POST",
+                url:"<%= prefix %>/user",
+                data:"json="+escape(JSON.stringify(user)),
+                processData: false,
+                dataType:"text"
+            })
+            .done(function() {
+                setTimeout(() => {
+                    //$("#content_view").load("<%= prefix %>/users");
+                    app.setViewForPendingOperation('content_view') 
+                    htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
+                    app.drawer.hide();
+                    app.toastShow('Saved','User saved successfully.',{type:"info"})           
+                    
+                }, 1000);
+            })
+            .fail(function(data) {
+                try {
+                    for (messageData of data.responseJSON.messages) {
+                        app.toastShow('Form data Error',messageData.message,{type:"error"})
+                        break;
+                    }
+
+                } catch (error) {}
+            })
+            .always(function() {
+            });              
+        } else {
+            try {
+                app.toastShow('Form data Error',userValidationResult.messages[0].message,{closable:true,type:"error"})
+            } catch (error) {}
+        }
+
+      
+    }
+
+    function deleteUser(uuid) {
+        let result = $.ajax({
+            type:"DELETE",
+            url:"<%= prefix %>/user?uuid="+uuid,
+        })
+        .done(function() {      
+            setTimeout(() =>{
+                app.setViewForPendingOperation('content_view')
+                htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
+                app.drawer.hide();
+                app.dialog.hide()
+                app.toastShow('Deleted','User deleted successfully.',{type:"info"}) 
+            },1000)   
+        })
+    
+    }    
+
+</script>
+<% if (!editing) { %>
+    <h3>Create User</h3>
+<% } else { %>
+    <sl-alert variant="warning" open>
+        <sl-icon slot="icon" name="exclamation-triangle"></sl-icon>
+        <strong>Editing User</strong><br />
+        <%= user.name %>
+      </sl-alert>
+
+<% } %>
+    <sl-tab-group id="user_form_tab_group">
+        <sl-tab slot="nav" panel="general">General</sl-tab>
+        <% if (editing) { %>
+            <sl-tab slot="nav" panel="operations">Operations</sl-tab>
+         
+        <% } %>
+    
+        <sl-tab-panel name="general">
+            <%- userFieldRender("user","email",user.email,userMetadata.email) %>    
+            <%- userFieldRender("user","password","----------",userMetadata.password) %>    
+            <%- userFieldRender("user","name",user.name,userMetadata.name) %>    
+            <%- userFieldRender("user","last_name",user.last_name,userMetadata.last_name) %>         
+        
+        </sl-tab-panel>
+
+        <% if (editing) { %>
+            <sl-tab-panel name="operations">
+                <sl-details summary="Delete">
+                    <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete User','Are you sure to delete the user <strong><%= user.name %></strong> ?','deleteUser(`<%= user.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete User</button>
+                    <br>
+                </sl-details>
+    
+            </sl-tab-panel>
+         
+        <% } %>
+        
+    </sl-tab-group>
+
+    <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+        <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitUser(this)">Save</sl-button>
+    </div>
+
+<script>
+    document.getElementById('user_form_tab_group').show('general')
+
+</script>

@@ -1,0 +1,42 @@
+<div class="alert alert-light" role="alert" style="text-align: center;">
+    <strong>Users</strong>
+</div>
+<button type="button" class="btn btn-primary" style="margin-top: 25px;" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form', {target:'#app_drawer', swap:'innerHTML'});">
+    <i class="bi bi-plus-circle"></i> Add
+</button>
+<div class="btn-group" role="group" style="margin-top: 25px;">
+    <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+    <input class="form-control" id="user_search_box" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="text" >
+</div>
+<br>
+<br>
+<table 
+    id="Users_table" 
+    data-toggle="table" 
+    data-search="true" 
+    data-search-align="left" 
+    data-search-selector="#user_search_box" 
+    data-search-highlight="true"
+    data-sortable="true"    
+>
+    <thead>
+        <tr>
+            <th data-sortable="true">E-Mail</th>
+        </tr>
+    </thead>
+    <% users.forEach(user => { %>
+    <tr>
+        <td>
+            <span>
+                <button class="list_button" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form?uuid=<%= user.uuid %>', {target:'#app_drawer', swap:'innerHTML'});"><i class="bi bi-pencil"></i></button>
+            </span>
+            <%= user.email %>
+        </td>
+    </tr>
+    <% }) %>
+</table>
+<script>
+    app.module_data = {}
+    app.module_data.Users_table = $('#Users_table')
+    app.module_data.Users_table.bootstrapTable()
+</script>
