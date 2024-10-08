@@ -13,6 +13,7 @@ export class UserService {
     private dataBase:Db
     private collection:Collection
     private hashcycles:number = 1000
+    private passwordMask = "----------"
 
     constructor(){
         this.mongoService = new MongoService()
@@ -37,11 +38,25 @@ export class UserService {
         const result = await this.collection.insertOne(User)
     }
 
-    async updateOne(User:UserDataObject){
-        User._id = new ObjectId(User.uuid)
+    async updateOne(user:UserDataObject){
+        user._id = new ObjectId(user.uuid)
+        if (user.password===this.passwordMask) {
+            const cursor = this.collection.find({uuid : user.uuid});
+
+            while (await cursor.hasNext()) {
+                let document = (await cursor.next() as UserDataObject);
+                user.password = document.password
+            }            
+            
+        }
+        else {
+            for (let index = 0; index < this.hashcycles; index++) {
+                user.password=createHash('sha256').update(user.password).digest('base64');
+            }            
+        }
         const result = await this.collection.replaceOne(
-            {uuid: User.uuid }, 
-            User,
+            {uuid: user.uuid }, 
+            user,
             {upsert: false}
         )        
     }
@@ -56,6 +71,7 @@ export class UserService {
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
+            document.password = this.passwordMask
             return document
         }
 
@@ -71,7 +87,7 @@ export class UserService {
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
-            document.password = ""
+            document.password = this.passwordMask
             return document
         }
 
