@@ -27,7 +27,7 @@ export let eventEmitter : EventEmitter
   const app = new Koa()
   
   let getRouter={}
-  let viewVars:any = {}
+  let viewVars:any = {} //TODO: remove viewVars from global
   let baseLanguage = "english"
   let selectedLanguage = "english"
 
