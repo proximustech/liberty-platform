@@ -47,6 +47,39 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
         </script>
         `
     }
+    else if (inputType=="password") {
+        html+=`
+        <label style='margin-bottom:7px;font-size:17px'>${label}</label>
+        <sl-input id='${dataObjectName}_${fieldName}' type="password" value='${fieldValue}' password-toggle oninput="${dataObjectName}_${fieldName}_listener(this)" ></sl-input>
+        <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
+        <br>
+
+        <script>
+            function ${dataObjectName}_${fieldName}_listener(element){
+                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
+
+                if(element.value===""){
+                    if("${validationRequired}"==="true"){
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML="${validationRequiredMessage}"
+                    }
+                    else{
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=""
+                    }                                   
+                } else {
+                    regexpValidator = new RegExp(/${validationRegexp}/)
+                    if(!regexpValidator.test(element.value)){
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
+                    }
+                    else {
+                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                    }
+                }
+
+            }
+            ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
+        </script>
+        `
+    }    
     else if (inputType=="text_area") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>

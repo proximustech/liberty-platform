@@ -1,6 +1,6 @@
 import { MongoService } from "./MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
-import { UserDataObject } from "../dataObjects/UserDataObject";
+import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
 import { Uuid } from "../../../services/utilities";
 const { createHash } = require('crypto');
 
@@ -13,7 +13,6 @@ export class UserService {
     private dataBase:Db
     private collection:Collection
     private hashcycles:number = 1000
-    private passwordMask = "----------"
 
     constructor(){
         this.mongoService = new MongoService()
@@ -40,7 +39,7 @@ export class UserService {
 
     async updateOne(user:UserDataObject){
         user._id = new ObjectId(user.uuid)
-        if (user.password===this.passwordMask) {
+        if (user.password===passwordMask) {
             const cursor = this.collection.find({uuid : user.uuid});
 
             while (await cursor.hasNext()) {
@@ -71,7 +70,7 @@ export class UserService {
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
-            document.password = this.passwordMask
+            document.password = passwordMask
             return document
         }
 
@@ -87,7 +86,7 @@ export class UserService {
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
-            document.password = this.passwordMask
+            document.password = passwordMask
             return document
         }
 

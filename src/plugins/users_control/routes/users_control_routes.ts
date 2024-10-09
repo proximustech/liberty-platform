@@ -1,7 +1,7 @@
 import Router from "koa-router"
 import { Context } from "koa";
 import { UserService } from "../services/UserService";
-import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator } from "../dataObjects/UserDataObject";
+import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 
 import koaBody from 'koa-body';
 
@@ -30,10 +30,12 @@ let getRouter = (viewVars: any) => {
             if (uuid !=="") {
                 User = await userService.getByUuId(uuid) 
                 viewVars.editing = true
+                viewVars.passwordValue=passwordMask
                 
             }
             else {
                 viewVars.editing = false
+                viewVars.passwordValue=""
             }
 
             viewVars.user = User
@@ -56,12 +58,25 @@ let getRouter = (viewVars: any) => {
 
         if (userValidationResult.isValid) {
             if (user.uuid !== "") {
-                userService.updateOne(user) 
+                userService.updateOne(user)
+                ctx.body = {
+                    status: 'success',
+                }                
             } else {
-                userService.create(user)
-            }
-            ctx.body = {
-                status: 'success',
+                if (user.password == passwordMask) {
+                    ctx.status=400
+                    ctx.body = {
+                        status: 'error',
+                        messages: [{field:"password",message:"Invalid password"}]
+                    }                    
+                }
+                else {
+                    userService.create(user)
+                    ctx.body = {
+                        status: 'success',
+                    }
+
+                }
             }
             
         } else {

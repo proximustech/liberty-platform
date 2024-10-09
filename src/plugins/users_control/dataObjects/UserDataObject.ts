@@ -11,6 +11,8 @@ export class UserDataObject {
 
 }
 
+export const passwordMask:string = "----------"
+
 export const UserDataObjectValidator:any = {
 
     validateSchema : {
@@ -21,8 +23,8 @@ export const UserDataObjectValidator:any = {
             requiredMessage : "E-Mail is required."
         },
         password : {
-            regexp:"^----------|.{3,30}$",
-            message:"Password must be in the range of 3 and 30 characters.",
+            regexp: String.raw`(^${passwordMask}$)|(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$)`,
+            message:"Password MUST have 8 characteres with letters ( uppercase and lowercase ) and numbers.",
             required:true,
             requiredMessage : "Password is required."
         },
@@ -61,7 +63,7 @@ export const UserDataObjectSpecs:any = {
             validationRegexp: UserDataObjectValidator.validateSchema.password.regexp,
             validationMessage: UserDataObjectValidator.validateSchema.password.message,
             validationRequiredMessage: UserDataObjectValidator.validateSchema.password.requiredMessage,
-            inputType:"text"
+            inputType:"password"
         },
         name : {
             label:"Name",
