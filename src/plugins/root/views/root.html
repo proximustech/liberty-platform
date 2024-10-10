@@ -66,7 +66,7 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item dropdown ml-md-auto show">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                      <%= labels.menu %>
+                      <%= labels.consoleMenu %>
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
                         <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});" ><i class="bi bi-gear"></i> <%= labels.accountSettings %></a></li>

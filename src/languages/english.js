@@ -1,6 +1,6 @@
 exports.labels = {
     appName:"Web Console",
-    menu:"Menu",
+    consoleMenu:"Console Menu",
     logOut:"Log Out",
     accountSettings:"Account Settings"
 }
