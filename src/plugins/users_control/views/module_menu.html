@@ -1,14 +1,6 @@
-<ul class="list-unstyled ps-0" id="permissions_module_menu_content" style="display: none;">
-  <li class="mb-1">
-    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-      Modules
-    </button>
-    <div class="collapse show" id="home-collapse">
-      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-        <li><a hx-get="/users_control/users" hx-target="#content_view" href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" onclick="app.setViewForPendingOperation('content_view')">Users</a></li>
-      </ul>
-    </div>
-</ul>
+<sl-tree id="permissions_module_menu_content" style="display: none;--indent-size:7px">
+    <sl-tree-item hx-get="/users_control/users" hx-target="#content_view" onclick="app.setViewForPendingOperation('content_view')" >Users</sl-tree-item>
+</sl-tree>
 
 <script>
   app.modules_menu.s_appendItem("Permissions","permissions",document.getElementById("permissions_module_menu_content").outerHTML)
