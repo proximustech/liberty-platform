@@ -1,6 +1,8 @@
 <sl-tree id="permissions_module_menu_content" style="display: none;--indent-size:7px">
-    <sl-tree-item hx-get="/users_control/users" hx-target="#content_view" onclick="app.setViewForPendingOperation('content_view')" >Users</sl-tree-item>
-</sl-tree>
+    <sl-tree-item hx-get="/users_control/users" hx-target="#content_view" onclick="app.setViewForPendingOperation('content_view')" >
+      <sl-icon name="people" label="Settings"></sl-icon>
+      Users</sl-tree-item>
+    </sl-tree>
 
 <script>
   app.modules_menu.s_appendItem("Permissions","permissions",document.getElementById("permissions_module_menu_content").outerHTML)
