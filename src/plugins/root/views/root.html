@@ -75,7 +75,7 @@
                       <%= labels.consoleMenu %>
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
-                        <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
+                        <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});$('.navbar-toggler').click();" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout" ><i class="bi bi-door-open"></i> <%= labels.logOut %></a></li>
                     </ul>
@@ -308,6 +308,12 @@
                 </div>
               `)
               app.dialog.show()
+            }  
+            app.app_menu_inteligentClose = () => {
+              //Close app menu automatically in small screen devices
+              if ($(window).width() < 992) {
+                app.toogleBar()
+              }
             }  
 
             function httpRequest(method,url,callback) {

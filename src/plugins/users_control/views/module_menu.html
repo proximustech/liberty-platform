@@ -1,5 +1,5 @@
 <sl-tree id="permissions_module_menu_content" style="display: none;--indent-size:7px">
-    <sl-tree-item hx-get="/users_control/users" hx-target="#content_view" onclick="app.setViewForPendingOperation('content_view')" >
+    <sl-tree-item hx-get="/users_control/users" hx-target="#content_view" onclick="app.setViewForPendingOperation('content_view');app.app_menu_inteligentClose()" >
       <sl-icon name="people" label="Settings"></sl-icon>
       Users</sl-tree-item>
     </sl-tree>
