@@ -2,3 +2,4 @@
 node_modules
 tests.js
 src/plugins/_*
+host.png
