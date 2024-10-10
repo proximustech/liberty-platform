@@ -69,9 +69,9 @@
                       <%= labels.menu %>
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
-                        <li></li>
+                        <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});" ><i class="bi bi-gear"></i> <%= labels.accountSettings %></a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/logout" ><%= labels.logOut %></a></li>
+                        <li><a class="dropdown-item" href="/logout" ><i class="bi bi-door-open"></i> <%= labels.logOut %></a></li>
                     </ul>
                   </li>
                 </ul>

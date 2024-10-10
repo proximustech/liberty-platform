@@ -20,6 +20,27 @@ let getRouter = (viewVars: any) => {
         }
     })
 
+    router.get('/account_settings', async (ctx:Context) => {
+        try {
+
+            let userService = new UserService()
+
+            viewVars.editing = true
+            viewVars.accountSettings = true
+            viewVars.passwordValue=passwordMask
+
+            viewVars.user = await userService.getByUuId(ctx.session.passport.user.uuid)
+            viewVars.userMetadata = UserDataObjectSpecs.metadata
+            viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender
+            viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
+            viewVars.userValidateFunction = "app.module_data.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
+
+            return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
+        } catch (error) {
+            console.error(error)
+        }
+    })   
+
     router.get('/user_form', async (ctx:Context) => {
         try {
 
@@ -38,6 +59,7 @@ let getRouter = (viewVars: any) => {
                 viewVars.passwordValue=""
             }
 
+            viewVars.accountSettings = false
             viewVars.user = User
             viewVars.userMetadata = UserDataObjectSpecs.metadata
             viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender

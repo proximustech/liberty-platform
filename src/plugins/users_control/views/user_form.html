@@ -3,6 +3,7 @@
     app.module_data.user_form.user=JSON.parse(`<%- JSON.stringify(user) %>`)
     app.module_data.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- userValidateFunction %>`)
+    app.module_data.accountSettings = <%= accountSettings %>
    
     function submitUser(triggerElement) {
 
@@ -20,8 +21,10 @@
             })
             .done(function() {
                 setTimeout(() => {
-                    app.setViewForPendingOperation('content_view') 
-                    htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
+                    if(!app.module_data.accountSettings){
+                        app.setViewForPendingOperation('content_view')
+                        htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
+                    }
                     app.drawer.hide();
                     app.toastShow('Saved','User saved successfully.',{type:"info"})           
                     
@@ -69,8 +72,7 @@
 <% if (!editing) { %>
     <h3>Create User</h3>
 <% } else { %>
-    <sl-alert variant="warning" open>
-        <sl-icon slot="icon" name="exclamation-triangle"></sl-icon>
+    <sl-alert open>
         <strong>Editing User</strong><br />
         <%= user.name %>
       </sl-alert>
@@ -78,7 +80,7 @@
 <% } %>
     <sl-tab-group id="user_form_tab_group">
         <sl-tab slot="nav" panel="general">General</sl-tab>
-        <% if (editing) { %>
+        <% if (editing && !accountSettings) { %>
             <sl-tab slot="nav" panel="operations">Operations</sl-tab>
          
         <% } %>
@@ -91,7 +93,7 @@
         
         </sl-tab-panel>
 
-        <% if (editing) { %>
+        <% if (editing && !accountSettings) { %>
             <sl-tab-panel name="operations">
                 <sl-details summary="Delete">
                     <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete User','Are you sure to delete the user <strong><%= user.name %></strong> ?','deleteUser(`<%= user.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete User</button>
