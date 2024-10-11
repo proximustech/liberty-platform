@@ -328,7 +328,7 @@
             app.app_menu_inteligentClose = () => {
               //Close app menu automatically in small screen devices
               if ($(window).width() < 992) {
-                app.toogleBar()
+                setTimeout(()=>{app.toogleBar()},500)
               }
             }  
 
