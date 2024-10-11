@@ -45,11 +45,11 @@ let getRouter = (viewVars: any) => {
         try {
 
             let uuid:any = ctx.request.query.uuid || ""
-            let User:UserDataObject = new UserDataObject()
+            let user:UserDataObject = new UserDataObject()
             let userService = new UserService()
 
             if (uuid !=="") {
-                User = await userService.getByUuId(uuid) 
+                user = await userService.getByUuId(uuid) 
                 viewVars.editing = true
                 viewVars.passwordValue=passwordMask
                 
@@ -60,7 +60,7 @@ let getRouter = (viewVars: any) => {
             }
 
             viewVars.accountSettings = false
-            viewVars.user = User
+            viewVars.user = user
             viewVars.userMetadata = UserDataObjectSpecs.metadata
             viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
