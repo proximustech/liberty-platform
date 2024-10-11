@@ -310,14 +310,13 @@
               app.dialog.show()
             }  
             app.ajax = (targetId,url) => {
-
+              app.setViewForPendingOperation(targetId)
               $.ajax({
                   type:"GET",
                   url:url,
                   dataType:"html"
               })
               .done(function(html) {
-                  app.setViewForPendingOperation(targetId)
                   $('#'+targetId).html(html);
               })
               .fail(function(error) {
