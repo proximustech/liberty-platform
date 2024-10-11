@@ -309,6 +309,23 @@
               `)
               app.dialog.show()
             }  
+            app.ajax = (targetId,url) => {
+
+              $.ajax({
+                  type:"GET",
+                  url:url,
+                  dataType:"html"
+              })
+              .done(function(html) {
+                  app.setViewForPendingOperation(targetId)
+                  $('#'+targetId).html(html);
+              })
+              .fail(function(error) {
+                app.toastShow('Connection Error','There is an error with the network or the server',{type:"error"})
+              })
+
+            } 
+
             app.app_menu_inteligentClose = () => {
               //Close app menu automatically in small screen devices
               if ($(window).width() < 992) {
