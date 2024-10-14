@@ -1,0 +1,109 @@
+<script>
+    app.module_data.role_form={}
+    app.module_data.role_form.role=JSON.parse(`<%- JSON.stringify(role) %>`)
+    app.module_data.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
+    eval(`<%- roleValidateFunction %>`)
+   
+    function submitRole(triggerElement) {
+
+        let role = app.module_data.role_form.role
+        let roleValidationResult = app.module_data.role_form.roleValidateFunction(role,app.module_data.role_form.roleValidateSchema)
+       
+        if (roleValidationResult.isValid) {
+            app.setElementForPendingOperation(triggerElement)
+            let result = $.ajax({
+                type:"POST",
+                url:"<%= prefix %>/role",
+                data:"json="+escape(JSON.stringify(role)),
+                processData: false,
+                dataType:"text"
+            })
+            .done(function() {
+                setTimeout(() => {
+                    app.ajax('content_view', '/<%= prefix %>/roles')
+                    app.drawer.hide();
+                    app.toastShow('Saved','Role saved successfully.',{type:"info"})           
+                    
+                }, 1000);
+            })
+            .fail(function(data) {
+                try {
+                    app.unsetElementForPendingOperation(triggerElement)
+                    for (messageData of JSON.parse(data.responseText).messages) {
+                        app.toastShow('Form data Error',messageData.message,{type:"error"})
+                        break;
+                    }
+
+                } catch (error) {}
+            })
+            .always(function() {
+            });              
+        } else {
+            try {
+                app.toastShow('Form data Error',roleValidationResult.messages[0].message,{closable:true,type:"error"})
+            } catch (error) {}
+        }
+
+      
+    }
+
+    function deleteRole(uuid) {
+        let result = $.ajax({
+            type:"DELETE",
+            url:"<%= prefix %>/role?uuid="+uuid,
+        })
+        .done(function() {      
+            setTimeout(() =>{
+                app.setViewForPendingOperation('content_view')
+                htmx.ajax('GET', '/<%= prefix %>/roles', {target:'#content_view', swap:'innerHTML'})
+                app.drawer.hide();
+                app.dialog.hide()
+                app.toastShow('Deleted','Role deleted successfully.',{type:"info"}) 
+            },1000)   
+        })
+    
+    }    
+
+</script>
+<% if (!editing) { %>
+    <h3>Create Role</h3>
+<% } else { %>
+    <sl-alert open>
+        <strong>Editing Role</strong><br />
+        <%= role.name %>
+      </sl-alert>
+
+<% } %>
+    <sl-tab-group id="role_form_tab_group">
+        <sl-tab slot="nav" panel="general">General</sl-tab>
+        <% if (editing) { %>
+            <sl-tab slot="nav" panel="operations">Operations</sl-tab>
+         
+        <% } %>
+    
+        <sl-tab-panel name="general"> 
+            <%- roleFieldRender("role","name",role.name,roleMetadata.name) %>          
+        </sl-tab-panel>
+
+        <% if (editing) { %>
+            <sl-tab-panel name="operations">
+                <sl-details summary="Delete">
+                    <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete Role','Are you sure to delete the role <strong><%= role.name %></strong> ?','deleteRole(`<%= role.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete Role</button>
+                    <br>
+                </sl-details>
+    
+            </sl-tab-panel>
+         
+        <% } %>
+        
+    </sl-tab-group>
+
+    <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+        <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitRole(this)">Save</sl-button>
+    </div>
+
+<script>
+    document.getElementById('role_form_tab_group').show('general')
+
+</script>
