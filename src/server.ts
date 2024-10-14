@@ -10,7 +10,7 @@ import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
 
-import {AuthorizerCasbin} from "./services/authorizer_casbin";
+import {AuthorizerCasbinMongo as AuthorizerCasbin} from "./services/authorizer_casbin_mongo";
 
 import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
 export let globalEntityManager : EntityManager

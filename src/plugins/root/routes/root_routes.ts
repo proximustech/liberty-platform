@@ -14,7 +14,7 @@ let getRouter = (viewVars: any) => {
         try {
             if (ctx.isAuthenticated()) {
                 // @ts-ignore
-                await ctx.authorizer.authorize("aldo","data2","write",undefined)
+                await ctx.authorizer.authorize("alice","data2","write",undefined)
                 await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
                 viewVars.user = ctx.session.passport.user
                 return ctx.render('plugins/root/views/root', viewVars);

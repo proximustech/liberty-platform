@@ -12,6 +12,7 @@ npm install koa-session
 npm install koa-passport
 npm install passport-local
 npm install casbin
+npm install --save --legacy-peer-deps casbin-mongodb-adapter
 npm install koa2-swagger-ui
 npm install yamljs
 npm install "@koa/ejs"

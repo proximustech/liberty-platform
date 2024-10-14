@@ -1,7 +1,7 @@
 import {IAuthorizer} from "../interfaces/authorizer_interface"
 import { newEnforcer } from 'casbin';
 
-export class AuthorizerCasbin implements IAuthorizer {
+export class AuthorizerCasbinFile implements IAuthorizer {
 
     enforcer:any
 
