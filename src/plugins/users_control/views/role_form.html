@@ -3,6 +3,32 @@
     app.module_data.role_form.role=JSON.parse(`<%- JSON.stringify(role) %>`)
     app.module_data.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- roleValidateFunction %>`)
+
+    app.module_data.permissionsSchema = {}
+
+    app.module_data.renderPluginSchemaConfig = (pluginSchemaConfig) => {
+        let permissionsHTML = ""
+        pluginSchemaConfig.schema.forEach(permissionConfig => {
+            permissionsHTML += `
+            <div class="alert alert-primary" role="alert">
+                <strong>${permissionConfig.resource.charAt(0).toUpperCase() + permissionConfig.resource.slice(1)}: </strong><br>
+
+            `
+            permissionConfig.permissions.forEach(permission => {
+                permissionsHTML += `
+                    <input type="checkbox"> ${permission.charAt(0).toUpperCase() + permission.slice(1)} <br>
+                `
+            });
+            permissionsHTML += "</div>"
+        });
+        let element = document.createElement("div");
+        element.innerHTML = `
+            <sl-details summary="${pluginSchemaConfig.label}">
+                ${permissionsHTML}
+            </sl-details>        
+        `
+        document.getElementById("permissions").appendChild(element)
+    }    
    
     function submitRole(triggerElement) {
 
@@ -76,6 +102,7 @@
 <% } %>
     <sl-tab-group id="role_form_tab_group">
         <sl-tab slot="nav" panel="general">General</sl-tab>
+        <sl-tab slot="nav" panel="permissions">Permissions</sl-tab>
         <% if (editing) { %>
             <sl-tab slot="nav" panel="operations">Operations</sl-tab>
          
@@ -83,6 +110,9 @@
     
         <sl-tab-panel name="general"> 
             <%- roleFieldRender("role","name",role.name,roleMetadata.name) %>          
+        </sl-tab-panel>
+        <sl-tab-panel id="permissions" name="permissions">
+            <%- permissionsModulesContent %> 
         </sl-tab-panel>
 
         <% if (editing) { %>
@@ -105,5 +135,9 @@
 
 <script>
     document.getElementById('role_form_tab_group').show('general')
+
+    for (const [plugin_name, pluginSchemaConfig] of Object.entries(app.module_data.permissionsSchema)) {
+        app.module_data.renderPluginSchemaConfig(pluginSchemaConfig)
+    }
 
 </script>

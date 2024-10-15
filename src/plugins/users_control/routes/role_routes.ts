@@ -2,6 +2,8 @@ import { Context } from "koa";
 import Router from "koa-router"
 import { RoleService } from "../services/RoleService";
 import { RoleDataObject,RoleDataObjectSpecs,RoleDataObjectValidator } from "../dataObjects/RoleDataObject";
+import { DynamicViews } from "../../../services/dynamic_views_service";
+import { dynamicViewsDefinition } from "../values/dynamic_views"
 
 import koaBody from 'koa-body';
 
@@ -24,6 +26,8 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             let uuid:any = ctx.request.query.uuid || ""
             let role:RoleDataObject = new RoleDataObject()
             let roleService = new RoleService()
+            viewVars.permissionsModulesContent = ""
+            await DynamicViews.addViewVarContent(dynamicViewsDefinition,"role_form","permissionsModulesContent",viewVars,ctx)
 
             if (uuid !=="") {
                 role = await roleService.getByUuId(uuid) 
