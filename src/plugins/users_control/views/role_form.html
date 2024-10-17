@@ -4,9 +4,12 @@
     app.module_data.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- roleValidateFunction %>`)
 
+    app.module_data.role_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
+    eval(`<%- userHasPermissionOnElement %>`)
+
     app.module_data.permissionsSchema = {}
 
-    app.module_data.renderPluginSchemaConfig = (pluginSchemaConfig) => {
+    app.module_data.renderPluginSchemaConfig = (pluginName,pluginSchemaConfig) => {
         let permissionsHTML = ""
         pluginSchemaConfig.schema.forEach(permissionConfig => {
             permissionsHTML += `
@@ -15,8 +18,13 @@
 
             `
             permissionConfig.permissions.forEach(permission => {
+                let checked = ""
+                if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.userPermissions,`${pluginName}.${permissionConfig.resource}`,permission)) {
+                    checked = "checked"
+                }
+
                 permissionsHTML += `
-                    <input type="checkbox"> ${permission.charAt(0).toUpperCase() + permission.slice(1)} <br>
+                    <input id="${pluginName}.${permissionConfig.resource}" type="checkbox" data-role="permission" value="${permission}" ${checked}> ${permission.charAt(0).toUpperCase() + permission.slice(1)} <br>
                 `
             });
             permissionsHTML += "</div>"
@@ -36,6 +44,15 @@
         let roleValidationResult = app.module_data.role_form.roleValidateFunction(role,app.module_data.role_form.roleValidateSchema)
        
         if (roleValidationResult.isValid) {
+
+            let permissionElements = Array.from(document.querySelectorAll('[data-role="permission"]'))
+            let permissions = []
+            permissionElements.forEach(element => {
+                permissions.push({"resource":element.id,"permission":element.value,"enabled":element.checked})
+            });
+
+            role.permissions=permissions
+
             app.setElementForPendingOperation(triggerElement)
             let result = $.ajax({
                 type:"POST",
@@ -136,8 +153,8 @@
 <script>
     document.getElementById('role_form_tab_group').show('general')
 
-    for (const [plugin_name, pluginSchemaConfig] of Object.entries(app.module_data.permissionsSchema)) {
-        app.module_data.renderPluginSchemaConfig(pluginSchemaConfig)
+    for (const [pluginName, pluginSchemaConfig] of Object.entries(app.module_data.permissionsSchema)) {
+        app.module_data.renderPluginSchemaConfig(pluginName,pluginSchemaConfig)
     }
 
 </script>

@@ -5,7 +5,7 @@ import { Uuid } from "../../../services/utilities";
 
 export class RoleService {
     
-    private dataBaseName = "lf_plugin"
+    private dataBaseName = "liberty_platform"
     private collectionName = "roles"
     private mongoClient:MongoClient
     private mongoService:MongoService

@@ -24,8 +24,8 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
 
     async authorize (subject: any, element: any, action: any, environment: any) {
 
-        this.enforcer.addPolicy('data2_admin','data2', 'write')
-        this.enforcer.addGroupingPolicy('alice', 'data2_admin')
+        //this.enforcer.addPolicy('data2_admin','data2', 'write')
+        //this.enforcer.addGroupingPolicy('alice', 'data2_admin')
 
         if ((await this.enforcer.enforce(subject, element, action)) === true) {
             // permit alice to read data1

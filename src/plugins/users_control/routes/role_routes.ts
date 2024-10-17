@@ -4,6 +4,7 @@ import { RoleService } from "../services/RoleService";
 import { RoleDataObject,RoleDataObjectSpecs,RoleDataObjectValidator } from "../dataObjects/RoleDataObject";
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
+import { UserHasPermissionOnElement } from "../../users_control/services/UserPermissionsService"
 
 import koaBody from 'koa-body';
 
@@ -44,7 +45,11 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             viewVars.roleFieldRender = RoleDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.roleValidateSchema = RoleDataObjectValidator.validateSchema
             viewVars.roleValidateFunction = "app.module_data.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
+            viewVars.userPermissions = await ctx.authorizer.enforcer.getPermissionsForUser(ctx.session.passport.user.uuid)
+            viewVars.userHasPermissionOnElement = "app.module_data.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
+            //let result = UserHasPermissionOnElement(viewVars.userPermissions,"alva","read")
+            
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);
         } catch (error) {
             console.error(error)
@@ -52,8 +57,13 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
     })    
 
     router.post('/role',koaBody(), async (ctx:Context) => {
+
+        let body = JSON.parse(ctx.request.body.json)
+        let permissions = body.permissions
+        delete body.permissions
+
         const roleService = new RoleService()
-        let role = (JSON.parse(ctx.request.body.json) as RoleDataObject)
+        let role = (body as RoleDataObject)
 
         let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
 
@@ -65,12 +75,20 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
                 }                
             } else {
 
-                roleService.create(role)
                 ctx.body = {
                     status: 'success',
                 }
                 
             }
+
+            permissions.forEach(async (permission:any) => {
+                if (permission.enabled) {
+                    let result:Boolean = await ctx.authorizer.enforcer.addPolicy(ctx.session.passport.user.uuid,permission.resource, permission.permission)
+                }
+                else{                    
+                    let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,ctx.session.passport.user.uuid,permission.resource,permission.permission)
+                }
+            });
             
         } else {
             ctx.status=400
