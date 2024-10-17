@@ -45,10 +45,9 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             viewVars.roleFieldRender = RoleDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.roleValidateSchema = RoleDataObjectValidator.validateSchema
             viewVars.roleValidateFunction = "app.module_data.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
-            viewVars.userPermissions = await ctx.authorizer.enforcer.getPermissionsForUser(ctx.session.passport.user.uuid)
+            viewVars.rolePermissions = await ctx.authorizer.enforcer.getPermissionsForUser(role.uuid)
+            //viewVars.userPermissions = await ctx.authorizer.enforcer.getPermissionsForUser(ctx.session.passport.user.uuid)
             viewVars.userHasPermissionOnElement = "app.module_data.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
-
-            //let result = UserHasPermissionOnElement(viewVars.userPermissions,"alva","read")
             
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);
         } catch (error) {
@@ -64,6 +63,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
 
         const roleService = new RoleService()
         let role = (body as RoleDataObject)
+        let uuid = role.uuid
 
         let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
 
@@ -74,7 +74,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
                     status: 'success',
                 }                
             } else {
-
+                uuid = await roleService.create(role)
                 ctx.body = {
                     status: 'success',
                 }
@@ -83,10 +83,10 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
 
             permissions.forEach(async (permission:any) => {
                 if (permission.enabled) {
-                    let result:Boolean = await ctx.authorizer.enforcer.addPolicy(ctx.session.passport.user.uuid,permission.resource, permission.permission)
+                    let result:Boolean = await ctx.authorizer.enforcer.addPolicy(uuid,permission.resource, permission.permission)
                 }
                 else{                    
-                    let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,ctx.session.passport.user.uuid,permission.resource,permission.permission)
+                    let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid,permission.resource,permission.permission)
                 }
             });
             

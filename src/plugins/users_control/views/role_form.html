@@ -4,7 +4,7 @@
     app.module_data.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- roleValidateFunction %>`)
 
-    app.module_data.role_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
+    app.module_data.role_form.rolePermissions = JSON.parse(`<%- JSON.stringify(rolePermissions) %>`)
     eval(`<%- userHasPermissionOnElement %>`)
 
     app.module_data.permissionsSchema = {}
@@ -19,7 +19,7 @@
             `
             permissionConfig.permissions.forEach(permission => {
                 let checked = ""
-                if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.userPermissions,`${pluginName}.${permissionConfig.resource}`,permission)) {
+                if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.rolePermissions,`${pluginName}.${permissionConfig.resource}`,permission)) {
                     checked = "checked"
                 }
 

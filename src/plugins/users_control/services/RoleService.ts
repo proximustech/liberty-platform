@@ -31,6 +31,7 @@ export class RoleService {
         role.uuid = Uuid.createMongoUuId()
         role._id = new ObjectId(role.uuid)        
         const result = await this.collection.insertOne(role)
+        return role.uuid
     }
 
     async updateOne(role:RoleDataObject){
