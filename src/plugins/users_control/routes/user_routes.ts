@@ -77,6 +77,8 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
     router.post('/user',koaBody(), async (ctx:Context) => {
         const userService = new UserService()
         let user = (JSON.parse(ctx.request.body.json) as UserDataObject)
+        let uuid = user.uuid
+        let saveRolePolicy = false
 
         let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
 
@@ -85,7 +87,8 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
                 userService.updateOne(user)
                 ctx.body = {
                     status: 'success',
-                }                
+                }
+                saveRolePolicy = true
             } else {
                 if (user.password == passwordMask) {
                     ctx.status=400
@@ -95,11 +98,18 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
                     }                    
                 }
                 else {
-                    userService.create(user)
+                    uuid = await userService.create(user)
                     ctx.body = {
                         status: 'success',
                     }
+                    saveRolePolicy = true
 
+                }
+            }
+            if (saveRolePolicy) {
+                await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid)
+                if (user.role_uuid !== "") {
+                    await ctx.authorizer.enforcer.addGroupingPolicy(uuid,user.role_uuid)          
                 }
             }
             

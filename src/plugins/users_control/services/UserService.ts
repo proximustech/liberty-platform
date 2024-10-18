@@ -22,19 +22,20 @@ export class UserService {
     }
 
     getNew(){
-        let User = new UserDataObject()
-        return User
+        let user = new UserDataObject()
+        return user
     }
 
-    async create(User:UserDataObject){
-        User.uuid = Uuid.createMongoUuId()
-        User._id = new ObjectId(User.uuid)
+    async create(user:UserDataObject){
+        user.uuid = Uuid.createMongoUuId()
+        user._id = new ObjectId(user.uuid)
 
         for (let index = 0; index < this.hashcycles; index++) {
-            User.password=createHash('sha256').update(User.password).digest('base64');
+            user.password=createHash('sha256').update(user.password).digest('base64');
         }         
         
-        const result = await this.collection.insertOne(User)
+        const result = await this.collection.insertOne(user)
+        return user.uuid
     }
 
     async updateOne(user:UserDataObject){
