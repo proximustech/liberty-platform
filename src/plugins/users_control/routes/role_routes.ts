@@ -33,11 +33,13 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             if (uuid !=="") {
                 role = await roleService.getByUuId(uuid) 
                 viewVars.editing = true
+                viewVars.rolePermissions = await ctx.authorizer.enforcer.getPermissionsForUser(role.uuid)
                 
             }
             else {
                 viewVars.editing = false
                 viewVars.passwordValue=""
+                viewVars.rolePermissions = []
             }
 
             viewVars.role = role
@@ -45,7 +47,6 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             viewVars.roleFieldRender = RoleDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.roleValidateSchema = RoleDataObjectValidator.validateSchema
             viewVars.roleValidateFunction = "app.module_data.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
-            viewVars.rolePermissions = await ctx.authorizer.enforcer.getPermissionsForUser(role.uuid)
             //viewVars.userPermissions = await ctx.authorizer.enforcer.getPermissionsForUser(ctx.session.passport.user.uuid)
             viewVars.userHasPermissionOnElement = "app.module_data.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
             
