@@ -1,6 +1,7 @@
 import { Context } from "koa";
 import Router from "koa-router"
 import { UserService } from "../services/UserService";
+import { RoleService } from "../services/RoleService";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 
 import koaBody from 'koa-body';
@@ -45,6 +46,9 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             let uuid:any = ctx.request.query.uuid || ""
             let user:UserDataObject = new UserDataObject()
             let userService = new UserService()
+            
+            let roleService = new RoleService()
+            viewVars.roles = await roleService.getAll()
 
             if (uuid !=="") {
                 user = await userService.getByUuId(uuid) 

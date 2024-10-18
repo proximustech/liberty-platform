@@ -9,6 +9,7 @@ export class UserDataObject {
     name:string = ""
     last_name:string = ""
 
+    role_uuid:string = ""
 }
 
 export const passwordMask:string = "----------"
