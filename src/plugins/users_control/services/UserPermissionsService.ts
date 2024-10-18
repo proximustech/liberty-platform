@@ -1,3 +1,4 @@
+// Casbin user permissions
 export let UserHasPermissionOnElement=(userPermissions:any,element:string,permission:string) => {
     let result = false
     for (let index = 0; index < userPermissions.length; index++) {
