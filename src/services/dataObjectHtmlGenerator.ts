@@ -1,4 +1,4 @@
-export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:string,fieldValue:any,fieldMetadata:any) => {
+export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:string,fieldValue:any,fieldMetadata:any,enabled:Boolean=true) => {
     let html:any = ""
     let validationRequired:any = false
     let validationRegexp:any = ""
@@ -6,7 +6,11 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     let validationRequiredMessage:any = ""
     let label:any = ""
     let inputType:any = ""
-    let disabled = "disabled='disabled'"
+    let disabledParameter = "disabled='disabled'"
+
+    if (enabled) {
+        disabledParameter = ""
+    }
 
     validationRegexp = fieldMetadata["validationRegexp"]
     validationMessage = fieldMetadata["validationMessage"]
@@ -15,15 +19,10 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     label = fieldMetadata["label"]
     inputType = fieldMetadata["inputType"]
 
-    if ("disabled" in fieldMetadata) {
-        disabled = fieldMetadata["disabled"]
-    }
-
-
     if (inputType=="text") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <input id='${dataObjectName}_${fieldName}' class='form-control' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabled} />
+        <input id='${dataObjectName}_${fieldName}' class='form-control' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} />
         <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
         <br>
 
@@ -56,7 +55,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     else if (inputType=="password") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <sl-input id='${dataObjectName}_${fieldName}' type="password" value='${fieldValue}' password-toggle oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabled} ></sl-input>
+        <sl-input id='${dataObjectName}_${fieldName}' type="password" value='${fieldValue}' password-toggle oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} ></sl-input>
         <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
         <br>
 
@@ -89,7 +88,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     else if (inputType=="text_area") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <textarea id='${dataObjectName}_${fieldName}' class='form-control' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabled} >${fieldValue}</textarea>
+        <textarea id='${dataObjectName}_${fieldName}' class='form-control' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} >${fieldValue}</textarea>
         <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
         <br>
 
@@ -122,7 +121,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     else if (inputType=="switch") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <input id="${dataObjectName}_${fieldName}" class="form-check-input" type="checkbox" role="switch" onchange="${dataObjectName}_${fieldName}_listener(this)" ${disabled} >
+        <input id="${dataObjectName}_${fieldName}" class="form-check-input" type="checkbox" role="switch" onchange="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} >
         <br>
 
         <script>
