@@ -19,7 +19,7 @@
             `
             permissionConfig.permissions.forEach(permission => {
                 let checked = ""
-                if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.rolePermissions,`${pluginName}.${permissionConfig.resource}`,permission)) {
+                if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.rolePermissions,[`${pluginName}.${permissionConfig.resource}`],[permission])) {
                     checked = "checked"
                 }
 

@@ -1,14 +1,36 @@
 // Casbin user permissions
-export let UserHasPermissionOnElement=(userPermissions:any,element:string,permission:string) => {
+export let UserHasPermissionOnElement=(userPermissions:any,elements:Array<string>,permissions:Array<string>) => {
     let result = false
-    for (let index = 0; index < userPermissions.length; index++) {
-        const rule = userPermissions[index]
+    let continueLoop = true
+    for (let userPermissionIndex = 0; userPermissionIndex < userPermissions.length; userPermissionIndex++) {
+        const rule = userPermissions[userPermissionIndex]
         const ruleElement = rule[1]
         const rulePermission = rule[2]
-        if (ruleElement === element && rulePermission === permission) {
-            result = true
-            break
+
+        for (let elementsIndex = 0; elementsIndex < elements.length; elementsIndex++) {
+            const element = elements[elementsIndex];
+            
+            for (let permissionsIndex = 0; permissionsIndex < permissions.length; permissionsIndex++) {
+                const permission = permissions[permissionsIndex];
+                
+                if (ruleElement === element && rulePermission === permission && continueLoop) {
+                    result = true
+                    continueLoop = false
+                    break
+                }
+
+                if (!continueLoop) {
+                    break
+                }                
+
+            }
+
+            if (!continueLoop) {
+                break
+            }
+
         }
+
         
     }
 
