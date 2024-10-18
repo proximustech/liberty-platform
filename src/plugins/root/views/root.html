@@ -270,7 +270,7 @@
               app.top_menu.insertAdjacentHTML("afterbegin",html)
             } 
 
-            app.modules_menu.s_appendItem = (title,module_name,innerHtml) => {
+            app.modules_menu.bootstrap_s_appendItem = (title,module_name,innerHtml) => {
               // Chcek This item will be the first item in order to show the content
               let headerCollapsed = "collapsed"
               let show = ""
@@ -292,6 +292,24 @@
                     </div>
                   </div>
                 </div>              
+              `
+              app.modules_menu.insertAdjacentHTML("beforeend",html)
+              try{
+                document.getElementById(`${module_name}_module_menu_content`).style.display="block"
+              }catch{}
+            }
+            app.modules_menu.s_appendItem = (title,module_name,innerHtml) => {
+              // Chcek This item will be the first item in order to show the content
+              let open = ""
+              if (app.modules_menu.innerHTML==="") {
+                open="open"
+              }
+
+              let html = `
+                <sl-details summary="${title}" ${open}>
+                  ${innerHtml}
+                </sl-details>
+                <div style="height:5px"></div>
               `
               app.modules_menu.insertAdjacentHTML("beforeend",html)
               try{
