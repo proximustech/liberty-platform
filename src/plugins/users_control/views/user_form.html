@@ -95,13 +95,15 @@
             <%- userFieldRender("user","name",user.name,userMetadata.name) %>    
             <%- userFieldRender("user","last_name",user.last_name,userMetadata.last_name) %>         
         
-            <label style='margin-bottom:7px;font-size:17px'>Role</label>
-            <select id="roles" class="js-example-basic-single" name="role" style="width:100%" onchange="app.module_data.setRole(this)" >
-                <option value="" >No Role</option>
-                <% roles.forEach(role => { %>
-                    <option value="<%= role.uuid %>" <% if(user.role_uuid === role.uuid){ %> selected <% } %> ><%= role.name %></option>
-                <% }) %>
-            </select>
+            <% if (editing && !accountSettings) { %>
+                <label style='margin-bottom:7px;font-size:17px'>Role</label>
+                <select id="roles" class="js-example-basic-single" name="role" style="width:100%" onchange="app.module_data.setRole(this)" >
+                    <option value="" >No Role</option>
+                    <% roles.forEach(role => { %>
+                        <option value="<%= role.uuid %>" <% if(user.role_uuid === role.uuid){ %> selected <% } %> ><%= role.name %></option>
+                    <% }) %>
+                </select>
+            <% } %>
 
         </sl-tab-panel>
 
