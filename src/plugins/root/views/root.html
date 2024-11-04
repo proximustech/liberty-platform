@@ -306,7 +306,8 @@
               }
 
               let html = `
-                <sl-details summary="${title}" ${open}>
+                <sl-details ${open}>
+                  <span slot="summary">${title}</span>
                   ${innerHtml}
                 </sl-details>
                 <div style="height:5px"></div>
