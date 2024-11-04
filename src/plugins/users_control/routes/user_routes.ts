@@ -10,6 +10,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
 
 
     router.get('/users', async (ctx:Context) => {
+        viewVars.prefix = prefix
         try {
             const userService = new UserService()
             viewVars.users = await userService.getAll()            
@@ -20,6 +21,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
     })
 
     router.get('/account_settings', async (ctx:Context) => {
+        viewVars.prefix = prefix
         try {
 
             let userService = new UserService()
@@ -41,6 +43,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
     })   
 
     router.get('/user_form', async (ctx:Context) => {
+        viewVars.prefix = prefix
         try {
 
             let uuid:any = ctx.request.query.uuid || ""

@@ -12,6 +12,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
 
 
     router.get('/roles', async (ctx:Context) => {
+        viewVars.prefix = prefix
         try {
             const roleService = new RoleService()
             viewVars.roles = await roleService.getAll()            
@@ -22,6 +23,7 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
     })
 
     router.get('/role_form', async (ctx:Context) => {
+        viewVars.prefix = prefix
         try {
 
             let uuid:any = ctx.request.query.uuid || ""
