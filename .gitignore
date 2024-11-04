@@ -1,5 +1,9 @@
 **/*.sqlite
 node_modules
+
 tests.js
+
 src/plugins/_*
+src/static/_*
+
 host.png
