@@ -12,7 +12,7 @@ export class UserService {
     private mongoService:MongoService
     private dataBase:Db
     private collection:Collection
-    private hashcycles:number = 1000
+    private hashcycles:number = 100
 
     constructor(){
         this.mongoService = new MongoService()
