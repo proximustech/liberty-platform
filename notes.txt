@@ -44,6 +44,9 @@ npx mikro-orm seeder:run
 ./node_modules/.bin/tsc -v
 ./node_modules/.bin/tsc --init
 
+#ts-node globally
+npm install -g ts-node typescript '@types/node'
+
 # Jest Doc
 https://jestjs.io/docs/getting-started
 https://jestjs.io/docs/configuration
