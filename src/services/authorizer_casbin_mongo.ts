@@ -1,20 +1,19 @@
 import {IAuthorizer} from "../interfaces/authorizer_interface"
 import { newEnforcer,Enforcer } from 'casbin';
 import { MongoAdapter } from 'casbin-mongodb-adapter';
-import { env } from "node:process";
 
 export class AuthorizerCasbinMongo implements IAuthorizer {
 
     enforcer:Enforcer
 
     constructor(){
-        this.readConfig()
         this.enforcer = new Enforcer();
+        this.readConfig()
     }
     
     private async readConfig(){
         const adapter = await MongoAdapter.newAdapter({
-            uri: (env.CASBIN_MONGO_URI as string),
+            uri: (process.env.CASBIN_MONGO_URI as string),
             collection: 'casbin',
             database: 'liberty_platform',
         });   
