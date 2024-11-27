@@ -14,7 +14,12 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
         viewVars.prefix = prefix
         try {
             const userService = new UserService()
-            viewVars.users = await userService.getAll()            
+            viewVars.users = await userService.getAll()
+            
+            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+            viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
+            viewVars.userHasPermissionOnElement = "app.module_data.users_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement            
+
             return ctx.render('plugins/users_control/views/users', viewVars);
         } catch (error) {
             console.error(error)

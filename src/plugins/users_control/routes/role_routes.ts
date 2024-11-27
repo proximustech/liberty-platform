@@ -15,7 +15,10 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
         viewVars.prefix = prefix
         try {
             const roleService = new RoleService()
-            viewVars.roles = await roleService.getAll()            
+            viewVars.roles = await roleService.getAll()
+            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+            viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
+            viewVars.userHasPermissionOnElement = "app.module_data.roles_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement         
             return ctx.render('plugins/'+prefix+'/views/roles', viewVars);
         } catch (error) {
             console.error(error)
