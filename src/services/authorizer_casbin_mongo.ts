@@ -8,10 +8,9 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
 
     constructor(){
         this.enforcer = new Enforcer();
-        this.readConfig()
     }
     
-    private async readConfig(){
+    public async initialize(){
         const adapter = await MongoAdapter.newAdapter({
             uri: (process.env.CASBIN_MONGO_URI as string),
             collection: 'casbin',
@@ -26,15 +25,17 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
         //this.enforcer.addPolicy('data2_admin','data2', 'write')
         //this.enforcer.addGroupingPolicy('alice', 'data2_admin')
 
+        let authorized = false
+        
         if ((await this.enforcer.enforce(subject, element, action)) === true) {
-            // permit alice to read data1
-            console.log("authorization ok")
-        } else {
-            // deny the request, show an errori
-            console.log("authorization bad")
-        }
+            authorized = true
+        } 
 
-        return false
+        return authorized
+    };
+
+    async getSubjectPermissions (subject: any) {
+        return await this.enforcer.getPermissionsForUser(subject)
     };
     
 }

@@ -19,6 +19,7 @@ export let eventEmitter : EventEmitter
 (async () => {
 
   const authorizer: AuthorizerCasbin = new AuthorizerCasbin()
+  await authorizer.initialize()
 
   eventEmitter = new EventEmitter()
   const orm = await MikroORM.init();
