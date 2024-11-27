@@ -1,13 +1,16 @@
 <sl-tree id="permissions_module_menu_content" style="display: none;--indent-size:7px">
-    <sl-tree-item onclick="app.ajax('content_view','/users_control/users');app.app_menu_inteligentClose()" >
-      <sl-icon name="person" label="Settings"></sl-icon>
-      Users
-    </sl-tree-item>
-    
-    <sl-tree-item onclick="app.ajax('content_view','/users_control/roles');app.app_menu_inteligentClose()" >
-      <sl-icon name="people" label="Settings"></sl-icon>
-      Roles
-    </sl-tree-item>
+    <% if (UserHasPermissionOnElement(userPermissions,['users_control.user'],['read'])) { %>
+      <sl-tree-item onclick="app.ajax('content_view','/users_control/users');app.app_menu_inteligentClose()" >
+        <sl-icon name="person" label="Settings"></sl-icon>
+        Users
+      </sl-tree-item>
+    <% } %>
+    <% if (UserHasPermissionOnElement(userPermissions,['users_control.role'],['read'])) { %>
+      <sl-tree-item onclick="app.ajax('content_view','/users_control/roles');app.app_menu_inteligentClose()" >
+        <sl-icon name="people" label="Settings"></sl-icon>
+        Roles
+      </sl-tree-item>
+    <% } %>
 </sl-tree>
 
 <script>

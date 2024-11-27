@@ -4,7 +4,7 @@ import { RoleService } from "../services/RoleService";
 import { RoleDataObject,RoleDataObjectSpecs,RoleDataObjectValidator } from "../dataObjects/RoleDataObject";
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
-import { UserHasPermissionOnElement } from "../../users_control/services/UserPermissionsService"
+import { UserHasPermissionOnElement } from "../services/UserPermissionsService"
 
 import koaBody from 'koa-body';
 
@@ -49,7 +49,8 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             viewVars.roleFieldRender = RoleDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.roleValidateSchema = RoleDataObjectValidator.validateSchema
             viewVars.roleValidateFunction = "app.module_data.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
-            //viewVars.userPermissions = await ctx.authorizer.enforcer.getPermissionsForUser(ctx.session.passport.user.uuid)
+            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+            viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
             
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);

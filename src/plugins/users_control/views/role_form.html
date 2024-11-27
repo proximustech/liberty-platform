@@ -7,6 +7,9 @@
     app.module_data.role_form.rolePermissions = JSON.parse(`<%- JSON.stringify(rolePermissions) %>`)
     eval(`<%- userHasPermissionOnElement %>`)
 
+    app.module_data.role_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
+    eval(`<%- userHasPermissionOnElement %>`)     
+
     app.module_data.permissionsSchema = {}
 
     app.module_data.renderPluginSchemaConfig = (pluginName,pluginSchemaConfig) => {
@@ -17,14 +20,18 @@
                 <strong>${permissionConfig.resource.charAt(0).toUpperCase() + permissionConfig.resource.slice(1)}: </strong><br>
 
             `
+            let disabled="disabled='disabled'"
+            if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.userPermissions,[`<%= prefix %>.role`],['write'])) {
+                disabled = ""
+            }   
             permissionConfig.permissions.forEach(permission => {
                 let checked = ""
                 if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.rolePermissions,[`${pluginName}.${permissionConfig.resource}`],[permission])) {
                     checked = "checked"
-                }
+                }             
 
                 permissionsHTML += `
-                    <input id="${pluginName}.${permissionConfig.resource}" type="checkbox" data-role="permission" value="${permission}" ${checked}> ${permission.charAt(0).toUpperCase() + permission.slice(1)} <br>
+                    <input id="${pluginName}.${permissionConfig.resource}" type="checkbox" data-role="permission" value="${permission}" ${checked} ${disabled}> ${permission.charAt(0).toUpperCase() + permission.slice(1)} <br>
                 `
             });
             permissionsHTML += "</div>"
@@ -122,19 +129,20 @@
     <sl-tab-group id="role_form_tab_group">
         <sl-tab slot="nav" panel="general">General</sl-tab>
         <sl-tab slot="nav" panel="permissions">Permissions</sl-tab>
-        <% if (editing) { %>
+        <% if (editing && UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
             <sl-tab slot="nav" panel="operations">Operations</sl-tab>
          
         <% } %>
     
-        <sl-tab-panel name="general"> 
-            <%- roleFieldRender("role","name",role.name,roleMetadata.name) %>          
+        <sl-tab-panel name="general">
+            <% let fieldsEnabled = false; if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { fieldsEnabled = true }%>
+            <%- roleFieldRender("role","name",role.name,roleMetadata.name,fieldsEnabled) %>          
         </sl-tab-panel>
         <sl-tab-panel id="permissions" name="permissions">
             <%- permissionsModulesContent %> 
         </sl-tab-panel>
 
-        <% if (editing) { %>
+        <% if (editing && UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
             <sl-tab-panel name="operations">
                 <sl-details summary="Delete">
                     <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete Role','Are you sure to delete the role <strong><%= role.name %></strong> ?','deleteRole(`<%= role.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete Role</button>
@@ -149,7 +157,9 @@
 
     <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
         <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitRole(this)">Save</sl-button>
+        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])){ %>
+            <button type="button" class="btn btn-primary" onclick="submitRole(this)">Save</sl-button>
+        <% } %>
     </div>
 
 <script>

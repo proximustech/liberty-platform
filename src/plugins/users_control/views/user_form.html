@@ -4,6 +4,9 @@
     app.module_data.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- userValidateFunction %>`)
     app.module_data.accountSettings = <%= accountSettings %>
+
+    app.module_data.user_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
+    eval(`<%- userHasPermissionOnElement %>`) 
    
     function submitUser(triggerElement) {
 
@@ -85,16 +88,17 @@
 <% } %>
     <sl-tab-group id="user_form_tab_group">
         <sl-tab slot="nav" panel="general">General</sl-tab>
-        <% if (editing && !accountSettings) { %>
+        <% if (editing && !accountSettings && UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
             <sl-tab slot="nav" panel="operations">Operations</sl-tab>
          
         <% } %>
     
         <sl-tab-panel name="general">
-            <%- userFieldRender("user","email",user.email,userMetadata.email) %>    
-            <%- userFieldRender("user","password",passwordValue,userMetadata.password) %>    
-            <%- userFieldRender("user","name",user.name,userMetadata.name) %>    
-            <%- userFieldRender("user","last_name",user.last_name,userMetadata.last_name) %>         
+            <% let fieldsEnabled = false; if (UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { fieldsEnabled = true }%>
+            <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>    
+            <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>    
+            <%- userFieldRender("user","name",user.name,userMetadata.name,fieldsEnabled) %>    
+            <%- userFieldRender("user","last_name",user.last_name,userMetadata.last_name,fieldsEnabled) %>         
         
             <% if (!accountSettings) { %>
                 <label style='margin-bottom:7px;font-size:17px'>Role</label>
@@ -108,7 +112,7 @@
 
         </sl-tab-panel>
 
-        <% if (editing && !accountSettings) { %>
+        <% if (editing && !accountSettings && UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
             <sl-tab-panel name="operations">
                 <sl-details summary="Delete">
                     <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete User','Are you sure to delete the user <strong><%= user.name %></strong> ?','deleteUser(`<%= user.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete User</button>
@@ -123,7 +127,9 @@
 
     <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
         <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitUser(this)">Save</sl-button>
+        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])){ %>
+            <button type="button" class="btn btn-primary" onclick="submitUser(this)">Save</sl-button>
+        <% } %>
     </div>
 
 <script>

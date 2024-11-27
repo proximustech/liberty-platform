@@ -3,6 +3,7 @@ import Router from "koa-router"
 import { UserService } from "../services/UserService";
 import { RoleService } from "../services/RoleService";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
+import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 
 import koaBody from 'koa-body';
 
@@ -70,6 +71,10 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
             viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
             viewVars.userValidateFunction = "app.module_data.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
+
+            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+            viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
+            viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
