@@ -31,9 +31,11 @@
         });
         let element = document.createElement("div");
         element.innerHTML = `
-            <sl-details summary="${pluginSchemaConfig.label}">
-                ${permissionsHTML}
-            </sl-details>        
+            <div style='margin-bottom:10px'>
+                <sl-details summary="${pluginSchemaConfig.label}">
+                    ${permissionsHTML}
+                </sl-details>        
+            </div>
         `
         document.getElementById("permissions").appendChild(element)
     }    
