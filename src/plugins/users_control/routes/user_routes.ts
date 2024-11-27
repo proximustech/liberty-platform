@@ -133,7 +133,8 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
         let uuid:any = ctx.request.query.uuid || ""
 
         if (uuid !=="") {
-            await userService.deleteByUuId(uuid)    
+            await userService.deleteByUuId(uuid)
+            await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid)
             ctx.body = {
                 status: 'success',
             }
