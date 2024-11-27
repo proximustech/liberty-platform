@@ -9,7 +9,8 @@
 
         let user = app.module_data.user_form.user
         let userValidationResult = app.module_data.user_form.userValidateFunction(user,app.module_data.user_form.userValidateSchema)
-       
+        
+        //TODO: filter for scenarios
         if (userValidationResult.isValid) {
             app.setElementForPendingOperation(triggerElement)
             let result = $.ajax({

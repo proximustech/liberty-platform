@@ -101,6 +101,8 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
                     }                    
                 }
                 else {
+                    //TODO: Check permissions on create or update
+                    //TODO: Look for duplicate
                     uuid = await userService.create(user)
                     ctx.body = {
                         status: 'success',
