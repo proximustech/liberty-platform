@@ -94,7 +94,7 @@
         <% } %>
     
         <sl-tab-panel name="general">
-            <% let fieldsEnabled = false; if (UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { fieldsEnabled = true }%>
+            <% let fieldsEnabled = false; if (accountSettings || UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { fieldsEnabled = true }%>
             <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>    
             <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>    
             <%- userFieldRender("user","name",user.name,userMetadata.name,fieldsEnabled) %>    
@@ -127,7 +127,7 @@
 
     <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
         <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
-        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])){ %>
+        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write']) || accountSettings){ %>
             <button type="button" class="btn btn-primary" onclick="submitUser(this)">Save</sl-button>
         <% } %>
     </div>
