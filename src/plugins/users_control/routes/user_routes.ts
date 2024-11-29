@@ -94,8 +94,14 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
         let saveRolePolicy = false
 
         let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
-
-        if (userValidationResult.isValid) {
+        if (await userService.fieldValueExists(user.uuid,"email",user.email)){
+            ctx.status=409
+            ctx.body = {
+                status: 'error',
+                messages: [{field:"email",message:"E-Mail already exists"}]
+            }              
+        }
+        else if (userValidationResult.isValid) {
             if (user.uuid !== "") {
                 userService.updateOne(user)
                 ctx.body = {
@@ -112,7 +118,6 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
                 }
                 else {
                     //TODO: Check permissions on create or update
-                    //TODO: Look for duplicate
                     uuid = await userService.create(user)
                     ctx.body = {
                         status: 'success',

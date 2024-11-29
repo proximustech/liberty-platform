@@ -74,7 +74,14 @@ module.exports = function(router:Router,viewVars:any,prefix:string){
 
         let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
 
-        if (roleValidationResult.isValid) {
+        if (await roleService.fieldValueExists(role.uuid,"name",role.name)){
+            ctx.status=409
+            ctx.body = {
+                status: 'error',
+                messages: [{field:"name",message:"Name already exists"}]
+            } 
+        }
+        else if (roleValidationResult.isValid) {
             if (role.uuid !== "") {
                 roleService.updateOne(role)
                 ctx.body = {
