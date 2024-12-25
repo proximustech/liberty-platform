@@ -66,76 +66,106 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.post('/role',koaBody(), async (ctx:Context) => {
 
-        let body = JSON.parse(ctx.request.body.json)
-        let permissions = body.permissions
-        delete body.permissions
+        let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+        let processAllowed = UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])
+        if (!processAllowed) {
 
-        const roleService = new RoleService()
-        let role = (body as RoleDataObject)
-        let uuid = role.uuid
-
-        let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
-
-        if (await roleService.fieldValueExists(role.uuid,"name",role.name)){
-            ctx.status=409
+            ctx.status=401
             ctx.body = {
                 status: 'error',
-                messages: [{field:"name",message:"Name already exists"}]
-            } 
+                messages: [{message:"Operation NOT Allowed"}]
+            }         
+            console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
+
         }
-        else if (roleValidationResult.isValid) {
-            if (role.uuid !== "") {
-                roleService.updateOne(role)
+        else {
+
+            let body = JSON.parse(ctx.request.body.json)
+            let permissions = body.permissions
+            delete body.permissions
+
+            const roleService = new RoleService()
+            let role = (body as RoleDataObject)
+            let uuid = role.uuid
+
+            let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
+
+            if (await roleService.fieldValueExists(role.uuid,"name",role.name)){
+                ctx.status=409
                 ctx.body = {
-                    status: 'success',
-                }                
+                    status: 'error',
+                    messages: [{field:"name",message:"Name already exists"}]
+                } 
+            }
+            else if (roleValidationResult.isValid) {
+                if (role.uuid !== "") {
+                    roleService.updateOne(role)
+                    ctx.body = {
+                        status: 'success',
+                    }                
+                } else {
+                    uuid = await roleService.create(role)
+                    ctx.body = {
+                        status: 'success',
+                    }
+                    
+                }
+
+                permissions.forEach(async (permission:any) => {
+                    if (permission.enabled) {
+                        let result:Boolean = await ctx.authorizer.enforcer.addPolicy(uuid,permission.resource, permission.permission)
+                    }
+                    else{                    
+                        let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid,permission.resource,permission.permission)
+                    }
+                });
+                
             } else {
-                uuid = await roleService.create(role)
+                ctx.status=400
                 ctx.body = {
-                    status: 'success',
+                    status: 'error',
+                    messages: roleValidationResult.messages
                 }
                 
             }
-
-            permissions.forEach(async (permission:any) => {
-                if (permission.enabled) {
-                    let result:Boolean = await ctx.authorizer.enforcer.addPolicy(uuid,permission.resource, permission.permission)
-                }
-                else{                    
-                    let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid,permission.resource,permission.permission)
-                }
-            });
-            
-        } else {
-            ctx.status=400
-            ctx.body = {
-                status: 'error',
-                messages: roleValidationResult.messages
-            }
-            
         }
 
     })
 
     router.delete('/role',koaBody(), async (ctx:Context) => {
-        const roleService = new RoleService()
 
-        let uuid:any = ctx.request.query.uuid || ""
+        let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+        let processAllowed = UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])
+        if (!processAllowed) {
 
-        if (uuid !=="") {
-            await roleService.deleteByUuId(uuid)   
-            await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid) 
-            ctx.body = {
-                status: 'success',
-            }
-        }
-        else {
-            ctx.status=400
+            ctx.status=401
             ctx.body = {
                 status: 'error',
-                message: "Invalid Uuid"
-            }
+                messages: [{message:"Operation NOT Allowed"}]
+            }         
+            console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
 
+        }
+        else {
+
+            const roleService = new RoleService()
+            let uuid:any = ctx.request.query.uuid || ""
+
+            if (uuid !=="") {
+                await roleService.deleteByUuId(uuid)   
+                await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid) 
+                ctx.body = {
+                    status: 'success',
+                }
+            }
+            else {
+                ctx.status=400
+                ctx.body = {
+                    status: 'error',
+                    message: "Invalid Uuid"
+                }
+
+            }
         }
 
     })
