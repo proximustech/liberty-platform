@@ -28,7 +28,7 @@ export let eventEmitter : EventEmitter
   const app = new Koa()
   
   let getRouter={}
-  let viewVars:any = {} //TODO: remove viewVars from global
+  let appViewVars:any = {}
   let baseLanguage = "english"
   let selectedLanguage = "english"
 
@@ -46,28 +46,28 @@ export let eventEmitter : EventEmitter
 
         ctx.authorizer = authorizer
 
-        viewVars.breadcrumbs = []
+        appViewVars.breadcrumbs = []
         //let language = ctx.session.language || "english"
         //viewVars.language = language
         //let language = ctx.request.query.language
         let baseLanguageLabels = require('./languages/'+baseLanguage+'.js')
-        viewVars.language = selectedLanguage
+        appViewVars.language = selectedLanguage
         let languageLabels = require('./languages/'+selectedLanguage+'.js')
-        viewVars.labels = {...baseLanguageLabels.labels, ...languageLabels.labels};
+        appViewVars.labels = {...baseLanguageLabels.labels, ...languageLabels.labels};
 
         routePlugins.forEach(pluginName => {
           // @ts-ignore
           getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
           // @ts-ignore
-          app.use(getRouter.default(viewVars).routes())
+          app.use(getRouter.default(appViewVars).routes())
           try {
             let pluginBaseLanguageLabels = require("./plugins/"+pluginName+"/languages/"+baseLanguage+".js")
             try{
               let pluginSelectedLanguageLabels = require("./plugins/"+pluginName+"/languages/"+selectedLanguage+".js")
               let pluginLanguageLabels = {...pluginBaseLanguageLabels.labels, ...pluginSelectedLanguageLabels.labels};
-              viewVars.labels = {...viewVars.labels, ...pluginLanguageLabels};
+              appViewVars.labels = {...appViewVars.labels, ...pluginLanguageLabels};
             }catch(error){
-              viewVars.labels = {...viewVars.labels, ...pluginBaseLanguageLabels.labels};
+              appViewVars.labels = {...appViewVars.labels, ...pluginBaseLanguageLabels.labels};
             }
           } catch (error) {}
 
@@ -87,7 +87,7 @@ export let eventEmitter : EventEmitter
       // @ts-ignore
       getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
       // @ts-ignore
-      app.use(getRouter.default(viewVars).routes())
+      app.use(getRouter.default(appViewVars).routes())
     });    
 
     app.use(testRoutes.routes())

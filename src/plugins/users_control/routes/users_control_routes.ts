@@ -1,11 +1,11 @@
 import Router from "koa-router"
 
-let getRouter = (viewVars: any) => {
+let getRouter = (appViewVars: any) => {
     const prefix = 'users_control'
     let router = new Router({prefix: '/'+ prefix});
 
-    router = require("./user_routes.ts")(router,viewVars,prefix)
-    router = require("./role_routes.ts")(router,viewVars,prefix)
+    router = require("./user_routes.ts")(router,appViewVars,prefix)
+    router = require("./role_routes.ts")(router,appViewVars,prefix)
 
     return router
 }
