@@ -30,8 +30,13 @@ export class RoleService {
     async create(role:RoleDataObject){
         role.uuid = Uuid.createMongoUuId()
         role._id = new ObjectId(role.uuid)        
-        const result = await this.collection.insertOne(role)
-        return role.uuid
+        const result = await this.collection.insertOne(role,{writeConcern: {w: 1, j: true}})
+
+        if (result.insertedId == role._id && result.acknowledged) {
+            return role.uuid
+        }
+        else return "false"
+
     }
 
     async updateOne(role:RoleDataObject){
@@ -39,12 +44,20 @@ export class RoleService {
         const result = await this.collection.replaceOne(
             {uuid: role.uuid }, 
             role,
-            {upsert: false}
-        )        
+            {upsert: false,writeConcern: {w: 1, j: true}}
+        )
+        if (result.acknowledged && result.matchedCount == 1 ) {
+            return true
+        }
+        else return false                
     }
 
     async deleteByUuId(roleUuId:string){
         const result = await this.collection.deleteOne({ uuid: roleUuId })
+        if (result.deletedCount == 1 && result.acknowledged) {
+            return true
+        }
+        else return false            
     }
 
     async getByUuId(uuid:string) : Promise<RoleDataObject> {

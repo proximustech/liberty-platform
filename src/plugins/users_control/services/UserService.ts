@@ -34,8 +34,13 @@ export class UserService {
             user.password=createHash('sha256').update(user.password).digest('base64');
         }         
         
-        const result = await this.collection.insertOne(user)
-        return user.uuid
+        const result = await this.collection.insertOne(user,{writeConcern: {w: 1, j: true}})
+
+        if (result.insertedId == user._id && result.acknowledged) {
+            return user.uuid
+        }
+        else return "false"
+
     }
 
     async updateOne(user:UserDataObject){
@@ -57,12 +62,22 @@ export class UserService {
         const result = await this.collection.replaceOne(
             {uuid: user.uuid }, 
             user,
-            {upsert: false}
-        )        
+            {upsert: false,writeConcern: {w: 1, j: true}}
+        )
+
+        if (result.acknowledged && result.matchedCount == 1 ) {
+            return true
+        }
+        else return false
+
     }
 
     async deleteByUuId(UserUuId:string){
-        const result = await this.collection.deleteOne({ uuid: UserUuId })
+        const result = await this.collection.deleteOne({ uuid: UserUuId },{writeConcern: {w: 1, j: true}})
+        if (result.deletedCount == 1 && result.acknowledged) {
+            return true
+        }
+        else return false        
     }
 
     async getByUuId(uuid:string) : Promise<UserDataObject> {
@@ -95,7 +110,6 @@ export class UserService {
     }
 
     async getAll() : Promise<UserDataObject[]> {
-        //await this.processTest()
         const cursor = this.collection.find({});
         return (await cursor.toArray() as UserDataObject[])
     }

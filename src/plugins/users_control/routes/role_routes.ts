@@ -98,27 +98,51 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 } 
             }
             else if (roleValidationResult.isValid) {
+                let dbResultOk = false
                 if (role.uuid !== "") {
-                    roleService.updateOne(role)
-                    ctx.body = {
-                        status: 'success',
-                    }                
+                    dbResultOk = await roleService.updateOne(role)
+                    if (dbResultOk) {
+                        ctx.body = {
+                            status: 'success',
+                        }                
+                    }
+                    else {
+                        ctx.status=500
+                        ctx.body = {
+                            status: 'error',
+                            messages: [{message: "Data Unexpected Error"}]
+                        }
+                        console.log("DATABASE ERROR writing role "+role.uuid)                        
+                    }
                 } else {
                     uuid = await roleService.create(role)
-                    ctx.body = {
-                        status: 'success',
+                    if (uuid != "false") {
+                        ctx.body = {
+                            status: 'success',
+                        }
+                    }
+                    else {
+                        ctx.status=500
+                        ctx.body = {
+                            status: 'error',
+                            messages: [{message: "Data Unexpected Error"}]
+                        }
+                        console.log("DATABASE ERROR writing role "+role.uuid)                           
                     }
                     
                 }
 
-                permissions.forEach(async (permission:any) => {
-                    if (permission.enabled) {
-                        let result:Boolean = await ctx.authorizer.enforcer.addPolicy(uuid,permission.resource, permission.permission)
-                    }
-                    else{                    
-                        let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid,permission.resource,permission.permission)
-                    }
-                });
+                if (uuid != "false") {
+                    permissions.forEach(async (permission:any) => {
+                        if (permission.enabled) {
+                            let result:Boolean = await ctx.authorizer.enforcer.addPolicy(uuid,permission.resource, permission.permission)
+                        }
+                        else{                    
+                            let result:Boolean = await ctx.authorizer.enforcer.removeFilteredPolicy(0,uuid,permission.resource,permission.permission)
+                        }
+                    });
+                }
+
                 
             } else {
                 ctx.status=400

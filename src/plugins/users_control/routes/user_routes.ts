@@ -119,12 +119,23 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 }              
             }
             else if (userValidationResult.isValid) {
+                let dbResultOk = false
                 if (user.uuid !== "") {
-                    userService.updateOne(user)
-                    ctx.body = {
-                        status: 'success',
+                    dbResultOk = await userService.updateOne(user)
+                    if (dbResultOk) {
+                        ctx.body = {
+                            status: 'success',
+                        }
+                        saveRolePolicy = true
                     }
-                    saveRolePolicy = true
+                    else{
+                        ctx.status=500
+                        ctx.body = {
+                            status: 'error',
+                            messages: [{message: "Data Unexpected Error"}]
+                        }
+                        console.log("DATABASE ERROR writing user "+user.uuid)
+                    }
                 } else {
                     if (user.password == passwordMask) {
                         ctx.status=400
@@ -135,10 +146,20 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     }
                     else {
                         uuid = await userService.create(user)
-                        ctx.body = {
-                            status: 'success',
+                        if (uuid != "false") {
+                            ctx.body = {
+                                status: 'success',
+                            }
+                            saveRolePolicy = true
                         }
-                        saveRolePolicy = true
+                        else {
+                            ctx.status=500
+                            ctx.body = {
+                                status: 'error',
+                                messages: [{message: "Data Unexpected Error"}]
+                            }
+                            console.log("DATABASE ERROR writing user "+user.uuid)                             
+                        }
     
                     }
                 }
