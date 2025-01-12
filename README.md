@@ -1,3 +1,3 @@
 # Liberty Platform
 
-Platform for building Concurrent Responsive Web Applications 
+Platform for building Concurrent Responsive Web Applications .
