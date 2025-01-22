@@ -12,8 +12,8 @@ import { EventEmitter } from "node:events";
 
 import {AuthorizerCasbinMongo as AuthorizerCasbin} from "./services/authorizer_casbin_mongo";
 
-import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
-export let globalEntityManager : EntityManager
+//import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
+//export let globalEntityManager : EntityManager
 export let eventEmitter : EventEmitter
 
 (async () => {
@@ -22,9 +22,9 @@ export let eventEmitter : EventEmitter
   await authorizer.initialize()
 
   eventEmitter = new EventEmitter()
-  const orm = await MikroORM.init();
+  //const orm = await MikroORM.init();
 
-  globalEntityManager = orm.em
+  //globalEntityManager = orm.em
   const app = new Koa()
   
   let getRouter={}
@@ -91,7 +91,7 @@ export let eventEmitter : EventEmitter
     });    
 
     app.use(testRoutes.routes())
-    app.use((ctx, next) => RequestContext.create(orm.em, next));
+    //app.use((ctx, next) => RequestContext.create(orm.em, next));
     
     app.use(mount('/static',serve(path.join(__dirname, '/static'))))
     
