@@ -1,6 +1,10 @@
 export let routePlugins = [
-    'swagger',
+    '_liberty_flag',
+    '_assessor',
     'root',
+    'users_control'
+    /*
+    'swagger',
     'reactjs',
     'events',
     'ajax_views',
@@ -9,4 +13,5 @@ export let routePlugins = [
     'mikroorm',
     'dynamic_view_target',
     'middleware_target'
+    */
 ]
