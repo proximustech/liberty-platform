@@ -22,6 +22,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.users_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement            
 
+            userService.dispose()
             return ctx.render('plugins/users_control/views/users', viewVars);
         } catch (error) {
             console.error(error)
@@ -48,6 +49,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
+            userService.dispose()
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
             console.error(error)
@@ -87,6 +89,8 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
+            userService.dispose()
+            roleService.dispose()
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
             console.error(error)
@@ -181,7 +185,8 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     messages: userValidationResult.messages
                 }
                 
-            }            
+            }   
+            userService.dispose()         
 
         }
 
@@ -221,6 +226,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 }
 
             }
+            userService.dispose()
         }
 
     })

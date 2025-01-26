@@ -21,6 +21,8 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.roles_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement         
+
+            roleService.dispose()
             return ctx.render('plugins/'+prefix+'/views/roles', viewVars);
         } catch (error) {
             console.error(error)
@@ -58,6 +60,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
             
+            roleService.dispose()
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);
         } catch (error) {
             console.error(error)
@@ -152,6 +155,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 }
                 
             }
+            roleService.dispose()
         }
 
     })
@@ -190,6 +194,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 }
 
             }
+            roleService.dispose()
         }
 
     })

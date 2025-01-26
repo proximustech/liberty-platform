@@ -1,9 +1,12 @@
+import { IDisposable } from "../../../interfaces/disposable_interface";
+
 import { MongoService } from "./MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { RoleDataObject } from "../dataObjects/RoleDataObject";
 import { Uuid } from "../../../services/utilities";
 
-export class RoleService {
+
+export class RoleService implements IDisposable {
     
     private dataBaseName = "liberty_platform"
     private collectionName = "roles"
@@ -100,6 +103,10 @@ export class RoleService {
             }
         }
         return false
-    }  
+    }
+    
+    dispose(){
+        this.mongoService.dispose()
+    }      
 
 }

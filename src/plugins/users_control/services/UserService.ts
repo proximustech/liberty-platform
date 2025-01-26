@@ -1,10 +1,13 @@
+import { IDisposable } from "../../../interfaces/disposable_interface";
+
 import { MongoService } from "./MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
 import { Uuid } from "../../../services/utilities";
 const { createHash } = require('crypto');
 
-export class UserService {
+
+export class UserService implements IDisposable {
     
     private dataBaseName = "liberty_platform"
     private collectionName = "users"
@@ -125,6 +128,10 @@ export class UserService {
             }
         }
         return false
-    }    
+    }
+    
+    dispose(){
+        this.mongoService.dispose()
+    }      
 
 }
