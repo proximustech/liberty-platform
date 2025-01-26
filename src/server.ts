@@ -56,10 +56,6 @@ export let eventEmitter : EventEmitter
         appViewVars.labels = {...baseLanguageLabels.labels, ...languageLabels.labels};
 
         routePlugins.forEach(pluginName => {
-          // @ts-ignore
-          getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
-          // @ts-ignore
-          app.use(getRouter.default(appViewVars).routes())
           try {
             let pluginBaseLanguageLabels = require("./plugins/"+pluginName+"/languages/"+baseLanguage+".js")
             try{
@@ -69,7 +65,11 @@ export let eventEmitter : EventEmitter
             }catch(error){
               appViewVars.labels = {...appViewVars.labels, ...pluginBaseLanguageLabels.labels};
             }
-          } catch (error) {}
+          } catch (error) {}   
+          // @ts-ignore
+          //getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")                 
+          // @ts-ignore
+          //app.use(getRouter.default(appViewVars).routes())
 
         });             
 
@@ -81,14 +81,14 @@ export let eventEmitter : EventEmitter
         ctx.body = err.message;
       }
 
-    });
+  });
   
     routePlugins.forEach(pluginName => {
       // @ts-ignore
       getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
       // @ts-ignore
       app.use(getRouter.default(appViewVars).routes())
-    });    
+    });  
 
     app.use(testRoutes.routes())
     //app.use((ctx, next) => RequestContext.create(orm.em, next));
