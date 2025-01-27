@@ -46,15 +46,7 @@ export let eventEmitter : EventEmitter
 
         ctx.authorizer = authorizer
 
-        appViewVars.breadcrumbs = []
-        //let language = ctx.session.language || "english"
-        //viewVars.language = language
-        //let language = ctx.request.query.language
-        let baseLanguageLabels = require('./languages/'+baseLanguage+'.js')
-        appViewVars.language = selectedLanguage
-        let languageLabels = require('./languages/'+selectedLanguage+'.js')
-        appViewVars.labels = {...baseLanguageLabels.labels, ...languageLabels.labels};
-
+        /*
         routePlugins.forEach(pluginName => {
           try {
             let pluginBaseLanguageLabels = require("./plugins/"+pluginName+"/languages/"+baseLanguage+".js")
@@ -71,7 +63,8 @@ export let eventEmitter : EventEmitter
           // @ts-ignore
           //app.use(getRouter.default(appViewVars).routes())
 
-        });             
+        });
+        */             
 
         await next()
 
@@ -83,33 +76,55 @@ export let eventEmitter : EventEmitter
 
   });
   
-    routePlugins.forEach(pluginName => {
-      // @ts-ignore
-      getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
-      // @ts-ignore
-      app.use(getRouter.default(appViewVars).routes())
-    });  
+  appViewVars.breadcrumbs = []
+  //let language = ctx.session.language || "english"
+  //viewVars.language = language
+  //let language = ctx.request.query.language
+  let baseLanguageLabels = require('./languages/'+baseLanguage+'.js')
+  appViewVars.language = selectedLanguage
+  let languageLabels = require('./languages/'+selectedLanguage+'.js')
+  appViewVars.labels = {...baseLanguageLabels.labels, ...languageLabels.labels};
 
-    app.use(testRoutes.routes())
-    //app.use((ctx, next) => RequestContext.create(orm.em, next));
-    
-    app.use(mount('/static',serve(path.join(__dirname, '/static'))))
-    
-    render(app, {
-        root: __dirname,
-        //layout: 'html/layout',
-        layout: false,
-        viewExt: 'html',
-        cache: false,
-        debug: false
-    });
-    
-    const server = app
-        .listen(8000, async () => {
-            console.log(`Server listening on port: 8000`)
-        })
-        .on("error", err => {
-            console.error(err)
-        })
+
+  routePlugins.forEach(pluginName => {
+
+    try {
+      let pluginBaseLanguageLabels = require("./plugins/"+pluginName+"/languages/"+baseLanguage+".js")
+      try{
+        let pluginSelectedLanguageLabels = require("./plugins/"+pluginName+"/languages/"+selectedLanguage+".js")
+        let pluginLanguageLabels = {...pluginBaseLanguageLabels.labels, ...pluginSelectedLanguageLabels.labels};
+        appViewVars.labels = {...appViewVars.labels, ...pluginLanguageLabels};
+      }catch(error){
+        appViewVars.labels = {...appViewVars.labels, ...pluginBaseLanguageLabels.labels};
+      }
+    } catch (error) {} 
+
+    // @ts-ignore
+    getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
+    // @ts-ignore
+    app.use(getRouter.default(appViewVars).routes())
+  });  
+
+  app.use(testRoutes.routes())
+  //app.use((ctx, next) => RequestContext.create(orm.em, next));
+  
+  app.use(mount('/static',serve(path.join(__dirname, '/static'))))
+  
+  render(app, {
+      root: __dirname,
+      //layout: 'html/layout',
+      layout: false,
+      viewExt: 'html',
+      cache: false,
+      debug: false
+  });
+  
+  const server = app
+      .listen(8000, async () => {
+          console.log(`Server listening on port: 8000`)
+      })
+      .on("error", err => {
+          console.error(err)
+      })
             
 })();
