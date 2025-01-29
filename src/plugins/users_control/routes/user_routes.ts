@@ -99,9 +99,15 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.post('/user',koaBody(), async (ctx:Context) => {
 
+        let user = (JSON.parse(ctx.request.body.json) as UserDataObject)
+        let selfUser = false
+        if (user.uuid===ctx.session.passport.user.uuid) {
+            selfUser = true
+        }
+
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let processAllowed = UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])
-        if (!processAllowed) {
+        if (!processAllowed && !selfUser) {
 
             ctx.status=401
             ctx.body = {
@@ -112,9 +118,19 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         }
         else {
-
             const userService = new UserService()
-            let user = (JSON.parse(ctx.request.body.json) as UserDataObject)
+
+            //Protect role_id on own user account settings change
+            if (selfUser && !processAllowed) {
+                let savedUser = await userService.getByUuId(user.uuid)
+                if (user.role_uuid !== savedUser.role_uuid) {
+                    console.log("SECURITY WARNING: Possible role id tampering by " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                }
+
+                user.role_uuid = savedUser.role_uuid
+
+            }
+
             let uuid = user.uuid
             let saveRolePolicy = false
     
@@ -171,7 +187,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     
                     }
                 }
-                if (saveRolePolicy) {
+                if (saveRolePolicy && processAllowed) {
                     await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid)
                     if (user.role_uuid !== "") {
                         await ctx.authorizer.enforcer.addGroupingPolicy(uuid,user.role_uuid)          
