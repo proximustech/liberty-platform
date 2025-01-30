@@ -1,3 +1,5 @@
+import { IllegalCharacters as IllegalCharactersRegexp, IllegalCharactersValidationMessage } from "../values/regular_expressions";
+
 export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:string,fieldValue:any,fieldMetadata:any,enabled:Boolean=true) => {
     let html:any = ""
     let validationRequired:any = false
@@ -43,7 +45,13 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
                     }
                     else {
-                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                        illegalCharactersRegexp = new RegExp(/${IllegalCharactersRegexp}/)
+                        if(illegalCharactersRegexp.test(element.value)){
+                            document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${IllegalCharactersValidationMessage}'
+                        }
+                        else {
+                            document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                        }
                     }
                 }
 
@@ -76,7 +84,13 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
                     }
                     else {
-                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                        illegalCharactersRegexp = new RegExp(/${IllegalCharactersRegexp}/)
+                        if(illegalCharactersRegexp.test(element.value)){
+                            document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${IllegalCharactersValidationMessage}'
+                        }
+                        else {
+                            document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                        }
                     }
                 }
 
@@ -110,7 +124,13 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
                         document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${validationMessage}'
                     }
                     else {
-                        document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                        illegalCharactersRegexp = new RegExp(/${IllegalCharactersRegexp}/)
+                        if(illegalCharactersRegexp.test(element.value)){
+                            document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML='${IllegalCharactersValidationMessage}'
+                        }
+                        else {
+                            document.getElementById('${dataObjectName}_${fieldName}_validation_message').innerHTML=''
+                        }
                     }
                 }
             }

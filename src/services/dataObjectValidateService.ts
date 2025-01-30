@@ -1,3 +1,5 @@
+import { IllegalCharacters as IllegalCharactersRegexp, IllegalCharactersValidationMessage } from "../values/regular_expressions";
+
 export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => {
     let fieldRegexp = ""
     let fieldValue = ""
@@ -31,6 +33,20 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
                     message:validateSchema[fieldName]["message"]
                 })
             }
+            else {
+                try {
+                    //This code executes well in the backend but not in the brower. Leaving this validation section to the backend
+                    let illegalCharactersRegexp = new RegExp(IllegalCharactersRegexp)                
+                    if(illegalCharactersRegexp.test(fieldValue)){
+                        result.isValid=false
+                        result.messages.push({
+                            field:fieldName,
+                            message:IllegalCharactersValidationMessage
+                        })
+                    }                                       
+                } catch (error) {}
+
+            }         
             
         }
 
