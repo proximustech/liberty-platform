@@ -25,7 +25,7 @@ export const UserDataObjectValidator:any = {
         },
         password : {
             regexp: String.raw`(^${passwordMask}$)|(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$)`,
-            message:"Password MUST have 8 characteres with letters ( uppercase and lowercase ) and numbers.",
+            message:"Password MUST have at least 8 characteres with letters ( uppercase and lowercase ) and numbers.",
             required:true,
             requiredMessage : "Password is required."
         },
