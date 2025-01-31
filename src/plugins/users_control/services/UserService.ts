@@ -53,7 +53,6 @@ export class UserService implements IDisposable {
 
     async updateOne(user:UserDataObject,checkPermissions=true){
 
-        console.log(checkPermissions)
         let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
 
         if (!userValidationResult.isValid) {

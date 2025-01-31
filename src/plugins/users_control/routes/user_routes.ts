@@ -7,7 +7,6 @@ import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
 
 import koaBody from 'koa-body';
-import { UuidType } from "@mikro-orm/core";
 
 module.exports = function(router:Router,appViewVars:any,prefix:string){
 
@@ -180,7 +179,6 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 let dbResultOk = false
                 if (user.uuid !== "") {
                     if (selfUser) {
-                        console.log("llmando con false")
                         dbResultOk = await userService.updateOne(user,false)
                     }
                     else {
