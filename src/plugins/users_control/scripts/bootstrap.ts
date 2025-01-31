@@ -8,7 +8,7 @@ import { RoleService } from "../services/RoleService";
 
 async function main() {
 
-    let userService = new UserService()
+    let userService = new UserService('users_control',[])
     let roleService = new RoleService()
 
     let role = new RoleDataObject()
@@ -19,9 +19,11 @@ async function main() {
     let user = new UserDataObject()
     user.role_uuid = roleUuid
     user.email="admin@admin.com"
-    user.password = "admin"
+    user.password = "5ibf6DJejfR7djf"
+    user.name="Admin"
+    user.last_name="Istrator"
 
-    await userService.create(user)
+    await userService.create(user,false)
 
     const permissions: any = [
         {resource:"users_control.user",permission:"read"},
