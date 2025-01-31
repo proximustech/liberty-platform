@@ -1,5 +1,5 @@
 import {IAuthenticator} from "../../../interfaces/authenticator_interface"
-import { UserService } from "./UserService";
+import { UserModel } from "../models/UserModel";
 
 
 export class MongoDbUserPasswordAuthenticator implements IAuthenticator {
@@ -13,7 +13,7 @@ export class MongoDbUserPasswordAuthenticator implements IAuthenticator {
 
     async authenticate(){
 
-        let userService = new UserService()
+        let userService = new UserModel()
         let user = await userService.getByEmailAndPassword(this.username,this.password)
 
         if (user.email !== "") {

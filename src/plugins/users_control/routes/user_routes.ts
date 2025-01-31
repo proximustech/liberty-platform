@@ -4,8 +4,10 @@ import { UserService } from "../services/UserService";
 import { RoleService } from "../services/RoleService";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
+import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
 
 import koaBody from 'koa-body';
+import { UuidType } from "@mikro-orm/core";
 
 module.exports = function(router:Router,appViewVars:any,prefix:string){
 
@@ -14,57 +16,85 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.get('/users', async (ctx:Context) => {
         
+        viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+        const userService = new UserService(prefix,viewVars.userPermissions)
         try {
-            const userService = new UserService()
             viewVars.users = await userService.getAll()
             
-            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.users_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement            
 
-            userService.dispose()
             return ctx.render('plugins/users_control/views/users', viewVars);
-        } catch (error) {
-            console.error(error)
+        } catch (error) { 
+
+            if (error instanceof ExceptionNotAuthorized) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
+                
+            }
+            else {
+                console.error(error)
+            }
+
+        } finally {
+            userService.dispose()
         }
+
     })
 
     router.get('/account_settings', async (ctx:Context) => {
 
+        viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+        let userService = new UserService(prefix,viewVars.userPermissions)
         try {
-
-            let userService = new UserService()
-
+        
             viewVars.editing = true
             viewVars.accountSettings = true
             viewVars.passwordValue=passwordMask
 
-            viewVars.user = await userService.getByUuId(ctx.session.passport.user.uuid)
+            viewVars.user = await userService.getByUuId(ctx.session.passport.user.uuid,false)
             viewVars.userMetadata = UserDataObjectSpecs.metadata
             viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
             viewVars.userValidateFunction = "app.module_data.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
 
-            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
-            userService.dispose()
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
-            console.error(error)
+            if (error instanceof ExceptionNotAuthorized) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
+                
+            }
+            else {
+                console.error(error)
+
+            }
+        } finally {
+            userService.dispose()
         }
     })   
 
     router.get('/user_form', async (ctx:Context) => {
 
+        viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+        let userService = new UserService(prefix,viewVars.userPermissions)
+        let roleService = new RoleService()
         try {
-
+            
             let uuid:any = ctx.request.query.uuid || ""
             let user:UserDataObject = new UserDataObject()
-            let userService = new UserService()
             
-            let roleService = new RoleService()
             viewVars.roles = await roleService.getAll()
 
             if (uuid !=="") {
@@ -85,27 +115,39 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
             viewVars.userValidateFunction = "app.module_data.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
 
-            viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
-            userService.dispose()
-            roleService.dispose()
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
-            console.error(error)
+            if (error instanceof ExceptionNotAuthorized) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
+                
+            }
+            else {
+                console.error(error)
+
+            }
+        } finally {
+            userService.dispose()
+            roleService.dispose()
         }
     })    
 
     router.post('/user',koaBody(), async (ctx:Context) => {
 
+        let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let user = (JSON.parse(ctx.request.body.json) as UserDataObject)
         let selfUser = false
         if (user.uuid===ctx.session.passport.user.uuid) {
             selfUser = true
         }
 
-        let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let processAllowed = UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])
         if (!processAllowed && !selfUser) {
 
@@ -118,34 +160,33 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         }
         else {
-            const userService = new UserService()
+            const userService = new UserService(prefix,userPermissions)
+            try {
 
-            //Protect role_id on own user account settings change
-            if (selfUser && !processAllowed) {
-                let savedUser = await userService.getByUuId(user.uuid)
-                if (user.role_uuid !== savedUser.role_uuid) {
-                    console.log("SECURITY WARNING: Possible role id tampering by " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
-                }
-
-                user.role_uuid = savedUser.role_uuid
-
-            }
-
-            let uuid = user.uuid
-            let saveRolePolicy = false
+                //Protect role_id on own user account settings change
+                if (selfUser && !processAllowed) {
+                    let savedUser = await userService.getByUuId(user.uuid,false)
+                    if (user.role_uuid !== savedUser.role_uuid) {
+                        console.log("SECURITY WARNING: Possible role id tampering by " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                    }
     
-            let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
-            if (await userService.fieldValueExists(user.uuid,"email",user.email)){
-                ctx.status=409
-                ctx.body = {
-                    status: 'error',
-                    messages: [{field:"email",message:"E-Mail already exists"}]
-                }              
-            }
-            else if (userValidationResult.isValid) {
+                    user.role_uuid = savedUser.role_uuid
+    
+                }
+    
+                let uuid = user.uuid
+                let saveRolePolicy = false
+        
                 let dbResultOk = false
                 if (user.uuid !== "") {
-                    dbResultOk = await userService.updateOne(user)
+                    if (selfUser) {
+                        console.log("llmando con false")
+                        dbResultOk = await userService.updateOne(user,false)
+                    }
+                    else {
+                        dbResultOk = await userService.updateOne(user)
+                    }
+
                     if (dbResultOk) {
                         ctx.body = {
                             status: 'success',
@@ -161,31 +202,23 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                         console.log("DATABASE ERROR writing user "+user.uuid)
                     }
                 } else {
-                    if (user.password == passwordMask) {
-                        ctx.status=400
+                    uuid = await userService.create(user)
+
+                    if (uuid != "false") {
                         ctx.body = {
-                            status: 'error',
-                            messages: [{field:"password",message:"Invalid password"}]
-                        }                    
+                            status: 'success',
+                        }
+                        saveRolePolicy = true
                     }
                     else {
-                        uuid = await userService.create(user)
-                        if (uuid != "false") {
-                            ctx.body = {
-                                status: 'success',
-                            }
-                            saveRolePolicy = true
+                        ctx.status=500
+                        ctx.body = {
+                            status: 'error',
+                            messages: [{message: "Data Unexpected Error"}]
                         }
-                        else {
-                            ctx.status=500
-                            ctx.body = {
-                                status: 'error',
-                                messages: [{message: "Data Unexpected Error"}]
-                            }
-                            console.log("DATABASE ERROR writing user "+user.uuid)                             
-                        }
-    
+                        console.log("DATABASE ERROR writing user "+user.uuid)                             
                     }
+
                 }
                 if (saveRolePolicy && processAllowed) {
                     await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid)
@@ -193,16 +226,41 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                         await ctx.authorizer.enforcer.addGroupingPolicy(uuid,user.role_uuid)          
                     }
                 }
-                
-            } else {
-                ctx.status=400
-                ctx.body = {
-                    status: 'error',
-                    messages: userValidationResult.messages
+                      
+            } catch (error) {
+                if (error instanceof ExceptionNotAuthorized) {
+                    ctx.status=401
+                    ctx.body = {
+                        status: 'error',
+                        messages: [{message:"Operation NOT Allowed"}]
+                    }         
+                    console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                    
                 }
-                
-            }   
-            userService.dispose()         
+                else if (error instanceof ExceptionRecordAlreadyExists) {
+                    ctx.status=409
+                    ctx.body = {
+                        status: 'error',
+                        messages: [{field:"email",message:"E-Mail already exists"}]
+                    }   
+                    
+                }
+                else if (error instanceof ExceptionInvalidObject) {
+                    ctx.status=400
+                    ctx.body = {
+                        status: 'error',
+                        //@ts-ignore
+                        messages: error.errorMessages
+                    }
+                    
+                }
+                else {
+                    console.error(error)
+    
+                }                
+            } finally {
+                userService.dispose()
+            }
 
         }
 
@@ -211,20 +269,9 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.delete('/user',koaBody(), async (ctx:Context) => {
 
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        let processAllowed = UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])
-        if (!processAllowed) {
+        const userService = new UserService(prefix,userPermissions)
 
-            ctx.status=401
-            ctx.body = {
-                status: 'error',
-                messages: [{message:"Operation NOT Allowed"}]
-            }         
-            console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
-
-        }
-        else {
-
-            const userService = new UserService()
+        try {
             let uuid:any = ctx.request.query.uuid || ""
 
             if (uuid !=="") {
@@ -241,7 +288,22 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     message: "Invalid Uuid"
                 }
 
+            }    
+        } catch (error) {
+            if (error instanceof ExceptionNotAuthorized) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                
             }
+            else {
+                console.error(error)
+
+            }            
+        } finally {
             userService.dispose()
         }
 

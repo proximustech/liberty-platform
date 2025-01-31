@@ -1,137 +1,138 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-
-import { MongoService } from "./MongoService";
-import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
-import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
-import { Uuid } from "../../../services/utilities";
-const { createHash } = require('crypto');
-
+import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
+import { UserDataObject, UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
+import { UserModel } from "../models/UserModel";
 
 export class UserService implements IDisposable {
     
-    private dataBaseName = "liberty_platform"
-    private collectionName = "users"
-    private mongoClient:MongoClient
-    private mongoService:MongoService
-    private dataBase:Db
-    private collection:Collection
-    private hashcycles:number = 100
+    private userModel:UserModel
+    private userPermissions:any
+    private serviceSecurityElement:string
+    private userCanRead:boolean
+    private userCanWrite:boolean
 
-    constructor(){
-        this.mongoService = new MongoService()
-        this.mongoClient = this.mongoService.getMongoClient()
-        this.dataBase = this.mongoClient.db(this.dataBaseName);
-        this.collection = this.dataBase.collection(this.collectionName);
+    constructor(serviceSecurityElementPrefix:string,userPermissions:any){
+        this.userModel= new UserModel()
+        this.serviceSecurityElement=serviceSecurityElementPrefix+".user"
+        this.userPermissions=userPermissions
+        this.userCanRead = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["read"])
+        this.userCanWrite = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["write"])
     }
 
-    getNew(){
-        let user = new UserDataObject()
-        return user
-    }
+    async create(user:UserDataObject,checkPermissions=true){
 
-    async create(user:UserDataObject){
-        user.uuid = Uuid.createMongoUuId()
-        user._id = new ObjectId(user.uuid)
-
-        for (let index = 0; index < this.hashcycles; index++) {
-            user.password=createHash('sha256').update(user.password).digest('base64');
-        }         
-        
-        const result = await this.collection.insertOne(user,{writeConcern: {w: 1, j: true}})
-
-        if (result.insertedId == user._id && result.acknowledged) {
-            return user.uuid
+        if (user.password == passwordMask) {
+            let errorMessages = [{field:"password",message:"Invalid password"}]
+            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,errorMessages)             
         }
-        else return "false"
 
-    }
+        let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
 
-    async updateOne(user:UserDataObject){
-        user._id = new ObjectId(user.uuid)
-        if (user.password===passwordMask) {
-            const cursor = this.collection.find({uuid : user.uuid});
+        if (!userValidationResult.isValid) {
+            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
+        }
 
-            while (await cursor.hasNext()) {
-                let document = (await cursor.next() as UserDataObject);
-                user.password = document.password
-            }            
+        if (await this.fieldValueExists(user.uuid,"email",user.email)) {
+            throw new ExceptionRecordAlreadyExists("E-Mail already exists")
+        }        
+
+        if (checkPermissions) {
+            if (this.userCanWrite) {
+                return await this.userModel.create(user)            
+            }
+            else{
+                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+            }
             
         }
         else {
-            for (let index = 0; index < this.hashcycles; index++) {
-                user.password=createHash('sha256').update(user.password).digest('base64');
+            return await this.userModel.create(user)
+        }
+    }
+
+    async updateOne(user:UserDataObject,checkPermissions=true){
+
+        console.log(checkPermissions)
+        let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
+
+        if (!userValidationResult.isValid) {
+            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
+        }        
+        
+        if (await this.fieldValueExists(user.uuid,"email",user.email,checkPermissions)) {
+            throw new ExceptionRecordAlreadyExists("E-Mail already exists")
+        }
+        if (checkPermissions) {
+            if (this.userCanWrite) {
+                return await this.userModel.updateOne(user)
+                
+            }
+            else{
+                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
             }            
         }
-        const result = await this.collection.replaceOne(
-            {uuid: user.uuid }, 
-            user,
-            {upsert: false,writeConcern: {w: 1, j: true}}
-        )
-
-        if (result.acknowledged && result.matchedCount == 1 ) {
-            return true
+        else{
+            return await this.userModel.updateOne(user)
         }
-        else return false
 
     }
 
     async deleteByUuId(UserUuId:string){
-        const result = await this.collection.deleteOne({ uuid: UserUuId },{writeConcern: {w: 1, j: true}})
-        if (result.deletedCount == 1 && result.acknowledged) {
-            return true
+        if (this.userCanWrite) {
+            return await this.userModel.deleteByUuId(UserUuId) 
+           
         }
-        else return false        
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }              
     }
 
-    async getByUuId(uuid:string) : Promise<UserDataObject> {
+    async getByUuId(uuid:string,checkPermissions=true) : Promise<UserDataObject> {
+        if (checkPermissions) {
+            if (this.userCanRead) {
+                return await this.userModel.getByUuId(uuid)
+               
+            }
+            else{
+                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+            }            
+        }
+        else{
+            return await this.userModel.getByUuId(uuid)
 
-        const cursor = this.collection.find({uuid : uuid});
-
-        while (await cursor.hasNext()) {
-            let document = (await cursor.next() as UserDataObject);
-            document.password = passwordMask
-            return document
         }
 
-        return new UserDataObject()
-    }
-
-    async getByEmailAndPassword(email:string,password:string) : Promise<UserDataObject> {
-
-        for (let index = 0; index < this.hashcycles; index++) {
-            password=createHash('sha256').update(password).digest('base64');
-        }
-        const cursor = this.collection.find({email:email, password:password});
-
-        while (await cursor.hasNext()) {
-            let document = (await cursor.next() as UserDataObject);
-            document.password = passwordMask
-            return document
-        }
-
-        return new UserDataObject()
+       
     }
 
     async getAll() : Promise<UserDataObject[]> {
-        const cursor = this.collection.find({});
-        return (await cursor.toArray() as UserDataObject[])
+        if (this.userCanRead) {
+            return await this.userModel.getAll()
+           
+        }
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }        
     }
 
-    async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any) : Promise<Boolean> {
-        let filter:any = {}
-        filter[fieldName] = fieldValue
-        const cursor = this.collection.find(filter);
-        while (await cursor.hasNext()) {
-            let document:any = await cursor.next();
-            if (document.uuid !== processedDocumentUuid) {
-                return true
+    async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any,checkPermissions=true) : Promise<Boolean> {
+        if (checkPermissions) {
+            if (this.userCanRead) {
+                return await this.userModel.fieldValueExists(processedDocumentUuid,fieldName,fieldValue)
             }
+            else{
+                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+            }                    
         }
-        return false
-    }
-    
+        else {
+            return await this.userModel.fieldValueExists(processedDocumentUuid,fieldName,fieldValue)
+        }
+
+    }    
+   
     dispose(){
-        this.mongoService.dispose()
+        this.userModel.dispose()
     }      
 
 }
