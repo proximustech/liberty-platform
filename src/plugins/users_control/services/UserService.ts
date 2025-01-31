@@ -33,7 +33,7 @@ export class UserService implements IDisposable {
             throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
         }
 
-        if (await this.fieldValueExists(user.uuid,"email",user.email)) {
+        if (await this.fieldValueExists(user.uuid,"email",user.email,checkPermissions)) {
             throw new ExceptionRecordAlreadyExists("E-Mail already exists")
         }        
 
@@ -101,8 +101,7 @@ export class UserService implements IDisposable {
             return await this.userModel.getByUuId(uuid)
 
         }
-
-       
+ 
     }
 
     async getAll() : Promise<UserDataObject[]> {
