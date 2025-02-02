@@ -35,3 +35,15 @@ export class ExceptionInvalidObject extends Error {
   }
 
 }
+
+export class ExceptionDataBaseUnExpectedResult extends Error {
+
+  public static databaseUnexpectedResult: string = "Database Unexpected Result";
+
+  constructor(message: string) {
+    super(message);
+    this.name = "DatabaseUnexpectedResult";
+    this.stack = (<any> new Error()).stack;
+  }
+
+}
