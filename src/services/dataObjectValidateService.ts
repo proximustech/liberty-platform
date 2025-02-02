@@ -26,7 +26,7 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
             
         } else {
             regexpValidator = new RegExp(fieldRegexp);
-            if (!regexpValidator.test(fieldValue)) {
+            if (!regexpValidator.test(fieldValue.toString())) {
                 result.isValid=false
                 result.messages.push({
                     field:fieldName,
@@ -35,7 +35,7 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
             }
             else {
                 try {
-                    //This code executes well in the backend but not in the brower. Leaving this validation section to the backend
+                    //This code executes well in the backend but not in the browser. Leaving this validation section to the backend
                     let illegalCharactersRegexp = new RegExp(IllegalCharactersRegexp)                
                     if(illegalCharactersRegexp.test(fieldValue)){
                         result.isValid=false
