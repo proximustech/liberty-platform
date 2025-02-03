@@ -79,9 +79,9 @@
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                  <li class="nav-item dropdown ml-md-auto show">
+                  <li class="nav-item dropdown ml-md-auto show" style="text-align:center">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                      <%= labels.consoleMenu %>
+                      <label style="color:white; background-color: green;border-radius: 5px;height: 24px;width:24px;text-align: center;"><%= user.name[0] %><%= user.last_name[0] %></label> <%= labels.consoleMenu %> 
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
                         <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});if ($(window).width() < 992)$('.navbar-toggler').click();" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
