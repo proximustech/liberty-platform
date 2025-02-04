@@ -207,7 +207,7 @@
               let html = `
                 <div id="app_toast_${toastIdex}" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
                   <div id="app_toast_header_${toastIdex}" class="toast-header"></div>
-                  <div id="app_toast_body_${toastIdex}" class="toast-body"></div>
+                  <div id="app_toast_body_${toastIdex}" class="toast-body" style="background-color: white !important"></div>
                 </div>              
               `
               toastsContainer.insertAdjacentHTML("beforeend",html)
@@ -250,7 +250,8 @@
               if ('type' in options){
                 if (options['type']=='info') {
                   toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-                  toastHeader.style.backgroundColor="aliceblue"
+                  toastHeader.style.backgroundColor="forestgreen"//lightskyblue
+                  toastHeader.style.color="white"
                 }
                 if (options['type']=='warning') {
                   toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-exclamation-triangle" style="margin-right:10px"></i>`)
