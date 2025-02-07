@@ -178,8 +178,8 @@
             }
             window.addEventListener('resize',resizeContetView,true) 
             var app = {
-                drawer:document.getElementById("app_drawer"),
-                dialog:document.getElementById("app_dialog"),
+              drawer:document.getElementById("app_drawer"),
+              dialog:document.getElementById("app_dialog"),
                 top_menu : document.getElementById("top_menu"),
                 modules_menu : document.getElementById("modules_menu"),
                 app_menu_visible : false,
@@ -222,12 +222,43 @@
                     
                 },
                 closeDetail : () => {      
-                    const detaill = document.getElementById("item_detail");
-                    detaill.outerHTML = app.temp_selected_element_for_detail.outerHTML
+                  const detaill = document.getElementById("item_detail");
+                  detaill.outerHTML = app.temp_selected_element_for_detail.outerHTML
                 },
                 loadDetail : (html) => {
                     const detaill = document.getElementById("item_detail");
                     detaill.insertAdjacentHTML("beforeend",html)
+                },
+                breadcrumbMap : new Map(),
+                addBreadCrumb : (targetId,url) => {
+                  if (app.breadcrumbMap.has(targetId)) {
+                    targetHistory = app.breadcrumbMap.get(targetId)
+                    targetHistory.push(url)
+                    // Only allow 5 elements in history
+                    if (targetHistory.length > 5) {
+                      targetHistory.shift()
+                    }
+                    app.breadcrumbMap.set(targetId,targetHistory)
+                  }
+                  else{
+                    app.breadcrumbMap.set(targetId,[url])
+                  }
+                },
+                popBreadCrumb : (targetId) => {
+                  let url = ""
+                  if (app.breadcrumbMap.has(targetId)) {
+                    targetHistory = app.breadcrumbMap.get(targetId)
+                    url = targetHistory.pop()
+                    app.breadcrumbMap.set(targetId,targetHistory)
+                    return url
+                  }
+                  else{
+                    app.breadcrumbMap.set(targetId,[url])
+                  }
+                },
+                reloadLastBreadCrumb : (targetId) => {
+                  let lastUrl = app.popBreadCrumb(targetId)
+                  app.ajax(targetId,lastUrl)
                 }
             }
 
@@ -392,6 +423,7 @@
               })
               .done(function(html) {
                   $('#'+targetId).html(html);
+                  app.addBreadCrumb(targetId,url)
               })
               .fail(function(error) {
                 app.toastShow('Connection Error','There is an error with the network or the server',{type:"error"})
