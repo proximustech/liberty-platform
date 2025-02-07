@@ -1,18 +1,19 @@
-<sl-tree id="permissions_module_menu_content" style="display: none;--indent-size:7px">
-    <% if (UserHasPermissionOnElement(userPermissions,['users_control.user'],['read'])) { %>
-      <sl-tree-item onclick="app.ajax('content_view','/users_control/users');app.app_menu_inteligentClose()" >
-        <sl-icon name="person" label="Settings"></sl-icon>
-        Users
-      </sl-tree-item>
-    <% } %>
-    <% if (UserHasPermissionOnElement(userPermissions,['users_control.role'],['read'])) { %>
-      <sl-tree-item onclick="app.ajax('content_view','/users_control/roles');app.app_menu_inteligentClose()" >
-        <sl-icon name="people" label="Settings"></sl-icon>
-        Roles
-      </sl-tree-item>
-    <% } %>
-</sl-tree>
-
+<div id="permissions_module_menu_content" class="lp_contrast_container" style="display: none">
+  <sl-tree style="--indent-size:7px">
+      <% if (UserHasPermissionOnElement(userPermissions,['users_control.user'],['read'])) { %>
+        <sl-tree-item onclick="app.ajax('content_view','/users_control/users');app.app_menu_inteligentClose()" >
+          <sl-icon name="person" label="Settings"></sl-icon>
+          Users
+        </sl-tree-item>
+      <% } %>
+      <% if (UserHasPermissionOnElement(userPermissions,['users_control.role'],['read'])) { %>
+        <sl-tree-item onclick="app.ajax('content_view','/users_control/roles');app.app_menu_inteligentClose()" >
+          <sl-icon name="people" label="Settings"></sl-icon>
+          Roles
+        </sl-tree-item>
+      <% } %>
+  </sl-tree>
+</div>
 <script>
   app.modules_menu.s_appendItem(`<i class="bi bi-lock"></i> Permissions`,"permissions",document.getElementById("permissions_module_menu_content").outerHTML)
 </script>
