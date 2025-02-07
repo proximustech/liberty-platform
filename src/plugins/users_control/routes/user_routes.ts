@@ -88,7 +88,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let userService = new UserService(prefix,viewVars.userPermissions)
-        let roleService = new RoleService()
+        let roleService = new RoleService(prefix,viewVars.userPermissions)
         try {
             
             let uuid:any = ctx.request.query.uuid || ""

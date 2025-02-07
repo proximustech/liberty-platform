@@ -24,11 +24,6 @@ export class UserModel implements IDisposable {
         this.collection = this.dataBase.collection(this.collectionName);
     }
 
-    getNew(){
-        let user = new UserDataObject()
-        return user
-    }
-
     async create(user:UserDataObject){
         user.uuid = Uuid.createMongoUuId()
         user._id = new ObjectId(user.uuid)

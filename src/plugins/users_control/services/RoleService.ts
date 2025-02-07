@@ -1,84 +1,95 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-
-import { MongoService } from "./MongoService";
-import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
-import { RoleDataObject } from "../dataObjects/RoleDataObject";
-import { Uuid } from "../../../services/utilities";
-
+import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
+import { RoleDataObject,RoleDataObjectValidator,RoleDataObjectSpecs } from "../dataObjects/RoleDataObject";
+import { RoleModel } from "../models/RoleModel";
 
 export class RoleService implements IDisposable {
     
-    private dataBaseName = "liberty_platform"
-    private collectionName = "roles"
-    private mongoClient:MongoClient
-    private mongoService:MongoService
-    private dataBase:Db
-    private collection:Collection
+    private roleModel:RoleModel
+    private userPermissions:any
+    private serviceSecurityElement:string
+    private userCanRead:boolean
+    private userCanWrite:boolean
 
-    constructor(){
-        this.mongoService = new MongoService()
-        this.mongoClient = this.mongoService.getMongoClient()
-        this.dataBase = this.mongoClient.db(this.dataBaseName);
-        this.collection = this.dataBase.collection(this.collectionName);
-    }
-
-    getNew(){
-        let role = new RoleDataObject()
-        role.uuid = Uuid.createMongoUuId()
-        role._id = new ObjectId(role.uuid)
-
-        return role
+    constructor(serviceSecurityElementPrefix:string,userPermissions:any){
+        this.roleModel= new RoleModel()
+        this.serviceSecurityElement=serviceSecurityElementPrefix+".user"
+        this.userPermissions=userPermissions
+        this.userCanRead = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["read"])
+        this.userCanWrite = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["write"])
     }
 
     async create(role:RoleDataObject){
-        role.uuid = Uuid.createMongoUuId()
-        role._id = new ObjectId(role.uuid)        
-        const result = await this.collection.insertOne(role,{writeConcern: {w: 1, j: true}})
 
-        if (result.insertedId == role._id && result.acknowledged) {
-            return role.uuid
+        let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
+
+        if (!roleValidationResult.isValid) {
+            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,roleValidationResult.messages)
+        }        
+
+        if (await this.fieldValueExists(role.uuid,"name",role.name)) {
+            throw new ExceptionRecordAlreadyExists("Name already exists")
+        }  
+        
+        if (this.userCanWrite) {
+            return await this.roleModel.create(role)            
         }
-        else return "false"
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }        
 
     }
 
     async updateOne(role:RoleDataObject){
-        role._id = new ObjectId(role.uuid)
-        const result = await this.collection.replaceOne(
-            {uuid: role.uuid }, 
-            role,
-            {upsert: false,writeConcern: {w: 1, j: true}}
-        )
-        if (result.acknowledged && result.matchedCount == 1 ) {
-            return true
+        let roleValidationResult=RoleDataObjectValidator.validateFunction(role,RoleDataObjectValidator.validateSchema)
+
+        if (!roleValidationResult.isValid) {
+            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,roleValidationResult.messages)
+        }        
+
+        if (await this.fieldValueExists(role.uuid,"name",role.name)) {
+            throw new ExceptionRecordAlreadyExists("Name already exists")
+        }  
+        
+        if (this.userCanWrite) {
+            return await this.roleModel.updateOne(role)
         }
-        else return false                
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }                  
     }
 
     async deleteByUuId(roleUuId:string){
-        const result = await this.collection.deleteOne({ uuid: roleUuId })
-        if (result.deletedCount == 1 && result.acknowledged) {
-            return true
+        if (this.userCanWrite) {
+            return await this.roleModel.deleteByUuId(roleUuId) 
+           
         }
-        else return false            
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }          
+
+
     }
 
     async getByUuId(uuid:string) : Promise<RoleDataObject> {
-
-        const cursor = this.collection.find({uuid : uuid});
-
-        while (await cursor.hasNext()) {
-            let document = (await cursor.next() as RoleDataObject);
-            return document
+        if (this.userCanRead) {
+            return await this.roleModel.getByUuId(uuid)
+           
         }
-
-        return new RoleDataObject()
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }  
     }
 
     async getAll() : Promise<RoleDataObject[]> {
-        //await this.processTest()
-        const cursor = this.collection.find({});
-        return (await cursor.toArray() as RoleDataObject[])
+        if (this.userCanRead) {
+            return await this.roleModel.getAll()
+           
+        }
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }  
     }
     
     getUuidMapFromList(list:RoleDataObject[]) : Map<string, string> {
@@ -93,20 +104,17 @@ export class RoleService implements IDisposable {
     }
 
     async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any) : Promise<Boolean> {
-        let filter:any = {}
-        filter[fieldName] = fieldValue
-        const cursor = this.collection.find(filter);
-        while (await cursor.hasNext()) {
-            let document:any = await cursor.next();
-            if (document.uuid !== processedDocumentUuid) {
-                return true
-            }
+        if (this.userCanRead) {
+            return await this.roleModel.fieldValueExists(processedDocumentUuid,fieldName,fieldValue)
+           
         }
-        return false
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }  
     }
     
     dispose(){
-        this.mongoService.dispose()
+        this.roleModel.dispose()
     }      
 
 }
