@@ -84,7 +84,7 @@
                       <label style="color:white; background-color: green;border-radius: 5px;height: 24px;width:24px;text-align: center;"><%= user.name[0] %><%= user.last_name[0] %></label> <%= labels.consoleMenu %> 
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
-                        <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});if ($(window).width() < 992)$('.navbar-toggler').click();" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
+                        <li><a class="dropdown-item" href="#" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});if ($(window).width() < wideScreenMinPixels)$('.navbar-toggler').click();" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout" ><i class="bi bi-door-open"></i> <%= labels.logOut %></a></li>
                     </ul>
@@ -136,6 +136,24 @@
         -->
 
         <script>
+            let wideScreenMinPixels = 992
+            function resizeContetView(event){
+              let contentViewWidthDiffPixels = 220
+              //Mantaing content ViewWidth in small screen devices
+              if ($(window).width() < wideScreenMinPixels) {
+                contentViewWidthDiffPixels = 0
+              }
+              if (app.app_menu_visible) {
+                document.getElementById("content_view").style.marginLeft = "226px";
+                document.getElementById("content_view").style.width = window.window.innerWidth  - contentViewWidthDiffPixels;
+                document.getElementById("app_menu").style.width= "220px";
+              } else {
+                document.getElementById("content_view").style.marginLeft= "10px";
+                document.getElementById("content_view").style.width = window.window.innerWidth;
+                document.getElementById("app_menu").style.width= "0px";
+              }              
+            }
+            window.addEventListener('resize',resizeContetView,true) 
             var app = {
                 drawer:document.getElementById("app_drawer"),
                 dialog:document.getElementById("app_dialog"),
@@ -161,17 +179,8 @@
                   try{
                     navigator.vibrate(25);
                   }catch{}
-                  if (!app.app_menu_visible) {
-                    document.getElementById("content_view").style.marginLeft = "226px";
-                    document.getElementById("app_menu").style.width= "220px";
-                    document.getElementById("content_view").style.width = "88%";
-                    app.app_menu_visible = true
-                  } else {
-                    document.getElementById("content_view").style.marginLeft= "10px";
-                    document.getElementById("app_menu").style.width= "0px";
-                    document.getElementById("content_view").style.width = "99%";
-                    app.app_menu_visible = false
-                  }
+                  app.app_menu_visible = !app.app_menu_visible
+                  resizeContetView({})
                 },
     
                 openDetail: (element) => {
@@ -369,7 +378,7 @@
 
             app.app_menu_inteligentClose = () => {
               //Close app menu automatically in small screen devices
-              if ($(window).width() < 992) {
+              if ($(window).width() < wideScreenMinPixels) {
                 setTimeout(()=>{app.toogleBar()},500)
               }
             }  
