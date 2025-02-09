@@ -1,6 +1,14 @@
 import { IllegalCharacters as IllegalCharactersRegexp, IllegalCharactersValidationMessage } from "../values/regular_expressions";
 
-export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => {
+export const DataObjectValidateFunction: any = (
+    data:any,
+    validateSchema:any,
+    extraValidateFunction = (data:any) =>{  return {
+            isValid :true,
+            messages:[]
+        }  
+    }) => {
+
     let fieldRegexp = ""
     let fieldValue = ""
     let regexpValidator = undefined
@@ -8,8 +16,6 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
         isValid :true,
         messages:[]
     }
-
-    result.isValid = true
 
     for (const [fieldName, fieldSchema] of Object.entries(validateSchema)) {
         fieldRegexp = validateSchema[fieldName]["regexp"]
@@ -50,6 +56,13 @@ export const DataObjectValidateFunction: any = (data:any,validateSchema:any) => 
             
         }
 
+    }
+    if (result.isValid) {
+        let extraValidationResult:any = extraValidateFunction(data)
+        if (!extraValidationResult.isValid) {
+            result.isValid=false
+            result.messages=extraValidationResult.messages
+        }
     }
     return result
 }
