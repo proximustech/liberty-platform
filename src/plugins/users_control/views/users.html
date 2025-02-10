@@ -45,7 +45,11 @@
                     </table>
                 </div>
                 <div class="register_container_body">
-                    <strong>Name:</strong> <%= user.name %> <%= user.last_name %>
+                    <% let roleName = undefined %>
+                    <% roleName = rolesUuidMap.get(user.role_uuid) %>
+                    <% if(roleName==undefined){ roleName="-"} %>
+                    <p><strong>Name:</strong> <%= user.name %> <%= user.last_name %></p>
+                    <p><strong>Role:</strong> <%= roleName %></p>
 
                 </div>
                 

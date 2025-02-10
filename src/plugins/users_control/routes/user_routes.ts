@@ -17,8 +17,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         const userService = new UserService(prefix,viewVars.userPermissions)
+        const roleService = new RoleService(prefix,viewVars.userPermissions)
         try {
             viewVars.users = await userService.getAll()
+            viewVars.rolesUuidMap = roleService.getUuidMapFromList(await roleService.getAll())
             
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.module_data.users_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement            
