@@ -157,7 +157,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
                 
             }
             else if (error instanceof ExceptionRecordAlreadyExists) {
@@ -221,7 +221,15 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             }                
         } catch (error) {
-            
+            if (error instanceof ExceptionNotAuthorized) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
+                
+            }            
         } finally {
             roleService.dispose()
 
