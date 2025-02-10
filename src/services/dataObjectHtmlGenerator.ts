@@ -30,7 +30,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
 
         <script>
             function ${dataObjectName}_${fieldName}_listener(element){
-                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
+                app.md.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
 
                 if(element.value===""){
                     if("${validationRequired}"==="true"){
@@ -69,7 +69,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
 
         <script>
             function ${dataObjectName}_${fieldName}_listener(element){
-                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
+                app.md.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
 
                 if(element.value===""){
                     if("${validationRequired}"==="true"){
@@ -108,7 +108,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
 
         <script>
             function ${dataObjectName}_${fieldName}_listener(element){
-                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
+                app.md.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.value
 
                 if(element.value===""){
                     if("${validationRequired}"==="true"){
@@ -146,7 +146,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
 
         <script>
             function ${dataObjectName}_${fieldName}_listener(element){
-                app.module_data.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.checked
+                app.md.${dataObjectName}_form.${dataObjectName}.${fieldName}=element.checked
             }
             ${dataObjectName}_${fieldName}_listener(document.getElementById("${dataObjectName}_${fieldName}"))
         </script>

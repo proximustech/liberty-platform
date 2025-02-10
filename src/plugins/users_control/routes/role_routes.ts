@@ -21,7 +21,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         try {
             viewVars.roles = await roleService.getAll()
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
-            viewVars.userHasPermissionOnElement = "app.module_data.roles_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement         
+            viewVars.userHasPermissionOnElement = "app.md.roles_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement         
 
             return ctx.render('plugins/'+prefix+'/views/roles', viewVars);
         } catch (error) {
@@ -69,9 +69,9 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.roleMetadata = RoleDataObjectSpecs.metadata
             viewVars.roleFieldRender = RoleDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.roleValidateSchema = RoleDataObjectValidator.validateSchema
-            viewVars.roleValidateFunction = "app.module_data.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
+            viewVars.roleValidateFunction = "app.md.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
-            viewVars.userHasPermissionOnElement = "app.module_data.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
+            viewVars.userHasPermissionOnElement = "app.md.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
             
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);
         } catch (error) {

@@ -23,7 +23,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.rolesUuidMap = roleService.getUuidMapFromList(await roleService.getAll())
             
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
-            viewVars.userHasPermissionOnElement = "app.module_data.users_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement            
+            viewVars.userHasPermissionOnElement = "app.md.users_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement            
 
             return ctx.render('plugins/users_control/views/users', viewVars);
         } catch (error) { 
@@ -61,10 +61,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.userMetadata = UserDataObjectSpecs.metadata
             viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
-            viewVars.userValidateFunction = "app.module_data.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
+            viewVars.userValidateFunction = "app.md.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
 
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
-            viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
+            viewVars.userHasPermissionOnElement = "app.md.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
@@ -114,10 +114,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.userMetadata = UserDataObjectSpecs.metadata
             viewVars.userFieldRender = UserDataObjectSpecs.htmlDataObjectFieldRender
             viewVars.userValidateSchema = UserDataObjectValidator.validateSchema
-            viewVars.userValidateFunction = "app.module_data.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
+            viewVars.userValidateFunction = "app.md.user_form.userValidateFunction=" + UserDataObjectValidator.validateFunction
 
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
-            viewVars.userHasPermissionOnElement = "app.module_data.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
+            viewVars.userHasPermissionOnElement = "app.md.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {

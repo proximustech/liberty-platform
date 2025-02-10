@@ -1,18 +1,18 @@
 <script>
-    app.module_data.role_form={}
-    app.module_data.role_form.role=JSON.parse(`<%- JSON.stringify(role) %>`)
-    app.module_data.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
+    app.md.role_form={}
+    app.md.role_form.role=JSON.parse(`<%- JSON.stringify(role) %>`)
+    app.md.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- roleValidateFunction %>`)
 
-    app.module_data.role_form.rolePermissions = JSON.parse(`<%- JSON.stringify(rolePermissions) %>`)
+    app.md.role_form.rolePermissions = JSON.parse(`<%- JSON.stringify(rolePermissions) %>`)
     eval(`<%- userHasPermissionOnElement %>`)
 
-    app.module_data.role_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
+    app.md.role_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
     eval(`<%- userHasPermissionOnElement %>`)     
 
-    app.module_data.permissionsSchema = {}
+    app.md.permissionsSchema = {}
 
-    app.module_data.renderPluginSchemaConfig = (pluginName,pluginSchemaConfig) => {
+    app.md.renderPluginSchemaConfig = (pluginName,pluginSchemaConfig) => {
         let permissionsHTML = ""
         pluginSchemaConfig.schema.forEach(permissionConfig => {
             permissionsHTML += `
@@ -21,12 +21,12 @@
 
             `
             let disabled="disabled='disabled'"
-            if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.userPermissions,[`<%= prefix %>.role`],['write'])) {
+            if (app.md.role_form.userHasPermissionOnElement(app.md.role_form.userPermissions,[`<%= prefix %>.role`],['write'])) {
                 disabled = ""
             }   
             permissionConfig.permissions.forEach(permission => {
                 let checked = ""
-                if (app.module_data.role_form.userHasPermissionOnElement(app.module_data.role_form.rolePermissions,[`${pluginName}.${permissionConfig.resource}`],[permission])) {
+                if (app.md.role_form.userHasPermissionOnElement(app.md.role_form.rolePermissions,[`${pluginName}.${permissionConfig.resource}`],[permission])) {
                     checked = "checked"
                 }             
 
@@ -49,8 +49,8 @@
    
     function submitRole(triggerElement) {
 
-        let role = app.module_data.role_form.role
-        let roleValidationResult = app.module_data.role_form.roleValidateFunction(role,app.module_data.role_form.roleValidateSchema)
+        let role = app.md.role_form.role
+        let roleValidationResult = app.md.role_form.roleValidateFunction(role,app.md.role_form.roleValidateSchema)
        
         if (roleValidationResult.isValid) {
 
@@ -165,8 +165,8 @@
 <script>
     document.getElementById('role_form_tab_group').show('general')
 
-    for (const [pluginName, pluginSchemaConfig] of Object.entries(app.module_data.permissionsSchema)) {
-        app.module_data.renderPluginSchemaConfig(pluginName,pluginSchemaConfig)
+    for (const [pluginName, pluginSchemaConfig] of Object.entries(app.md.permissionsSchema)) {
+        app.md.renderPluginSchemaConfig(pluginName,pluginSchemaConfig)
     }
 
 </script>
