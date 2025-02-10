@@ -1,15 +1,17 @@
 import {IAuthorizer} from "../interfaces/authorizer_interface"
-import { newEnforcer } from 'casbin';
+import { newEnforcer,Enforcer } from 'casbin';
 
 export class AuthorizerCasbinFile implements IAuthorizer {
 
-    enforcer:any
+    enforcer:Enforcer
 
     constructor(){
-        this.readConfig()
+        this.initialize()
+        this.enforcer = new Enforcer();
+
     }
     
-    private async readConfig(){
+    async initialize(){
         this.enforcer = await newEnforcer('./src/authorizers/casbin/model.conf', './src/authorizers/casbin/policy.csv');
     }
 
@@ -25,5 +27,11 @@ export class AuthorizerCasbinFile implements IAuthorizer {
 
         return false
     };
+
+    async getRoleAndSubjectPermissions (subject: any,role: any) {
+        let userPermissions = await this.enforcer.getPermissionsForUser(subject)
+        let rolePermissions = await this.enforcer.getPermissionsForUser(role)
+        return userPermissions.concat(rolePermissions)
+    };    
     
 }
