@@ -12,8 +12,8 @@ export class UserService implements IDisposable {
     private userCanRead:boolean
     private userCanWrite:boolean
 
-    constructor(serviceSecurityElementPrefix:string,userPermissions:any){
-        this.userModel= new UserModel()
+    constructor(userModel:UserModel,serviceSecurityElementPrefix:string,userPermissions:any){
+        this.userModel= userModel
         this.serviceSecurityElement=serviceSecurityElementPrefix+".user"
         this.userPermissions=userPermissions
         this.userCanRead = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["read"])

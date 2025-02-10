@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import Router from "koa-router"
-import { UserService } from "../services/UserService";
+import { UserServiceFactory } from "../factories/UserServiceFactory";
 import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
@@ -16,7 +16,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.get('/users', async (ctx:Context) => {
         
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        const userService = new UserService(prefix,viewVars.userPermissions)
+        const userService = UserServiceFactory.create(prefix,viewVars.userPermissions)
         const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             viewVars.users = await userService.getAll()
@@ -50,7 +50,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.get('/account_settings', async (ctx:Context) => {
 
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        let userService = new UserService(prefix,viewVars.userPermissions)
+        let userService = UserServiceFactory.create(prefix,viewVars.userPermissions)
         try {
         
             viewVars.editing = true
@@ -89,7 +89,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.get('/user_form', async (ctx:Context) => {
 
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        let userService = new UserService(prefix,viewVars.userPermissions)
+        let userService = UserServiceFactory.create(prefix,viewVars.userPermissions)
         let roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             
@@ -161,7 +161,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         }
         else {
-            const userService = new UserService(prefix,userPermissions)
+            const userService = UserServiceFactory.create(prefix,userPermissions)
             try {
 
                 //Protect role_id on own user account settings change
@@ -269,7 +269,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.delete('/user',koaBody(), async (ctx:Context) => {
 
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        const userService = new UserService(prefix,userPermissions)
+        const userService = UserServiceFactory.create(prefix,userPermissions)
 
         try {
             let uuid:any = ctx.request.query.uuid || ""
