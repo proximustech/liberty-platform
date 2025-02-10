@@ -3,13 +3,13 @@ import {AuthorizerCasbinMongo as AuthorizerCasbin} from "../../../services/autho
 import { UserDataObject } from "../dataObjects/UserDataObject";
 import { RoleDataObject } from "../dataObjects/RoleDataObject";
 
-import { UserService } from "../services/UserService";
-import { RoleService } from "../services/RoleService";
+import { UserServiceFactory } from "../factories/UserServiceFactory";
+import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 
 async function main() {
 
-    let userService = new UserService('users_control',[])
-    let roleService = new RoleService()
+    let userService = UserServiceFactory.create('users_control',[])
+    let roleService = RoleServiceFactory.create('users_control',[])
 
     let role = new RoleDataObject()
     role.name = "Administrator"
