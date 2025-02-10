@@ -12,8 +12,8 @@ export class RoleService implements IDisposable {
     private userCanRead:boolean
     private userCanWrite:boolean
 
-    constructor(serviceSecurityElementPrefix:string,userPermissions:any){
-        this.roleModel= new RoleModel()
+    constructor(roleModel:RoleModel,serviceSecurityElementPrefix:string,userPermissions:any){
+        this.roleModel= roleModel
         this.serviceSecurityElement=serviceSecurityElementPrefix+".user"
         this.userPermissions=userPermissions
         this.userCanRead = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["read"])

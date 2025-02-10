@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import Router from "koa-router"
-import { RoleService } from "../services/RoleService";
+import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 import { RoleDataObject,RoleDataObjectSpecs,RoleDataObjectValidator } from "../dataObjects/RoleDataObject";
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
@@ -17,7 +17,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.get('/roles', async (ctx:Context) => {
 
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        const roleService = new RoleService(prefix,viewVars.userPermissions)
+        const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             viewVars.roles = await roleService.getAll()
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
@@ -45,7 +45,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     router.get('/role_form', async (ctx:Context) => {
         
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
-        let roleService = new RoleService(prefix,viewVars.userPermissions)
+        let roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
 
             let uuid:any = ctx.request.query.uuid || ""
@@ -100,7 +100,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         let permissions = body.permissions
         delete body.permissions
 
-        const roleService = new RoleService(prefix,userPermissions)
+        const roleService = RoleServiceFactory.create(prefix,userPermissions)
         try {
             let role = (body as RoleDataObject)
             let uuid = role.uuid
@@ -191,7 +191,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
 
-        const roleService = new RoleService(prefix,userPermissions)
+        const roleService = RoleServiceFactory.create(prefix,userPermissions)
         try {
             let uuid:any = ctx.request.query.uuid || ""
 

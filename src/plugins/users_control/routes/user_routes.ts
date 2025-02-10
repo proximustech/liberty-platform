@@ -1,7 +1,7 @@
 import { Context } from "koa";
 import Router from "koa-router"
 import { UserService } from "../services/UserService";
-import { RoleService } from "../services/RoleService";
+import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
@@ -17,7 +17,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         const userService = new UserService(prefix,viewVars.userPermissions)
-        const roleService = new RoleService(prefix,viewVars.userPermissions)
+        const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             viewVars.users = await userService.getAll()
             viewVars.rolesUuidMap = roleService.getUuidMapFromList(await roleService.getAll())
@@ -90,7 +90,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let userService = new UserService(prefix,viewVars.userPermissions)
-        let roleService = new RoleService(prefix,viewVars.userPermissions)
+        let roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             
             let uuid:any = ctx.request.query.uuid || ""
