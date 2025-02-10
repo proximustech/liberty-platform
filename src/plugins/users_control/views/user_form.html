@@ -101,7 +101,7 @@
         
             <% if (!accountSettings) { %>
                 <label style='margin-bottom:7px;font-size:17px'>Role</label>
-                <select id="roles" class="js-example-basic-single" name="role" style="width:100%" onchange="app.module_data.setRole(this)" >
+                <select id="roles" style="width:100%" onchange="app.module_data.setRole(this)" >
                     <option value="" >No Role</option>
                     <% roles.forEach(role => { %>
                         <option value="<%= role.uuid %>" <% if(user.role_uuid === role.uuid){ %> selected <% } %> ><%= role.name %></option>
@@ -133,9 +133,4 @@
 
 <script>
     document.getElementById('user_form_tab_group').show('general')
-
-    $(document).ready(function() {
-        $('.js-example-basic-single').select2({width:'resolve'});
-    });    
-
 </script>
