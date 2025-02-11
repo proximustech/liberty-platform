@@ -8,8 +8,12 @@ import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 
 async function main() {
 
-    let userService = UserServiceFactory.create('users_control',[])
-    let roleService = RoleServiceFactory.create('users_control',[])
+    let userPermissions = [
+        ['','users_control.role','read'],['','users_control.role','write'],
+        ['','users_control.user','read'],['','users_control.user','write'],
+    ]
+    let userService = UserServiceFactory.create('users_control',userPermissions)
+    let roleService = RoleServiceFactory.create('users_control',userPermissions)
 
     let role = new RoleDataObject()
     role.name = "Administrator"
