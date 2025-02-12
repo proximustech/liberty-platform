@@ -37,10 +37,12 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
     async getRoleAndSubjectPermissions (role: any,subject: any) {
         let userPermissions:any = []
         let rolePermissions:any = []
+        /*
         if (role!=="") {
             rolePermissions = await this.enforcer.getPermissionsForUser(role)
             
         }
+        */
         if (subject!=="") {
             userPermissions = await this.enforcer.getPermissionsForUser(subject)
             

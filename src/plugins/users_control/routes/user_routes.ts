@@ -220,7 +220,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     }
 
                 }
-                if (saveRolePolicy && processAllowed) { // Facility NOT used
+                if (saveRolePolicy && processAllowed) {
                     await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid)
                     if (user.role_uuid !== "") {
                         await ctx.authorizer.enforcer.addGroupingPolicy(uuid,user.role_uuid)          
@@ -276,7 +276,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             if (uuid !=="") {
                 await userService.deleteByUuId(uuid)
-                await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid) //Facility NOT used
+                await ctx.authorizer.enforcer.removeFilteredGroupingPolicy(0,uuid)
                 ctx.body = {
                     status: 'success',
                 }
