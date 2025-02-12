@@ -25,7 +25,7 @@ export const UserDataObjectValidator:any = {
         },
         password : {
             regexp: String.raw`(^${passwordMask}$)|(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#;:,\.\?@])[a-zA-Z\d!#;:,\.\?@]{12,}$)`,
-            message:"Password MUST have at least 12 DISTRIBUTED characteres with letters ( uppercase and lowercase ), numbers and some of the following:!#;:,.?@",
+            message:"Password MUST have at least 12 DISTRIBUTED characteres with letters ( uppercase and lowercase ), numbers and some of the following: !#;:,.?@",
             required:true,
             requiredMessage : "Password is required."
         },
