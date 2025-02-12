@@ -65,7 +65,7 @@
                 htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
                 app.drawer.hide();
                 app.dialog.hide()
-                app.toastShow('Deleted','User deleted successfully.',{type:"info"}) 
+                app.toastShow('Deleted','User deleted successfully.',{type:"success"}) 
             },1000)   
         })
     
