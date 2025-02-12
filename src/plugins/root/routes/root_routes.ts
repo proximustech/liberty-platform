@@ -14,8 +14,6 @@ let getRouter = (appViewVars: any) => {
         try {
             if (ctx.isAuthenticated()) {
                 viewVars.modulesContent = ""
-                // @ts-ignore
-                //await ctx.authorizer.authorize("alice","data2","write",undefined)
                 await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
                 viewVars.user = ctx.session.passport.user
                 return ctx.render('plugins/root/views/root', viewVars);
@@ -44,6 +42,9 @@ let getRouter = (appViewVars: any) => {
     router.get(passportAuthExports.loginUrl, async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
+                viewVars.modulesContent = ""
+                await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
+                viewVars.user = ctx.session.passport.user                
                 return ctx.render('plugins/root/views/root', viewVars);
             }
             else {
