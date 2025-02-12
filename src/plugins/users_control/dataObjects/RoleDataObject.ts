@@ -12,7 +12,7 @@ export const RoleDataObjectValidator:any = {
 
     validateSchema : {
         name : {
-            regexp:"^.{3,30}$",
+            regexp: String.raw`^\S{3,30}$`,
             message:"Name name must be in the range of 3 and 30 characters.",
             required:true,
             requiredMessage : "Name is required."

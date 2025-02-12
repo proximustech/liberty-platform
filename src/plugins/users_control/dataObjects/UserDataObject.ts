@@ -31,13 +31,13 @@ export const UserDataObjectValidator:any = {
             requiredMessage : "Password is required."
         },
         name : {
-            regexp:"^.{3,30}$",
+            regexp:String.raw`^\S{3,30}$`,
             message:"Name name must be in the range of 3 and 30 characters.",
             required:true,
             requiredMessage : "Name is required."
         },
         last_name : {
-            regexp:"^.{3,30}$",
+            regexp:String.raw`^\S{3,30}$`,
             message:"Last name name must be in the range of 3 and 30 characters.",
             required:true,
             requiredMessage : "Last name is required."
