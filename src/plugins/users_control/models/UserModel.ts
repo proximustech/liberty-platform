@@ -3,7 +3,7 @@ import { IDisposable } from "../../../interfaces/disposable_interface";
 import { MongoService } from "../services/MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
-import { Uuid } from "../../../services/utilities";
+import { Uuid,Random } from "../../../services/utilities";
 const { createHash } = require('crypto');
 
 
@@ -15,7 +15,6 @@ export class UserModel implements IDisposable {
     private mongoService:MongoService
     private dataBase:Db
     private collection:Collection
-    private hashcycles:number = 100
 
     constructor(){
         this.mongoService = new MongoService()
@@ -27,11 +26,9 @@ export class UserModel implements IDisposable {
     async create(user:UserDataObject){
         user.uuid = Uuid.createMongoUuId()
         user._id = new ObjectId(user.uuid)
+        user.salt = Random.getRandomString()
+        user.password=createHash('sha256').update(user.password+user.salt).digest('base64');
 
-        for (let index = 0; index < this.hashcycles; index++) {
-            user.password=createHash('sha256').update(user.password).digest('base64');
-        }         
-        
         const result = await this.collection.insertOne(user,{writeConcern: {w: 1, j: true}})
 
         if (result.insertedId == user._id && result.acknowledged) {
@@ -43,19 +40,18 @@ export class UserModel implements IDisposable {
 
     async updateOne(user:UserDataObject){
         user._id = new ObjectId(user.uuid)
-        if (user.password===passwordMask) {
-            const cursor = this.collection.find({uuid : user.uuid});
+        const cursor = this.collection.find({uuid : user.uuid});
 
-            while (await cursor.hasNext()) {
-                let document = (await cursor.next() as UserDataObject);
+        while (await cursor.hasNext()) {
+            let document = (await cursor.next() as UserDataObject);
+            user.salt = document.salt
+            if (user.password===passwordMask) {
                 user.password = document.password
-            }            
-            
-        }
-        else {
-            for (let index = 0; index < this.hashcycles; index++) {
-                user.password=createHash('sha256').update(user.password).digest('base64');
-            }            
+            }
+            else {
+                user.salt = Random.getRandomString()
+                user.password=createHash('sha256').update(user.password+user.salt).digest('base64');
+            }
         }
         const result = await this.collection.replaceOne(
             {uuid: user.uuid }, 
@@ -85,6 +81,7 @@ export class UserModel implements IDisposable {
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
             document.password = passwordMask
+            document.salt = ""
             return document
         }
 
@@ -93,22 +90,53 @@ export class UserModel implements IDisposable {
 
     async getByEmailAndPassword(email:string,password:string) : Promise<UserDataObject> {
 
-        for (let index = 0; index < this.hashcycles; index++) {
-            password=createHash('sha256').update(password).digest('base64');
+        let user = await this.getByEmail(email)
+        if (user.salt==="") {
+            return new UserDataObject()
         }
-        const cursor = this.collection.find({email:email, password:password});
+        else{
+            password=createHash('sha256').update(password+user.salt).digest('base64');
+            const cursor = this.collection.find({email:email, password:password});
+            
+            while (await cursor.hasNext()) {
+                let document = (await cursor.next() as UserDataObject);
+                document.password = passwordMask
+                document.salt = ""
+                return document
+            }
+            return new UserDataObject()
+        }
 
+    }
+    private async getByEmail(email:string) : Promise<UserDataObject> {
+
+        const cursor = this.collection.find({email:email});
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
-            document.password = passwordMask
             return document
         }
-
         return new UserDataObject()
     }
 
     async getAll() : Promise<UserDataObject[]> {
-        const cursor = this.collection.find({});
+
+        const pipeline = [
+            { 
+                $match: {} 
+            },
+            {
+                $project: {
+                    _id: 1,
+                    uuid: 1,
+                    email: 1,
+                    name: 1,
+                    last_name: 1,
+                    role_uuid:1
+                },
+            }
+          ]        
+
+        const cursor = this.collection.aggregate(pipeline);
         return (await cursor.toArray() as UserDataObject[])
     }
 

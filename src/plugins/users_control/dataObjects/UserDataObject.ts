@@ -6,6 +6,7 @@ export class UserDataObject {
 
     email:string = ""
     password:string = ""
+    salt:string = ""
     name:string = ""
     last_name:string = ""
 
