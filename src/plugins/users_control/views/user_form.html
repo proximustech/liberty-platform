@@ -101,6 +101,15 @@
             pass += chars[randIdx];
         }
 
+        let randIdx = Math.floor(Math.random() * lowerChars.length);
+        pass += lowerChars[randIdx];        
+        randIdx = Math.floor(Math.random() * upperChars.length);
+        pass += upperChars[randIdx];        
+        randIdx = Math.floor(Math.random() * numChars.length);
+        pass += numChars[randIdx];        
+        randIdx = Math.floor(Math.random() * specialChars.length);
+        pass += specialChars[randIdx];        
+
         return pass;
 
     }
@@ -139,7 +148,7 @@
             <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>
             <div style="text-align: right;">
             <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()"         style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
-                Try Auto Generated Password
+                Auto Generate Password
             </button>                
             </div>
             <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>
