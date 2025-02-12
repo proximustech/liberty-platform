@@ -32,7 +32,7 @@ export const UserDataObjectValidator:any = {
         },
         name : {
             regexp:String.raw`^\S{3,30}$`,
-            message:"Name name must be in the range of 3 and 30 characters.",
+            message:"Name name must be in the range of 3 and 30 characters without spaces.",
             required:true,
             requiredMessage : "Name is required."
         },
