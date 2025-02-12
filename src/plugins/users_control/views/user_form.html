@@ -75,6 +75,40 @@
         app.md.user_form.user.role_uuid=selectElement.value
     }
 
+    app.md.generatePassword = () => {
+
+        const lower = "abcdefghijklmnopqrstuvwxyz";  
+        const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";     
+        const numChars = "0123456789";
+        const specialChars = "!#;:,.?@";
+
+        let chars = lower;
+
+        chars += upperChars;
+        chars += numChars;
+        chars += specialChars;
+
+        let pass = "";
+        for (let i = 0; i < 17; i++) {
+            const randIdx = Math.floor(Math.random() * chars.length);
+            pass += chars[randIdx];
+        }
+
+        return pass;
+
+    }
+
+    app.md.setGeneratedPassword = () => {
+
+        let generatedPassword=app.md.generatePassword()
+        navigator.clipboard.writeText(generatedPassword)
+        document.getElementById('user_password').value=generatedPassword
+        document.getElementById('user_password').passwordVisible=true
+        document.getElementById('user_password_validation_message').innerHTML=''
+        app.toastShow('Copied','Password copied to Clipboard',{type:"info"})
+
+    } 
+
 </script>
 <% if (!editing) { %>
     <h3>Create User</h3>
@@ -94,8 +128,13 @@
     
         <sl-tab-panel name="general">
             <% let fieldsEnabled = false; if (accountSettings || UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { fieldsEnabled = true }%>
-            <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>    
-            <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>    
+            <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>
+            <div style="text-align: right;">
+            <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()"         style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
+                Auto Generate Password
+            </button>                
+            </div>
+            <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>
             <%- userFieldRender("user","name",user.name,userMetadata.name,fieldsEnabled) %>    
             <%- userFieldRender("user","last_name",user.last_name,userMetadata.last_name,fieldsEnabled) %>         
         

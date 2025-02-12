@@ -24,8 +24,8 @@ export const UserDataObjectValidator:any = {
             requiredMessage : "E-Mail is required."
         },
         password : {
-            regexp: String.raw`(^${passwordMask}$)|(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$)`,
-            message:"Password MUST have at least 8 characteres with letters ( uppercase and lowercase ) and numbers.",
+            regexp: String.raw`(^${passwordMask}$)|(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#;:,\.\?@])[a-zA-Z\d!#;:,\.\?@]{12,}$)`,
+            message:"Password MUST have at least 12 DISTRIBUTED characteres with letters ( uppercase and lowercase ), numbers and some of the following:!#;:,.?@",
             required:true,
             requiredMessage : "Password is required."
         },

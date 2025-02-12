@@ -23,7 +23,7 @@ async function main() {
     let user = new UserDataObject()
     user.role_uuid = roleUuid
     user.email="admin@admin.com"
-    user.password = "5ibf6DJejfR7djf"
+    user.password = "5ib!6DJej@R7djf"
     user.name="Admin"
     user.last_name="Istrator"
 
