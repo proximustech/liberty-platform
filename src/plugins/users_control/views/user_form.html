@@ -88,8 +88,11 @@
         chars += numChars;
         chars += specialChars;
 
+        let min = 12
+        let max = 20
+
         let pass = "";
-        for (let i = 0; i < 17; i++) {
+        for (let i = 0; i < Math.floor(Math.random() * (max - min + 1) + min); i++) {
             const randIdx = Math.floor(Math.random() * chars.length);
             pass += chars[randIdx];
         }
