@@ -316,11 +316,16 @@
                 }
               }
               if ('type' in options){
-                if (options['type']=='info') {
+                if (options['type']=='success') {
                   toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-                  toastHeader.style.backgroundColor="forestgreen"//lightskyblue
+                  toastHeader.style.backgroundColor="forestgreen"
                   toastHeader.style.color="white"
                 }
+                if (options['type']=='info') {
+                  toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
+                  toastHeader.style.backgroundColor="lightskyblue"
+                  toastHeader.style.color="black"
+                }                
                 if (options['type']=='warning') {
                   toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-exclamation-triangle" style="margin-right:10px"></i>`)
                   toastHeader.style.backgroundColor="#ffffba"
