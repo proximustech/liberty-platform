@@ -27,7 +27,7 @@ async function main() {
     user.name="Admin"
     user.last_name="Istrator"
 
-    await userService.create(user,false)
+    user.uuid = await userService.create(user,false)
 
     const permissions: any = [
         {resource:"users_control.user",permission:"read"},
@@ -42,6 +42,8 @@ async function main() {
         const permission = permissions[index];
         let result:Boolean = await authorizer.enforcer.addPolicy(roleUuid,permission.resource, permission.permission)
     }   
+    
+    await authorizer.enforcer.addGroupingPolicy(user.uuid,user.role_uuid)
 
     process.exit()
     

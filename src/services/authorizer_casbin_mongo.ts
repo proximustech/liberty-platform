@@ -22,9 +22,6 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
 
     async authorize (subject: any, element: any, action: any, environment: any) {
 
-        //this.enforcer.addPolicy('data2_admin','data2', 'write')
-        //this.enforcer.addGroupingPolicy('alice', 'data2_admin')
-
         let authorized = false
         
         if ((await this.enforcer.enforce(subject, element, action)) === true) {
@@ -37,14 +34,9 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
     async getRoleAndSubjectPermissions (role: any,subject: any) {
         let userPermissions:any = []
         let rolePermissions:any = []
-        /*
-        if (role!=="") {
-            rolePermissions = await this.enforcer.getPermissionsForUser(role)
-            
-        }
-        */
+
         if (subject!=="") {
-            userPermissions = await this.enforcer.getPermissionsForUser(subject)
+            userPermissions = await this.enforcer.getImplicitPermissionsForUser(subject)
             
         }
         return userPermissions.concat(rolePermissions)
