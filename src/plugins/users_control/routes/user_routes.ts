@@ -5,6 +5,7 @@ import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
 
 import koaBody from 'koa-body';
 
@@ -12,6 +13,8 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     let viewVars = {...appViewVars};
     viewVars.prefix = prefix
+
+    let logger = LoggerServiceFactory.create()
 
     router.get('/users', async (ctx:Context) => {
         
@@ -33,12 +36,13 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 ctx.body = {
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
-                }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
+                }  
+       
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
             }
 
         } finally {
@@ -74,11 +78,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
 
             }
         } finally {
@@ -127,11 +131,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.user')
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
 
             }
         } finally {
@@ -157,7 +161,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 status: 'error',
                 messages: [{message:"Operation NOT Allowed"}]
             }         
-            console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+            logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
 
         }
         else {
@@ -168,7 +172,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 if (selfUser && !processAllowed) {
                     let savedUser = await userService.getByUuId(user.uuid,false)
                     if (user.role_uuid !== savedUser.role_uuid) {
-                        console.log("SECURITY WARNING: Possible role id tampering by " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                        logger.warn("SECURITY WARNING: Possible role id tampering by " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
                     }
     
                     user.role_uuid = savedUser.role_uuid
@@ -199,7 +203,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                             status: 'error',
                             messages: [{message: "Data Unexpected Error"}]
                         }
-                        console.log("DATABASE ERROR writing user "+user.uuid)
+                        logger.error("DATABASE ERROR writing user "+user.uuid)
                     }
                 } else {
                     uuid = await userService.create(user)
@@ -234,7 +238,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                         status: 'error',
                         messages: [{message:"Operation NOT Allowed"}]
                     }         
-                    console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                    logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
                     
                 }
                 else if (error instanceof ExceptionRecordAlreadyExists) {
@@ -255,7 +259,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     
                 }
                 else {
-                    console.error(error)
+                    logger.error(error)
     
                 }                
             } finally {
@@ -296,11 +300,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
 
             }            
         } finally {

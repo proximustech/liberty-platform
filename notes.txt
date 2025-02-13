@@ -33,6 +33,9 @@ npm install @mikro-orm/core @mikro-orm/sqlite
 npm install @mikro-orm/cli
 npx mikro-orm
 
+npm install koa-pino-logger --force
+npm install pino-pretty --force
+npm install --save-dev "@types/koa-pino-logger" --force
 npm audit fix
 
 # Runs schema synchronization 

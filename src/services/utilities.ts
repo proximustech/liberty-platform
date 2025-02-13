@@ -1,4 +1,5 @@
 import {v4 as uuidv4} from 'uuid';
+const pino = require('pino')
 
 export abstract class Uuid  {
     
@@ -15,6 +16,21 @@ export abstract class Random  {
     
     static getRandomString(){
         return (Math.random()+1).toString(36).substring(2)
+    }
+    
+}
+export class PinoLogger  {
+    
+    public static create(){
+        const logger = pino({
+            transport: {
+                target: 'pino-pretty',
+                options: {
+                    colorize: true
+                }
+            }
+        })
+        return logger 
     }
     
 }

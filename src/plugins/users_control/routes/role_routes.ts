@@ -6,6 +6,7 @@ import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService"
 import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
 
 import koaBody from 'koa-body';
 
@@ -13,6 +14,8 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     let viewVars = {...appViewVars};
     viewVars.prefix = prefix
+
+    let logger = LoggerServiceFactory.create()
 
     router.get('/roles', async (ctx:Context) => {
 
@@ -31,11 +34,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.role')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.role')
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
             }
         } finally  {
             roleService.dispose()
@@ -81,11 +84,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.role')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to READ on " + prefix +'.role')
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
             }
         } finally {
             roleService.dispose()
@@ -119,7 +122,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                         status: 'error',
                         messages: [{message: "Data Unexpected Error"}]
                     }
-                    console.log("DATABASE ERROR writing role "+role.uuid)                        
+                    logger.error("DATABASE ERROR writing role "+role.uuid)                        
                 }
             } else {
                 uuid = await roleService.create(role)
@@ -134,7 +137,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                         status: 'error',
                         messages: [{message: "Data Unexpected Error"}]
                     }
-                    console.log("DATABASE ERROR writing role "+role.uuid)                           
+                    logger.error("DATABASE ERROR writing role "+role.uuid)                           
                 }
                 
             }
@@ -157,7 +160,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
                 
             }
             else if (error instanceof ExceptionRecordAlreadyExists) {
@@ -178,7 +181,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 
             }
             else {
-                console.error(error)
+                logger.error(error)
 
             }               
         } finally{
@@ -208,7 +211,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                         status: 'error',
                         messages: [{message: "Data Unexpected Error"}]
                     }
-                    console.log("DATABASE ERROR writing role "+uuid)                        
+                    logger.error("DATABASE ERROR writing role "+uuid)                        
                 }
                 
             }
@@ -227,7 +230,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     status: 'error',
                     messages: [{message:"Operation NOT Allowed"}]
                 }         
-                console.log("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
+                logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
                 
             }            
         } finally {

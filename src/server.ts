@@ -6,6 +6,7 @@ const mount = require('koa-mount')
 const serve = require('koa-static')
 const session = require('koa-session');
 const passport = require('koa-passport');
+const pino = require('koa-pino-logger')()
 import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
@@ -26,6 +27,7 @@ export let eventEmitter : EventEmitter
 
   //globalEntityManager = orm.em
   const app = new Koa()
+  app.use(pino)
   
   let getRouter={}
   let appViewVars:any = {}
