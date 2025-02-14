@@ -21,7 +21,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     ctx.login(user);
                     ctx.redirect('/');
                 } else {
-                    ctx.redirect('/login');
+                    ctx.redirect('/login'+"?event=invalid_credentials");
                 }
               })(ctx)  
                     
