@@ -37,9 +37,11 @@ export let eventEmitter : EventEmitter
   //app.use(koaBody())
 
   app.keys = ['lkaweob923jkpselld34k'];
+  //app.use(session({cookie: { secure: false }},app))
   app.use(session(app))
   
   require('./auth/local_auth')
+  //require('./auth/oidc_auth')
   app.use(passport.initialize());
   app.use(passport.session());
 

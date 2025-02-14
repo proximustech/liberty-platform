@@ -36,6 +36,7 @@
     "koa2-swagger-ui": "^5.10.0",
     "mongodb": "^6.8.0",
     "passport-local": "^1.0.0",
+    "passport-openidconnect": "^0.1.2",
     "pino-pretty": "^13.0.0",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
