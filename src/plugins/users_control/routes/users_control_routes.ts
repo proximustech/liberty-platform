@@ -6,6 +6,7 @@ let getRouter = (appViewVars: any) => {
 
     router = require("./user_routes.ts")(router,appViewVars,prefix)
     router = require("./role_routes.ts")(router,appViewVars,prefix)
+    router = require("./api_v1_routes.ts")(router,appViewVars,prefix)
 
     return router
 }

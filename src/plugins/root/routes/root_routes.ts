@@ -3,13 +3,15 @@ import Router from "koa-router"
 import koaBody from "koa-body"
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
-import { passportAuthExports } from "../../../auth/local_auth"
 
 const passport = require('koa-passport')
 
 let getRouter = (appViewVars: any) => {
     let viewVars = {...appViewVars}
     const router = new Router();
+
+    let loginRoute = "/login"
+
     router.get('/', async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
@@ -20,7 +22,7 @@ let getRouter = (appViewVars: any) => {
             }
             else
             {
-                ctx.redirect(passportAuthExports.loginUrl);
+                ctx.redirect(loginRoute);
             }
 
         } catch (error) {
@@ -28,18 +30,18 @@ let getRouter = (appViewVars: any) => {
         }
     })
 
-    router.post('/login',koaBody(), async (ctx:Context) => {
+    router.post('/local-login',koaBody(), async (ctx:Context) => {
         return passport.authenticate('local', (err:any, user:any, info:any, status:any) => {
             if (user) {
                 ctx.login(user);
                 ctx.redirect('/');
             } else {
-                ctx.redirect(passportAuthExports.loginUrl);
+                ctx.redirect(loginRoute+"?event=invalid_credentials");
             }
           })(ctx);
     })
 
-    router.get(passportAuthExports.loginUrl, async (ctx:Context) => {
+    router.get(loginRoute, async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
                 viewVars.modulesContent = ""
@@ -55,11 +57,15 @@ let getRouter = (appViewVars: any) => {
         }
     })
 
+    router.get('/oidc-login', async (ctx:Context) => {
+        return passport.authenticate('openidconnect')(ctx)
+    })
+
     router.get('/logout', async (ctx) => {
         if (ctx.isAuthenticated()) {
             ctx.logout();
         }
-        ctx.redirect(passportAuthExports.loginUrl);
+        ctx.redirect(loginRoute);
     })
 
     return router

@@ -108,7 +108,7 @@ export class UserModel implements IDisposable {
         }
 
     }
-    private async getByEmail(email:string) : Promise<UserDataObject> {
+    async getByEmail(email:string) : Promise<UserDataObject> {
 
         const cursor = this.collection.find({email:email});
         while (await cursor.hasNext()) {
