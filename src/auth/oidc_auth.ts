@@ -3,6 +3,18 @@ const OpenIDConnectStrategy = require('passport-openidconnect');
 import { MongoDbUserAuthenticator  as Authenticator } from "../plugins/users_control/services/mongodb_authenticator_user";
 
 /*
+OIDC Notes:
+  Definitions:
+    Client or Relying Party: Liberty Platform
+    OIDC Provider: Microsoft, Google, etc ...
+
+  Flow:
+    Client redirects to OIDC Provider with callback url
+    OIDC Provider authenticates and asks if the user wants to allow the Client access the profile
+    OIDC Provider redirects to callback url with the authorization code
+    Client asks for the Access Token to the OIDC Provider using the received authorization code
+    OIDC Provider gives the Client the JWT ACCESS TOKEN wich includes the user profile info
+
 Library Notes:
   Reference:
     https://github.com/jaredhanson/passport-openidconnect?tab=readme-ov-file
