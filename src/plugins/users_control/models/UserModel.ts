@@ -40,7 +40,7 @@ export class UserModel implements IDisposable {
 
     async updateOne(user:UserDataObject){
         user._id = new ObjectId(user.uuid)
-        const cursor = this.collection.find({uuid : user.uuid});
+        const cursor = this.collection.find({uuid : String(user.uuid)});
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
@@ -54,7 +54,7 @@ export class UserModel implements IDisposable {
             }
         }
         const result = await this.collection.replaceOne(
-            {uuid: user.uuid }, 
+            {uuid: String(user.uuid) }, 
             user,
             {upsert: false,writeConcern: {w: 1, j: true}}
         )
@@ -66,8 +66,8 @@ export class UserModel implements IDisposable {
 
     }
 
-    async deleteByUuId(UserUuId:string){
-        const result = await this.collection.deleteOne({ uuid: UserUuId },{writeConcern: {w: 1, j: true}})
+    async deleteByUuId(uuid:string){
+        const result = await this.collection.deleteOne({ uuid: String(uuid) },{writeConcern: {w: 1, j: true}})
         if (result.deletedCount == 1 && result.acknowledged) {
             return true
         }
@@ -76,7 +76,7 @@ export class UserModel implements IDisposable {
 
     async getByUuId(uuid:string) : Promise<UserDataObject> {
 
-        const cursor = this.collection.find({uuid : uuid});
+        const cursor = this.collection.find({uuid : String(uuid)});
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
@@ -96,7 +96,7 @@ export class UserModel implements IDisposable {
         }
         else{
             password=createHash('sha256').update(password+user.salt).digest('base64');
-            const cursor = this.collection.find({email:email, password:password});
+            const cursor = this.collection.find({email:String(email), password:String(password)});
             
             while (await cursor.hasNext()) {
                 let document = (await cursor.next() as UserDataObject);
@@ -110,7 +110,7 @@ export class UserModel implements IDisposable {
     }
     async getByEmail(email:string) : Promise<UserDataObject> {
 
-        const cursor = this.collection.find({email:email});
+        const cursor = this.collection.find({email:String(email)});
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as UserDataObject);
             return document

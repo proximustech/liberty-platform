@@ -37,7 +37,7 @@ export class RoleModel implements IDisposable {
     async updateOne(role:RoleDataObject){
         role._id = new ObjectId(role.uuid)
         const result = await this.collection.replaceOne(
-            {uuid: role.uuid }, 
+            {uuid: String(role.uuid) }, 
             role,
             {upsert: false,writeConcern: {w: 1, j: true}}
         )
@@ -48,7 +48,7 @@ export class RoleModel implements IDisposable {
     }
 
     async deleteByUuId(roleUuId:string){
-        const result = await this.collection.deleteOne({ uuid: roleUuId })
+        const result = await this.collection.deleteOne({ uuid: String(roleUuId) })
         if (result.deletedCount == 1 && result.acknowledged) {
             return true
         }
@@ -57,7 +57,7 @@ export class RoleModel implements IDisposable {
 
     async getByUuId(uuid:string) : Promise<RoleDataObject> {
 
-        const cursor = this.collection.find({uuid : uuid});
+        const cursor = this.collection.find({uuid : String(uuid)});
 
         while (await cursor.hasNext()) {
             let document = (await cursor.next() as RoleDataObject);
