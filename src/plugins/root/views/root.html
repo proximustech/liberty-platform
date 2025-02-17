@@ -446,6 +446,13 @@
                 setTimeout(()=>{app.toogleBar()},500)
               }
             }  
+            app.escapeHTML = (s) => {
+              return s.replace(/&/g, '&amp;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#x27;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;');
+            }  
 
             function httpRequest(method,url,callback) {
               const request = new XMLHttpRequest();
