@@ -42,6 +42,18 @@ export const UserDataObjectValidator:any = {
             required:true,
             requiredMessage : "Last name is required."
         },
+        uuid : {
+            regexp:String.raw`(^\S{24}$)|(^$)`,
+            message:"uuid format is invalid",
+            required:false,
+            requiredMessage : ""
+        },
+        role_uuid : {
+            regexp:String.raw`(^\S{24}$)|(^$)`,
+            message:"role_uuid format is invalid",
+            required:false,
+            requiredMessage : ""
+        },
 
     },
 

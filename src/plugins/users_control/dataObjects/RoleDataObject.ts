@@ -17,6 +17,12 @@ export const RoleDataObjectValidator:any = {
             required:true,
             requiredMessage : "Name is required."
         },
+        uuid : {
+            regexp:String.raw`(^\S{24}$)|(^$)`,
+            message:"uuid format is invalid",
+            required:false,
+            requiredMessage : ""
+        },           
 
     },
 
