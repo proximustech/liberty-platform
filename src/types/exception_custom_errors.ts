@@ -47,3 +47,14 @@ export class ExceptionDataBaseUnExpectedResult extends Error {
   }
 
 }
+export class ExceptionCsrfTokenFailed extends Error {
+
+  public static ExceptionCsrfTokenFailed: string = "Csrf Token Failed";
+
+  constructor(message: string) {
+    super(message);
+    this.name = "ExceptionCsrfTokenFailed";
+    this.stack = (<any> new Error()).stack;
+  }
+
+}

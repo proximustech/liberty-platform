@@ -4,8 +4,9 @@ import { UserServiceFactory } from "../factories/UserServiceFactory";
 import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
-import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { ExceptionCsrfTokenFailed,ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
 import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
+import { RouteService } from "../../../services/route_service";
 
 import koaBody from 'koa-body';
 
@@ -69,6 +70,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
+            RouteService.setCsrfToken(viewVars,ctx)
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
@@ -122,6 +124,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
+            RouteService.setCsrfToken(viewVars,ctx)
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
@@ -167,6 +170,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         else {
             const userService = UserServiceFactory.create(prefix,userPermissions)
             try {
+
+                if (ctx.request.body.csrfToken !== ctx.cookies.get("csrfToken")) {
+                    throw new ExceptionCsrfTokenFailed(ExceptionCsrfTokenFailed.ExceptionCsrfTokenFailed);
+                }                
 
                 //Protect role_id on own user account settings change
                 if (selfUser && !processAllowed) {
@@ -258,6 +265,15 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     }
                     
                 }
+                else if (error instanceof ExceptionCsrfTokenFailed) {
+                    ctx.status=401
+                    ctx.body = {
+                        status: 'error',
+                        messages: [{message:"Operation NOT Allowed"}]
+                    }         
+                    logger.warn("SECURITY WARNING: Csrf Control Failed for user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                    
+                }                  
                 else {
                     logger.error(error)
     
@@ -276,6 +292,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         const userService = UserServiceFactory.create(prefix,userPermissions)
 
         try {
+
+            if (ctx.request.query.csrfToken !== ctx.cookies.get("csrfToken")) {
+                throw new ExceptionCsrfTokenFailed(ExceptionCsrfTokenFailed.ExceptionCsrfTokenFailed);
+            }
+
             let uuid:any = ctx.request.query.uuid || ""
 
             if (uuid !=="") {
@@ -303,6 +324,15 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
                 
             }
+            else if (error instanceof ExceptionCsrfTokenFailed) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                logger.warn("SECURITY WARNING: Csrf Control Failed for user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.user')
+                
+            }             
             else {
                 logger.error(error)
 

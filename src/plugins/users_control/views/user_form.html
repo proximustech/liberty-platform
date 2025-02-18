@@ -18,7 +18,7 @@
             let result = $.ajax({
                 type:"POST",
                 url:"<%= prefix %>/user",
-                data:"json="+JSON.stringify(user),
+                data:"csrfToken=<%= csrfToken %>"+"&json="+JSON.stringify(user),
                 processData: false,
                 dataType:"text"
             })
@@ -57,7 +57,7 @@
     app.md.deleteUser = (uuid) => {
         let result = $.ajax({
             type:"DELETE",
-            url:"<%= prefix %>/user?uuid="+uuid,
+            url:"<%= prefix %>/user?uuid="+uuid+"&csrfToken=<%= csrfToken %>",
         })
         .done(function() {      
             setTimeout(() =>{

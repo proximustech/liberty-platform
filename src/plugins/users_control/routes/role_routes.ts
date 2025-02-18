@@ -5,8 +5,9 @@ import { RoleDataObject,RoleDataObjectSpecs,RoleDataObjectValidator } from "../d
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService"
-import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { ExceptionCsrfTokenFailed,ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
 import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
+import { RouteService } from "../../../services/route_service";
 
 import koaBody from 'koa-body';
 
@@ -75,6 +76,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.roleValidateFunction = "app.md.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
+            RouteService.setCsrfToken(viewVars,ctx)
             
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);
         } catch (error) {
@@ -105,6 +107,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         const roleService = RoleServiceFactory.create(prefix,userPermissions)
         try {
+
+            if (ctx.request.body.csrfToken !== ctx.cookies.get("csrfToken")) {
+                throw new ExceptionCsrfTokenFailed(ExceptionCsrfTokenFailed.ExceptionCsrfTokenFailed);
+            }
+
             let role = (body as RoleDataObject)
             let uuid = role.uuid
 
@@ -152,7 +159,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                     }
                 });
             }
-           
+ 
         } catch (error) {
             if (error instanceof ExceptionNotAuthorized) {
                 ctx.status=401
@@ -180,6 +187,15 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 }
                 
             }
+            else if (error instanceof ExceptionCsrfTokenFailed) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                logger.warn("SECURITY WARNING: Csrf Control Failed for user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
+                
+            }            
             else {
                 logger.error(error)
 
@@ -196,6 +212,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
         const roleService = RoleServiceFactory.create(prefix,userPermissions)
         try {
+            
+            if (ctx.request.query.csrfToken !== ctx.cookies.get("csrfToken")) {
+                throw new ExceptionCsrfTokenFailed(ExceptionCsrfTokenFailed.ExceptionCsrfTokenFailed);
+            }
+
             let uuid:any = ctx.request.query.uuid || ""
 
             if (uuid !=="") {
@@ -232,7 +253,16 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 }         
                 logger.warn("SECURITY WARNING: unauthorized user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
                 
-            }            
+            }
+            else if (error instanceof ExceptionCsrfTokenFailed) {
+                ctx.status=401
+                ctx.body = {
+                    status: 'error',
+                    messages: [{message:"Operation NOT Allowed"}]
+                }         
+                logger.warn("SECURITY WARNING: Csrf Control Failed for user " + ctx.session.passport.user.uuid + " traying to WRITE on " + prefix +'.role')
+                
+            }                       
         } finally {
             roleService.dispose()
 
