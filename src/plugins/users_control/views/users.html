@@ -2,7 +2,7 @@
     app.md = {}
 </script>
 <div class="alert alert-light module_title" role="alert">
-    <strong>Users</strong>
+    <strong><sl-icon name="person" label="Settings"></sl-icon> Users</strong>
 </div>
 <% if ( UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
 <button type="button" class="btn btn-primary" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form', {target:'#app_drawer', swap:'innerHTML'});">
