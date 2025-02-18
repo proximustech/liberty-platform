@@ -184,8 +184,7 @@
                 document.getElementById("content_view").style.width = window.window.innerWidth  - contentViewWidthDiffPixels - 10;
                 document.getElementById("app_menu").style.width= "220px";
                 if (app.isSmallScreen()) {
-                  app.drawer.hide()
-
+                  try {app.drawer.hide()} catch (error) {}
                 }                
               } else {
                 document.getElementById("content_view").style.marginLeft= "6px";
@@ -336,7 +335,8 @@
               if ('type' in options){
                 if (options['type']=='success') {
                   toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-                  toastHeader.style.backgroundColor="forestgreen"
+                  let backgroundColor="#228b6d"
+                  toastHeader.style.background=`linear-gradient(274deg, ${backgroundColor} 0%, white 0%, ${backgroundColor} 100%)`
                   toastHeader.style.color="white"
                 }
                 if (options['type']=='info') {
