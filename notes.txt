@@ -21,6 +21,7 @@ npm install "@types/koa-router"
 npm install "@types/koa-node"
 npm install "@types/koa-ejs"
 npm install "@types/koa-passport"
+npm install argon2
 
 npm install --save-dev ts-node-dev
 npm install --save-dev jest

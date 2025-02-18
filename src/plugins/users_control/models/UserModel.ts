@@ -4,7 +4,8 @@ import { MongoService } from "../services/MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
 import { Uuid,Random } from "../../../services/utilities";
-const { createHash } = require('crypto');
+
+import * as argon2 from "argon2";
 
 
 export class UserModel implements IDisposable {
@@ -27,7 +28,7 @@ export class UserModel implements IDisposable {
         user.uuid = Uuid.createMongoUuId()
         user._id = new ObjectId(user.uuid)
         user.salt = Random.getRandomString()
-        user.password=createHash('sha256').update(user.password+user.salt).digest('base64');
+        user.password=await argon2.hash(user.password+user.salt)
 
         const result = await this.collection.insertOne(user,{writeConcern: {w: 1, j: true}})
 
@@ -50,7 +51,7 @@ export class UserModel implements IDisposable {
             }
             else {
                 user.salt = Random.getRandomString()
-                user.password=createHash('sha256').update(user.password+user.salt).digest('base64');
+                user.password=await argon2.hash(user.password+user.salt)
             }
         }
         const result = await this.collection.replaceOne(
@@ -90,22 +91,20 @@ export class UserModel implements IDisposable {
 
     async getByEmailAndPassword(email:string,password:string) : Promise<UserDataObject> {
 
-        let user = await this.getByEmail(email)
+        let user = await this.getByEmail(String(email))
         if (user.salt==="") {
             return new UserDataObject()
         }
         else{
-            password=createHash('sha256').update(password+user.salt).digest('base64');
-            const cursor = this.collection.find({email:String(email), password:String(password)});
-            
-            while (await cursor.hasNext()) {
-                let document = (await cursor.next() as UserDataObject);
-                document.password = passwordMask
-                document.salt = ""
-                return document
+
+            if (await argon2.verify(user.password,String(password)+user.salt)) {
+                user.password = passwordMask
+                user.salt = ""
+                return user
             }
-            return new UserDataObject()
+
         }
+        return new UserDataObject()
 
     }
     async getByEmail(email:string) : Promise<UserDataObject> {
