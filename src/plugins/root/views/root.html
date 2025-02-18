@@ -106,7 +106,7 @@
     <body>  
         <nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary" style="background-color: var(--main-bg-color) !important; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
             <div class="container-fluid">
-              <button onclick="app.toogleBar()" class="btn" role="button">
+              <button onclick="app.toggleBar()" class="btn" role="button">
                 <i class="bi bi-layout-sidebar-inset" style="font-size: x-large;"></i>
               </button>
               <!-- <a class="navbar-brand" href="#"><%= labels.appName %></a> -->
@@ -175,7 +175,7 @@
             let wideScreenMinPixels = 992
             function resizeContetView(event){
               let contentViewWidthDiffPixels = 220
-              //Mantaing content ViewWidth in small screen devices
+              //Mantaining content ViewWidth in small screen devices
               if ($(window).width() < wideScreenMinPixels) {
                 contentViewWidthDiffPixels = 0
               }
@@ -183,6 +183,10 @@
                 document.getElementById("content_view").style.marginLeft = "226px";
                 document.getElementById("content_view").style.width = window.window.innerWidth  - contentViewWidthDiffPixels - 10;
                 document.getElementById("app_menu").style.width= "220px";
+                if (app.isSmallScreen()) {
+                  app.drawer.hide()
+
+                }                
               } else {
                 document.getElementById("content_view").style.marginLeft= "6px";
                 document.getElementById("content_view").style.width = window.window.innerWidth - 10;
@@ -211,28 +215,31 @@
                     let child = document.getElementById(childId)
                     parent.prepend(child)
                     child.style.display = "block"
-                },   
-                toogleBar : () => {
-                  try{
-                    navigator.vibrate(25);
-                  }catch{}
+                },
+
+                vibrate : () => {
+                  if (app.isSmallScreen()) {
+                    try{navigator.vibrate(35);}catch{}
+                  }
+                },
+                toggleBar : (vibrate=true) => {
+                  if (vibrate) {
+                    app.vibrate()
+                  }
                   app.app_menu_visible = !app.app_menu_visible
                   resizeContetView({})
                 },
     
                 openDetail: (element) => {
-                  try{
-                    navigator.vibrate(25);
-                  }catch{}
-                    try {
-                      app.closeDetail()
-                    } catch (error) {}
-                    app.temp_selected_element_for_detail = element.cloneNode(true)
-                    const detail = document.getElementById("detail_model").cloneNode(true);
-                    detail.id="item_detail"
-                    detail.style.display="block"
-                    element.outerHTML = detail.outerHTML
-                    setTimeout(()=>{document.getElementById("item_detail").style.opacity="1"},0)
+                  try {
+                    app.closeDetail()
+                  } catch (error) {}
+                  app.temp_selected_element_for_detail = element.cloneNode(true)
+                  const detail = document.getElementById("detail_model").cloneNode(true);
+                  detail.id="item_detail"
+                  detail.style.display="block"
+                  element.outerHTML = detail.outerHTML
+                  setTimeout(()=>{document.getElementById("item_detail").style.opacity="1"},0)
                     
                 },
                 closeDetail : () => {      
@@ -277,6 +284,8 @@
             }
 
             app.toastShow = (title,body,options = {}) => {
+
+              app.vibrate()
 
               const toastsContainer = document.getElementById('toasts_container')
               let toastIdex=toastsContainer.childElementCount
@@ -452,10 +461,18 @@
 
             app.app_menu_inteligentClose = () => {
               //Close app menu automatically in small screen devices
-              if ($(window).width() < wideScreenMinPixels) {
-                setTimeout(()=>{app.toogleBar()},500)
+              if (app.isSmallScreen()) {
+                setTimeout(()=>{app.toggleBar(false)},500)
               }
             }  
+
+            app.isSmallScreen = () => {
+              let isSmall = false
+              if ($(window).width() < wideScreenMinPixels) {
+                isSmall=true
+              }
+              return isSmall
+            }             
             app.escapeHTML = (s) => {
               return s.replace(/&/g, '&amp;')
                       .replace(/"/g, '&quot;')
@@ -484,7 +501,7 @@
             }
             
             //Show left bar at start
-            app.toogleBar()
+            app.toggleBar()
 
         </script>
         <%- modulesContent %>
