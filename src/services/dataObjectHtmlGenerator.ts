@@ -24,7 +24,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     if (inputType=="text") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <input id='${dataObjectName}_${fieldName}' class='form-control' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} />
+        <input id='${dataObjectName}_${fieldName}' class='form-control' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} autocomplete="one-time-code" />
         <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
         <br>
 
