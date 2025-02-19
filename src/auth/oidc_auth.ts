@@ -68,11 +68,13 @@ passport.use(new OpenIDConnectStrategy(auth_options, async function verify (issu
 
     //Available in profile: profile.displayName,profile.username //only when scope:"profile" and skipUserProfile: false are set.
     let authenticator = new Authenticator(profile.username)
-    let authenticatedUser = await authenticator.authenticate()
+    let authenticatedUser:any = await authenticator.authenticate()
 
+    
     if ( authenticatedUser === false) {
       return done(null, false);
     } else {
+      authenticatedUser.federated = true
       return done(null, authenticatedUser);
     }  
 

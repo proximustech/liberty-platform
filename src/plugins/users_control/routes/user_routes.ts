@@ -53,8 +53,13 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     })
 
     router.get('/account_settings', async (ctx:Context) => {
+        viewVars.userPermissions = [
+            ['','users_control.user','read'],
+        ]
+        if (!ctx.session.passport.user.federated) {
+            viewVars.userPermissions.push(['','users_control.self_user','write'])
+        }
 
-        viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let userService = UserServiceFactory.create(prefix,viewVars.userPermissions)
         try {
         
@@ -152,7 +157,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let user = (JSON.parse(ctx.request.body.json) as UserDataObject)
         let selfUser = false
-        if (user.uuid===ctx.session.passport.user.uuid) {
+        if (user.uuid===ctx.session.passport.user.uuid && !ctx.session.passport.user.federated) {
             selfUser = true
         }
 

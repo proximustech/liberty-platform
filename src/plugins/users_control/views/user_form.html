@@ -146,12 +146,14 @@
         <% } %>
     
         <sl-tab-panel name="general">
-            <% let fieldsEnabled = false; if (accountSettings || UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { fieldsEnabled = true }%>
+            <% let fieldsEnabled = false; if (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write'])) { fieldsEnabled = true }%>
             <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>
             <div style="text-align: right;">
-            <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
-                Auto Generate Password
-            </button>                
+            <% if (fieldsEnabled) { %>
+                <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
+                    Auto Generate Password
+                </button>
+            <% } %>
             </div>
             <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>
             <%- userFieldRender("user","name",user.name,userMetadata.name,fieldsEnabled) %>    
@@ -184,7 +186,7 @@
 
     <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
         <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
-        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write']) || accountSettings){ %>
+        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write'])){ %>
             <button type="button" class="btn btn-primary" onclick="app.md.submitUser(this)">Save</sl-button>
         <% } %>
     </div>

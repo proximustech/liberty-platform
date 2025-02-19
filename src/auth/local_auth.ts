@@ -12,11 +12,13 @@ passport.deserializeUser((user:any, done:any) => {
 passport.use(new LocalStrategy(auth_options, async (username:string, password:string, done:any) => {
 
   let authenticator = new UserPasswordAuthenticator(username,password)
-  let authenticatedUser = await authenticator.authenticate()
+  let authenticatedUser:any = await authenticator.authenticate()
 
+  
   if ( authenticatedUser === false) {
     return done(null, false);
   } else {
+    authenticatedUser.federated = false
     return done(null, authenticatedUser);
   }  
 
