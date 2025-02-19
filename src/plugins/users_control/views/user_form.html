@@ -117,12 +117,14 @@
     app.md.setGeneratedPassword = () => {
 
         let generatedPassword=app.md.generatePassword()
-        navigator.clipboard.writeText(generatedPassword)
         app.md.user_form.user.password = generatedPassword
         document.getElementById('user_password').value=generatedPassword
         document.getElementById('user_password').passwordVisible=true
         document.getElementById('user_password_validation_message').innerHTML=''
-        app.toastShow('Copied','Password copied to Clipboard',{type:"info"})
+        try {
+            navigator.clipboard.writeText(generatedPassword)
+            app.toastShow('Copied','Password copied to Clipboard',{type:"info"})
+        } catch (error) {}
 
     } 
 
@@ -147,7 +149,7 @@
             <% let fieldsEnabled = false; if (accountSettings || UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { fieldsEnabled = true }%>
             <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>
             <div style="text-align: right;">
-            <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()"         style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
+            <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
                 Auto Generate Password
             </button>                
             </div>
