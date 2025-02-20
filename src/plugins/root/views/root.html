@@ -283,6 +283,12 @@
                 }
             }
 
+            app.setSmartTable = (tableId) => {
+              $('#'+tableId).bootstrapTable()
+              document.getElementsByClassName("fixed-table-body")[0].classList.remove("fixed-table-body")
+              document.getElementsByClassName("loading-text")[0].innerHTML=""
+            }            
+
             app.toastShow = (title,body,options = {}) => {
 
               app.vibrate()
