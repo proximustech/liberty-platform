@@ -122,7 +122,7 @@
                       <label style="color:white; background-color: green;border-radius: 5px;height: 24px;width:24px;text-align: center;"><%= user.name[0] %><%= user.last_name[0] %></label> <%= labels.consoleMenu %> 
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
-                        <li><a class="dropdown-item" href="#" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});if (app.isSmallScreen)$('.navbar-toggler').click();if(app.app_menu_visible&&app.isSmallScreen())app.toggleBar(false)" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
+                        <li><a class="dropdown-item" href="#" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/users_control/account_settings', {target:'#app_drawer', swap:'innerHTML'});if (app.isSmallScreen()){$('.navbar-toggler').click()};if(app.app_menu_visible && app.isSmallScreen()){app.toggleBar(false)}" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout" ><i class="bi bi-door-open"></i> <%= labels.logOut %></a></li>
                     </ul>
