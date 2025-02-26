@@ -481,6 +481,18 @@
 
             app.graphShowPie = (containerId,dataArray) => {
 
+              am5.ready(function() {
+
+              am5.array.each(am5.registry.rootElements, 
+                function(root) {
+                  if (typeof root !== 'undefined'){
+                    if (root.dom.id == containerId) {
+                        root.dispose();
+                    }
+                  }
+                }
+              );
+
               let root = am5.Root.new(containerId);
               let themes = []
               themes.push(am5themes_Kelly.new(root))
@@ -510,12 +522,28 @@
                   endAngle: -90
               });
               
-              series.data.setAll(dataArray);
+              series.data.setAll(dataArray  );
               series.appear(1000, 100);
 
-            }  
+            })
+            }
+
+
             app.graphShowBars = (containerId,dataArray) => {
-              //am5.ready(function() {
+              
+              am5.ready(function() {
+
+              am5.array.each(am5.registry.rootElements, 
+                function(root) {
+                  if (typeof root !== 'undefined'){
+                    if (root.dom.id == containerId) {
+                        root.dispose();
+                    }
+                  }
+                }
+              );
+
+
               let root = am5.Root.new(containerId);
               let themes = []
               themes.push(am5themes_Kelly.new(root))
@@ -524,31 +552,6 @@
                   themes.push(am5themes_Responsive.new(root))
               }
               root.setThemes(themes);
-
-              /*            
-              let chart = root.container.children.push(
-              am5percent.PieChart.new(root, {
-                  endAngle: 270
-              }));
-
-              let series = chart.series.push(
-              am5percent.PieSeries.new(root, {
-                  valueField: "value",
-                  categoryField: "category",
-                  endAngle: 270,
-                  alignLabels: true
-              }));
-              
-              series.labels.template.set("text", "{category}: [bold]{valuePercentTotal.formatNumber('0')}%");        
-              
-              series.states.create("hidden", {
-                  endAngle: -90
-              });
-              
-              series.data.setAll(JSON.parse('${JSON.stringify(contextStats)}'));
-              series.appear(1000, 100);
-
-              */
 
               let chart = root.container.children.push(am5xy.XYChart.new(root, {
                 panX: false,
@@ -627,7 +630,7 @@
               series.appear();
               chart.appear(1000, 100);
 
-              //});            
+              });            
 
             }  
 
