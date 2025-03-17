@@ -48,6 +48,15 @@
           color:white
 
         }
+        .lf_input{
+          /*
+          background: linear-gradient(0deg, rgb(2, 0, 36) 0%, rgb(255, 255, 255) 0%, rgb(240, 240, 240) 100%);
+          border-color: transparent;
+          */  
+          margin-left: 3px;
+          max-width: 98%                  
+        }
+
         .lf_button {
           height: 40px;
           background-color: white;
@@ -301,7 +310,7 @@
                   let targetHistory = app.breadCrumbsMap.get(breadCrumbTargetId)
                   targetHistory.forEach(breadCrumb => {
                     html+=`
-                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="app.popBreadCrumb('${breadCrumbTargetId}');app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')"><i class="bi bi-arrow-left-circle"></i> ${breadCrumb.label}</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}');app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')"><i class="bi bi-arrow-left-circle"></i> ${breadCrumb.label}</button>
                     ` 
                   });
                   html+="</div>"

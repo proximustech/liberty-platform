@@ -24,7 +24,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     if (inputType=="text") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <input id='${dataObjectName}_${fieldName}' class='form-control' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} autocomplete="one-time-code" />
+        <input id='${dataObjectName}_${fieldName}' class='form-control lf_input' type='text' value='${fieldValue}' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} autocomplete="one-time-code" />
         <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
         <br>
 
@@ -102,7 +102,7 @@ export const HtmlDataObjectFieldRender: any = (dataObjectName:string,fieldName:s
     else if (inputType=="text_area") {
         html+=`
         <label style='margin-bottom:7px;font-size:17px'>${label}</label>
-        <textarea id='${dataObjectName}_${fieldName}' class='form-control' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} >${fieldValue}</textarea>
+        <textarea id='${dataObjectName}_${fieldName}' class='form-control lf_input' oninput="${dataObjectName}_${fieldName}_listener(this)" ${disabledParameter} >${fieldValue}</textarea>
         <label id='${dataObjectName}_${fieldName}_validation_message' style='font-size:15px;color:red;margin-left:2px;margin-top:3px'></label>
         <br>
 
