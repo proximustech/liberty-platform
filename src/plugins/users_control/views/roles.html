@@ -5,7 +5,7 @@
     <strong><sl-icon name="people" label="Settings"></sl-icon> Roles</strong>
 </div>
 <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
-    <button type="button" class="btn btn-primary" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/role_form', {target:'#app_drawer', swap:'innerHTML'});">
+    <button type="button" class="lf_button" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/role_form', {target:'#app_drawer', swap:'innerHTML'});">
         <i class="bi bi-plus-circle"></i> Add
     </button>
 <% } %>

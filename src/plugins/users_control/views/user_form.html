@@ -150,7 +150,7 @@
             <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>
             <div style="text-align: right;">
             <% if (fieldsEnabled) { %>
-                <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px">
+                <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px;background-color: var(--main-contrast-color);">
                     Auto Generate Password
                 </button>
             <% } %>
@@ -187,7 +187,7 @@
     <div slot="footer" style="padding: 20px;background-color: aliceblue;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
         <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
         <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write'])){ %>
-            <button type="button" class="btn btn-primary" onclick="app.md.submitUser(this)">Save</sl-button>
+            <button type="button" class="btn btn-primary" style="background-color: var(--main-contrast-color);" onclick="app.md.submitUser(this)">Save</sl-button>
         <% } %>
     </div>
 
