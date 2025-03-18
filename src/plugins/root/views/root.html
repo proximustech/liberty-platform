@@ -555,7 +555,7 @@
                     alignLabels: true
                 }));
                 
-                series.labels.template.set("text", "{category}: [bold]{valuePercentTotal.formatNumber('0.0')}");        
+                series.labels.template.set("text", "{category}: ({value}) [bold]{valuePercentTotal.formatNumber('0.0')}%");        
                 
                 series.states.create("hidden", {
                     endAngle: -90
