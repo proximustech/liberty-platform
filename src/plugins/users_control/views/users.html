@@ -5,7 +5,7 @@
     <strong><sl-icon name="person" label="Settings"></sl-icon> Users</strong>
 </div>
 <% if ( UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
-<button type="button" class="lf_button" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form', {target:'#app_drawer', swap:'innerHTML'});">
+<button type="button" class="lp_button" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form', {target:'#app_drawer', swap:'innerHTML'});">
     <i class="bi bi-plus-circle"></i> Add
 </button>
 <% } %>
@@ -37,7 +37,7 @@
             <div class="lp_container">
                 <div class="lp_contrast_container" style="padding-bottom: 8px;">
                     <div>
-                        <button class="lf_button" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form?uuid=<%= user.uuid %>', {target:'#app_drawer', swap:'innerHTML'});"><i class="bi bi-pencil"></i></button>
+                        <button class="lp_button" onclick="app.drawer.innerHTML='';app.setViewForPendingOperation('app_drawer');app.drawer.show();htmx.ajax('GET', '/<%= prefix %>/user_form?uuid=<%= user.uuid %>', {target:'#app_drawer', swap:'innerHTML'});"><i class="bi bi-pencil"></i></button>
                     </div> 
                     <strong>Mail:</strong> <%= user.email %>                                                            
                 </div>
