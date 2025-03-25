@@ -36,7 +36,7 @@ export let eventEmitter : EventEmitter
 
   //app.use(koaBody())
 
-  app.keys = ['lkaweob923jkpselld34k'];
+  app.keys = [(process.env.APP_KEYS as string)];
   app.use(session(app))
   
   require('./auth/local_auth')
