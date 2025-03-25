@@ -292,11 +292,20 @@
                     }])
                   }
                 },
-                popBreadCrumb : (targetId) => {
+                popBreadCrumb : (targetId,position=undefined) => {
                   let url = ""
                   if (app.breadCrumbsMap.has(targetId)) {
+                    if (typeof position == 'undefined'){
+                      position = app.breadCrumbsMap.get(targetId).length -1
+                    }
+
                     targetHistory = app.breadCrumbsMap.get(targetId)
-                    url = targetHistory.pop().url
+                    targetHistoryLength = targetHistory.length
+                    for (let positionIndex = position + 1; positionIndex < targetHistoryLength; positionIndex++) {
+                      //remove unnecessary elements
+                      url = targetHistory.pop().url
+                    }
+
                     app.breadCrumbsMap.set(targetId,targetHistory)
                   }
                   return url
@@ -308,10 +317,12 @@
                 renderBreadCrumbs : (renderTargetId,breadCrumbTargetId) => {
                   let html='<div class="btn-group" role="group" aria-label="Basic outlined example">'
                   let targetHistory = app.breadCrumbsMap.get(breadCrumbTargetId)
+                  let breadCrumbIndex = 0
                   targetHistory.forEach(breadCrumb => {
                     html+=`
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}');app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')"><i class="bi bi-arrow-left-circle"></i> ${breadCrumb.label}</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}',${breadCrumbIndex});app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')"><i class="bi bi-arrow-left-circle"></i> ${breadCrumb.label}</button>
                     ` 
+                    breadCrumbIndex++
                   });
                   html+="</div>"
                   document.getElementById(renderTargetId).innerHTML=html
