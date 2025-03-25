@@ -10,6 +10,7 @@ const passport = require('koa-passport');
 import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
+import { Config } from "./values/config";
 
 import {AuthorizerCasbinMongo as AuthorizerCasbin} from "./services/authorizer_casbin_mongo";
 
@@ -36,7 +37,7 @@ export let eventEmitter : EventEmitter
 
   //app.use(koaBody())
 
-  app.keys = [(process.env.APP_KEYS as string)];
+  app.keys = [Config.APP_KEYS];
   app.use(session(app))
   
   require('./auth/local_auth')

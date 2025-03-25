@@ -1,6 +1,7 @@
 import {IAuthorizer} from "../interfaces/authorizer_interface"
 import { newEnforcer,Enforcer } from 'casbin';
 import { MongoAdapter } from 'casbin-mongodb-adapter';
+import { Config } from "../values/config";
 
 export class AuthorizerCasbinMongo implements IAuthorizer {
 
@@ -12,7 +13,7 @@ export class AuthorizerCasbinMongo implements IAuthorizer {
     
     public async initialize(){
         const adapter = await MongoAdapter.newAdapter({
-            uri: (process.env.CASBIN_MONGO_URI as string),
+            uri: (Config.CASBIN_MONGO_URI as string),
             collection: 'casbin',
             database: 'liberty_platform',
         });   

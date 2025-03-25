@@ -1,6 +1,7 @@
 const passport = require('koa-passport');
 const OpenIDConnectStrategy = require('passport-openidconnect');
 import { MongoDbUserAuthenticator  as Authenticator } from "../plugins/users_control/services/mongodb_authenticator_user";
+import { Config } from "../values/config";
 
 /*
 OIDC Notes:
@@ -48,13 +49,13 @@ Microsoft notes:
 */
 
 const auth_options = {
-    issuer: process.env.OIDC_ISSUER,
-    authorizationURL: process.env.OIDC_AUTHORIZATION_URL,
-    tokenURL: process.env.OIDC_TOKEN_URL,
-    userInfoURL: process.env.OIDC_USER_INFO_URL,
-    clientID: process.env.OIDC_CLIENT_ID,
-    clientSecret: process.env.OIDC_CLIENT_SECRET,
-    callbackURL: process.env.OIDC_CALLBACK_URL,
+    issuer: Config.OIDC_ISSUER,
+    authorizationURL: Config.OIDC_AUTHORIZATION_URL,
+    tokenURL: Config.OIDC_TOKEN_URL,
+    userInfoURL: Config.OIDC_USER_INFO_URL,
+    clientID: Config.OIDC_CLIENT_ID,
+    clientSecret: Config.OIDC_CLIENT_SECRET,
+    callbackURL: Config.OIDC_CALLBACK_URL,
     skipUserProfile: false,
     scope:"profile"
   };

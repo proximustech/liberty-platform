@@ -1,7 +1,6 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-
-import { env } from 'node:process';
 import { MongoClient, ServerApiVersion } from 'mongodb';
+import { Config } from "../values/config";
 
 
 export class MongoService implements IDisposable {
@@ -10,7 +9,7 @@ export class MongoService implements IDisposable {
 
     constructor(){
         // @ts-ignore
-        this.client = new MongoClient(env.AUTHENTICATOR_USER_PASSWORD_PLUGIN_MONGO_URI, {
+        this.client = new MongoClient(Config.AUTHENTICATOR_USER_PASSWORD_PLUGIN_MONGO_URI, {
             //serverApi: {
             //    version: ServerApiVersion.v1,
             //    strict: true,
