@@ -1,4 +1,4 @@
-import * as LibertyFlagPermissions from "../../_liberty_flag/services/permissions";
+//import * as LibertyFlagPermissions from "../../_liberty_flag/services/permissions";
 import * as UsersControlPermissions from "../../users_control/services/permissions";
 
 export let dynamicViewsDefinition = {
@@ -6,7 +6,7 @@ export let dynamicViewsDefinition = {
     "role_form":{
         "permissionsModulesContent":[
             new UsersControlPermissions.Permissions(),
-            new LibertyFlagPermissions.Permissions(),
+            //new LibertyFlagPermissions.Permissions(),
 
         ]
     },
