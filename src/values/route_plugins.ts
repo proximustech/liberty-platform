@@ -1,6 +1,6 @@
 export let routePlugins = [
-    '_liberty_flag',
-    '_assessor',
+    //'_liberty_flag',
+    //'_assessor',
     'root',
     'users_control'
     /*
