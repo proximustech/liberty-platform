@@ -15,6 +15,7 @@ let getRouter = (appViewVars: any) => {
     router.get('/', async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
+                viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
                 viewVars.modulesContent = ""
                 await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
                 viewVars.user = ctx.session.passport.user
