@@ -164,7 +164,9 @@
 
     $(document).ready(function() {
         document.getElementById('role_form_tab_group').show('general')
-        document.getElementById("role_name").focus();
+        if (app.md.role_form.role.name==="") {
+            setTimeout(()=>{document.getElementById("role_name").focus()},500)        
+        }          
     });
 
 
