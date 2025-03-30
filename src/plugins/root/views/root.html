@@ -294,16 +294,17 @@
                 },
                 popBreadCrumb : (targetId,position=undefined) => {
                   let url = ""
+                  targetHistory = app.breadCrumbsMap.get(targetId)                
                   if (app.breadCrumbsMap.has(targetId)) {
                     if (typeof position == 'undefined'){
-                      position = app.breadCrumbsMap.get(targetId).length -1
-                    }
-
-                    targetHistory = app.breadCrumbsMap.get(targetId)
-                    targetHistoryLength = targetHistory.length
-                    for (let positionIndex = position + 1; positionIndex < targetHistoryLength; positionIndex++) {
-                      //remove unnecessary elements
                       url = targetHistory.pop().url
+                    }
+                    else {
+                      targetHistoryLength = targetHistory.length  
+                      for (let positionIndex = position + 1; positionIndex < targetHistoryLength; positionIndex++) {
+                        //remove unnecessary elements
+                        url = targetHistory.pop().url
+                      } 
                     }
 
                     app.breadCrumbsMap.set(targetId,targetHistory)
