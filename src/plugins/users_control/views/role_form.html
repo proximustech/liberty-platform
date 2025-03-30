@@ -161,7 +161,12 @@
     </div>
 
 <script>
-    document.getElementById('role_form_tab_group').show('general')
+
+    $(document).ready(function() {
+        document.getElementById('role_form_tab_group').show('general')
+        document.getElementById("role_name").focus();
+    });
+
 
     for (const [pluginName, pluginSchemaConfig] of Object.entries(app.md.permissionsSchema)) {
         app.md.renderPluginSchemaConfig(pluginName,pluginSchemaConfig)
