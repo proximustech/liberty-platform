@@ -3,7 +3,7 @@
     app.md.user_form.user=JSON.parse(`<%- JSON.stringify(user) %>`)
     app.md.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema).replaceAll("\\","\\\\") %>`)
     eval(`<%- userValidateFunction %>`)
-    app.md.accountSettings = <%= accountSettings %>
+    app.md.user_form.accountSettings = <%= accountSettings %>
 
     app.md.user_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
     eval(`<%- userHasPermissionOnElement %>`) 
@@ -24,7 +24,7 @@
             })
             .done(function() {
                 setTimeout(() => {
-                    if(!app.md.accountSettings){
+                    if(!app.md.user_form.accountSettings){
                         app.setViewForPendingOperation('content_view')
                         htmx.ajax('GET', '/<%= prefix %>/users', {target:'#content_view', swap:'innerHTML'})
                     }
