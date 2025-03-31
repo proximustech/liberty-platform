@@ -1,5 +1,5 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-import { ExceptionNotAuthorized,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { ExceptionNotAuthorized,ExceptionInvalidObject } from "../../../types/exceptions";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 import { UserDataObject, UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserModel } from "../models/UserModel";

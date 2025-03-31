@@ -4,7 +4,7 @@ import { MongoService } from "../services/MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
 import { Uuid,Random } from "../../../services/utilities";
-import { ExceptionRecordAlreadyExists } from "../../../types/exception_custom_errors";
+import { ExceptionRecordAlreadyExists } from "../../../types/exceptions";
 
 import * as argon2 from "argon2";
 
