@@ -219,14 +219,13 @@
             }
             window.addEventListener('resize',resizeContetView,true) 
             var app = {
-              md:{}, //module_data
+              md:{}, //module_data. used for any porpouse by the loaded module
               drawer:document.getElementById("app_drawer"),
               dialog:document.getElementById("app_dialog"),
                 top_menu : document.getElementById("top_menu"),
                 modules_menu : document.getElementById("modules_menu"),
                 app_menu_visible : false,
                 temp_selected_element_for_detail:{},
-                module_data : {}, //used for any porpouse by the loaded module
                 modal_window : {},
                 append : (parentId,childId) => {
                     let parent = document.getElementById(parentId)
