@@ -4,6 +4,7 @@ import { MongoService } from "../services/MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { UserDataObject,passwordMask } from "../dataObjects/UserDataObject";
 import { Uuid,Random } from "../../../services/utilities";
+import { ExceptionRecordAlreadyExists } from "../../../types/exception_custom_errors";
 
 import * as argon2 from "argon2";
 
@@ -30,8 +31,14 @@ export class UserModel implements IDisposable {
         user.salt = Random.getRandomString()
         user.password=await argon2.hash(user.password+user.salt)
 
-        const result = await this.collection.insertOne(user,{writeConcern: {w: 1, j: true}})
-
+        const result = await this.collection.insertOne(user,{writeConcern: {w: 1, j: true}}).catch((error) => {
+            if (error.code === 11000) {
+                throw new ExceptionRecordAlreadyExists("E-Mail already exists")
+            } else {
+              console.log(error);
+              throw new Error("DB Unexpected Error");
+            }
+        });
         if (result.insertedId == user._id && result.acknowledged) {
             return user.uuid
         }
@@ -58,7 +65,14 @@ export class UserModel implements IDisposable {
             {uuid: String(user.uuid) }, 
             user,
             {upsert: false,writeConcern: {w: 1, j: true}}
-        )
+        ).catch((error) => {
+            if (error.code === 11000) {
+                throw new ExceptionRecordAlreadyExists("E-Mail already exists")
+            } else {
+              console.log(error);
+              throw new Error("DB Unexpected Error");
+            }
+        });
 
         if (result.acknowledged && result.matchedCount == 1 ) {
             return true

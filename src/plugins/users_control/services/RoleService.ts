@@ -1,7 +1,7 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { ExceptionNotAuthorized,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
-import { RoleDataObject,RoleDataObjectValidator,RoleDataObjectSpecs } from "../dataObjects/RoleDataObject";
+import { RoleDataObject,RoleDataObjectValidator } from "../dataObjects/RoleDataObject";
 import { RoleModel } from "../models/RoleModel";
 
 export class RoleService implements IDisposable {
@@ -27,11 +27,7 @@ export class RoleService implements IDisposable {
         if (!roleValidationResult.isValid) {
             throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,roleValidationResult.messages)
         }        
-
-        if (await this.fieldValueExists(role.uuid,"name",role.name)) {
-            throw new ExceptionRecordAlreadyExists("Name already exists")
-        }  
-        
+   
         if (this.userCanWrite) {
             return await this.roleModel.create(role)            
         }
@@ -47,10 +43,6 @@ export class RoleService implements IDisposable {
         if (!roleValidationResult.isValid) {
             throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,roleValidationResult.messages)
         }        
-
-        if (await this.fieldValueExists(role.uuid,"name",role.name)) {
-            throw new ExceptionRecordAlreadyExists("Name already exists")
-        }  
         
         if (this.userCanWrite) {
             return await this.roleModel.updateOne(role)

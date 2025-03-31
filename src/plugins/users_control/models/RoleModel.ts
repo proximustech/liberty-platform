@@ -4,6 +4,7 @@ import { MongoService } from "../services/MongoService";
 import { ObjectId,MongoClient,Db,Collection } from 'mongodb';
 import { RoleDataObject } from "../dataObjects/RoleDataObject";
 import { Uuid } from "../../../services/utilities";
+import { ExceptionRecordAlreadyExists } from "../../../types/exception_custom_errors";
 
 
 export class RoleModel implements IDisposable {
@@ -25,7 +26,14 @@ export class RoleModel implements IDisposable {
     async create(role:RoleDataObject){
         role.uuid = Uuid.createMongoUuId()
         role._id = new ObjectId(role.uuid)        
-        const result = await this.collection.insertOne(role,{writeConcern: {w: 1, j: true}})
+        const result = await this.collection.insertOne(role,{writeConcern: {w: 1, j: true}}).catch((error) => {
+            if (error.code === 11000) {
+                throw new ExceptionRecordAlreadyExists("Name already exists")
+            } else {
+              console.log(error);
+              throw new Error("DB Unexpected Error");
+            }
+        });
 
         if (result.insertedId == role._id && result.acknowledged) {
             return role.uuid
@@ -40,7 +48,14 @@ export class RoleModel implements IDisposable {
             {uuid: String(role.uuid) }, 
             role,
             {upsert: false,writeConcern: {w: 1, j: true}}
-        )
+        ).catch((error) => {
+            if (error.code === 11000) {
+                throw new ExceptionRecordAlreadyExists("Name already exists")
+            } else {
+              console.log(error);
+              throw new Error("DB Unexpected Error");
+            }
+        });
         if (result.acknowledged && result.matchedCount == 1 ) {
             return true
         }

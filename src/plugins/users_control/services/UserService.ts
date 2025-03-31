@@ -1,5 +1,5 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-import { ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
+import { ExceptionNotAuthorized,ExceptionInvalidObject } from "../../../types/exception_custom_errors";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 import { UserDataObject, UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserModel } from "../models/UserModel";
@@ -33,10 +33,6 @@ export class UserService implements IDisposable {
             throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
         }
 
-        if (await this.fieldValueExists(user.uuid,"email",user.email,checkPermissions)) {
-            throw new ExceptionRecordAlreadyExists("E-Mail already exists")
-        }        
-
         if (checkPermissions) {
             if (this.userCanWrite) {
                 return await this.userModel.create(user)            
@@ -59,9 +55,6 @@ export class UserService implements IDisposable {
             throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
         }        
         
-        if (await this.fieldValueExists(user.uuid,"email",user.email,checkPermissions)) {
-            throw new ExceptionRecordAlreadyExists("E-Mail already exists")
-        }
         if (checkPermissions) {
             if (this.userCanWrite) {
                 return await this.userModel.updateOne(user)
