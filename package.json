@@ -8,7 +8,7 @@
     "script": "ts-node-dev",
     "dev": "ts-node-dev --transpile-only --respawn src/server.ts",
     "dev:debug": "ts-node-dev --transpile-only --respawn --inspect=4321",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "author": "",
   "license": "MIT",
