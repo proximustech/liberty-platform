@@ -13,30 +13,20 @@ var createdRoleUuid = ""
 describe("plugin: users_control - RoleService", () => {
 
     test('Create', async () => {
-
         let role = new RoleDataObject()
         role.name="utest-role"
-
         createdRoleUuid = await roleService.create(role)
-
         expect(createdRoleUuid.length).toBe(24);
     });
     test('Update', async () => {
-
         let role = (await roleService.getByUuId(createdRoleUuid) as RoleDataObject)
         role.name="utest-role-updated"
 
         let updatedOk = await roleService.updateOne(role)
-
         expect(updatedOk).toBe(true);
     });
     test('Delete', async () => {
-
-        let role = (await roleService.getByUuId(createdRoleUuid) as RoleDataObject)
-
-
         let deletedOk = await roleService.deleteByUuId(createdRoleUuid)
-
         expect(deletedOk).toBe(true);
     });        
 
