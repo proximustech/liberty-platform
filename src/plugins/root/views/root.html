@@ -45,7 +45,9 @@
           border-color: transparent;
           border-style: none;
           text-align: left;
-          color:white
+          color:white;
+          padding: 7px;
+          border-radius: 4px;
 
         }
         .lf_input{
@@ -123,11 +125,11 @@
                 <i class="bi bi-layout-sidebar-inset" style="font-size: x-large;"></i>
               </button>
               <!-- <a class="navbar-brand" href="#"><%= labels.appName %></a> -->
-              <img src="static/platform_images/host.png" style="max-width: 150px;" />
+              <span id="app.headerBar" class="nav-link" style="width: 50%;"></span>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="border-style: none !important;">
                 <i class="bi bi-list" style="font-size: x-large;"></i>
               </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <span class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item dropdown ml-md-auto show" style="text-align:center">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
@@ -140,13 +142,13 @@
                     </ul>
                   </li>
                 </ul>
-              </div>
+              </span>
             </div>
         </nav>    
         <div class="app_menu" id="app_menu" style="transition: width .3s ease-in-out;border-radius: 7px; overflow: auto;height: 93%; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);background-color: var(--main-bg-color);  overflow-x: hidden;">
             <div class="flex-shrink-0 p-3" style="width: 220px;">
               <div style="text-align: center; font-weight: bold;">
-                <%= labels.root_app_menu_title  %>
+                <img src="static/platform_images/host.png" style="max-width: 150px;" />
                 <br/>
                 <br/>
               </div>
@@ -701,7 +703,17 @@
                       .replace(/'/g, '&#x27;')
                       .replace(/</g, '&lt;')
                       .replace(/>/g, '&gt;');
-            }  
+            }
+            app.setModuleTitle = (
+              title,html=`
+                <div id="app.moduleTitle" class="module_title"></div>              
+              `
+            ) => {
+              let headerBar = document.getElementById("app.headerBar")
+              headerBar.innerHTML=html
+              let moduleTitle = document.getElementById("app.moduleTitle")
+              moduleTitle.innerHTML=title
+            }              
 
             function httpRequest(method,url,callback) {
               const request = new XMLHttpRequest();
