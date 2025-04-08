@@ -48,11 +48,12 @@
           color:white;
           padding: 7px;
           border-radius: 4px;
+          min-height: 38px;
 
         }
         .module_fixed_bar{
           position:fixed;
-          top:90;
+          top:65;
           z-index: 1;
           box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         }        
@@ -509,6 +510,9 @@
               app.dialog.show()
             }  
             app.ajax = (targetId,url,label="*",resetBreadCrumbsMap=false) => {
+              if (targetId=="content_view") {
+                app.setModuleTitle(`<i class="bi bi-smartwatch"></i>`)
+              }
               app.setViewForPendingOperation(targetId)
               $.ajax({
                   type:"GET",
@@ -516,6 +520,9 @@
                   dataType:"html"
               })
               .done(function(html) {
+                  if (targetId=="content_view") {
+                    app.setModuleTitle(`<i class="bi bi-box-fill"></i>`)
+                  }
                   $('#'+targetId).html(html);
                   if (targetId=="content_view") {
                     try {
