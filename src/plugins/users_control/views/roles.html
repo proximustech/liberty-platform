@@ -4,9 +4,9 @@
 
 <div class="lp_contrast_container module_fixed_bar">
     <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
-        <button type="button" class="lp_button" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();app.ajax('app_drawer', '/<%= prefix %>/role_form')">
-            <i class="bi bi-plus-circle"></i> Add
-        </button>
+        <div class="btn-group" role="group" aria-label="" style="margin-bottom: 10px;">
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();app.ajax('app_drawer', '/<%= prefix %>/role_form')"><i class="bi bi-plus-circle"></i> Add</button>
+        </div>
     <% } %>
 
     <div style="max-width: 250px;">
