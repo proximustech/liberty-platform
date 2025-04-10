@@ -102,16 +102,13 @@ var app = {
         app.ajax(targetId,lastUrl)
       },
       renderBreadCrumbs : (renderTargetId,breadCrumbTargetId) => {
-        let html='<div class="btn-group" role="group" aria-label="Basic outlined example">'
+        let html=''
         let targetHistory = app.breadCrumbsMap.get(breadCrumbTargetId)
         let breadCrumbIndex = 0
         targetHistory.forEach(breadCrumb => {
-          html+=`
-          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}',${breadCrumbIndex});app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')"><i class="bi bi-arrow-left-circle"></i> ${breadCrumb.label}</button>
-          ` 
+          html+=`<span class="badge text-bg-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}',${breadCrumbIndex});app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')">${breadCrumb.label}</span> ` 
           breadCrumbIndex++
         });
-        html+="</div>"
         document.getElementById(renderTargetId).innerHTML=html
 
       }
