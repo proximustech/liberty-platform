@@ -101,9 +101,10 @@
         -->
 
         <script>
-            window.addEventListener('resize',app.resizeContetView,true)             
-            //Show left bar at start
-            app.toggleBar()
+          window.onbeforeunload = (event) => {event.preventDefault()}
+          window.addEventListener('resize',app.resizeContetView,true)             
+          //Show left bar at start
+          app.toggleBar()
         </script>
         <%- modulesContent %>
       <!-- Register shoelace components to be used in dynamic content  -->
