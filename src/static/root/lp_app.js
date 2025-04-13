@@ -294,7 +294,8 @@ var app = {
         if (targetId=="content_view") {
           app.setModuleTitle(`<i class="bi bi-box-fill"></i>`)
         }
-        $('#'+targetId).html(html);
+        document.getElementById(targetId).style.display="none"
+        $('#'+targetId).html(html).fadeIn(300);
         if (targetId=="content_view") {
           try {
             if (app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
