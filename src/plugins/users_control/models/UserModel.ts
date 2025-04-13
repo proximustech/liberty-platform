@@ -131,9 +131,16 @@ export class UserModel implements IDisposable {
         return new UserDataObject()
     }
 
-    async getAll() : Promise<UserDataObject[]> {
+    async getAll(limit=0,skip=0) : Promise<UserDataObject[]> {
 
-        const pipeline = [
+        let limitStage = [{
+            $limit : limit
+        }]
+        let skipStage = [{
+            $skip : skip
+        }]        
+
+        let pipeline = [
             { 
                 $match: {} 
             },
@@ -147,11 +154,24 @@ export class UserModel implements IDisposable {
                     role_uuid:1
                 },
             }
-          ]        
+        ] 
+
+        if (limit > 0) {
+            //@ts-ignore
+            pipeline = limitStage.concat(pipeline)
+        }
+        if (skip > 0) {
+            //@ts-ignore
+            pipeline = skipStage.concat(pipeline)
+        }        
 
         const cursor = this.collection.aggregate(pipeline);
         return (await cursor.toArray() as UserDataObject[])
     }
+
+    async getCount() : Promise<number> {
+        return await this.collection.countDocuments();
+    }    
 
     async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any) : Promise<Boolean> {
         let filter:any = {}

@@ -518,3 +518,25 @@ var app = {
       document.getElementById("app_menu").style.width= "0px";
     }              
   }
+
+  app.renderListNavigationBar=(elementId,listPagesTotalNumber,listPageNumber,sourceUrl)=>{
+    startDisabled = ""
+    endDisabled = ""
+
+    if (listPageNumber == 1) {
+      startDisabled="disabled='disabled'"
+    }
+    else if (listPageNumber == listPagesTotalNumber) {
+      endDisabled="disabled='disabled'"
+    }
+
+    element = document.getElementById(elementId);
+    element.innerHTML=`
+      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=1')" ${startDisabled}><i class="bi bi-skip-start-fill"></i></button> 
+      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber - 1}')" ${startDisabled}><i class="bi bi-rewind-fill"></i></button>
+      <button class="lp_button">${listPageNumber}</button>  
+      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber + 1}')" ${endDisabled}><i class="bi bi-fast-forward-fill"></i></button> 
+      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPagesTotalNumber}')" ${endDisabled}><i class="bi bi-skip-end-fill"></i></button>     
+    `
+              
+  }

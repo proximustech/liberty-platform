@@ -97,15 +97,25 @@ export class UserService implements IDisposable {
  
     }
 
-    async getAll() : Promise<UserDataObject[]> {
+    async getAll(limit=0,skip=0) : Promise<UserDataObject[]> {
         if (this.userCanRead) {
-            return await this.userModel.getAll()
+            return await this.userModel.getAll(limit,skip)
            
         }
         else{
             throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
         }        
     }
+
+    async getCount() : Promise<number> {
+        if (this.userCanRead) {
+            return await this.userModel.getCount()
+           
+        }
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }        
+    }    
 
     async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any,checkPermissions=true) : Promise<Boolean> {
         if (checkPermissions) {

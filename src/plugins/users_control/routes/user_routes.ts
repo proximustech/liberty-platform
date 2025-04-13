@@ -9,6 +9,7 @@ import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
 import { RouteService } from "../../../services/route_service";
 
 import koaBody from 'koa-body';
+import { vi } from "@faker-js/faker";
 
 module.exports = function(router:Router,appViewVars:any,prefix:string){
 
@@ -23,7 +24,14 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         const userService = UserServiceFactory.create(prefix,viewVars.userPermissions)
         const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
-            viewVars.users = await userService.getAll()
+            let usersCount:number = await userService.getCount()
+            let listRegistersNumber:number = parseInt(ctx.request.query.list_registers_number as string) || 2
+            let listPageNumber:number = parseInt(ctx.request.query.list_page_number as string) || 1
+            viewVars.listPagesTotalNumber= Math.ceil(usersCount / listRegistersNumber)
+            let skipRegistersNumber = (listPageNumber * listRegistersNumber) - listRegistersNumber
+
+            viewVars.listPageNumber = listPageNumber
+            viewVars.users = await userService.getAll(listRegistersNumber,skipRegistersNumber)
             viewVars.rolesUuidMap = roleService.getUuidMapFromList(await roleService.getAll())
             
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
