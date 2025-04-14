@@ -1,7 +1,7 @@
 # Build with: docker build -t lp .
-FROM node:20-slim
+FROM node:alpine
 WORKDIR /app
-RUN apt update
+#RUN apt update
 COPY ./ /app/
 RUN cd /app
 RUN npm install --force
