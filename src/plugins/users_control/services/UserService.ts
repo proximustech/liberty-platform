@@ -97,9 +97,9 @@ export class UserService implements IDisposable {
  
     }
 
-    async getAll(limit=0,skip=0) : Promise<UserDataObject[]> {
+    async getAll(filter:any={},limit=0,skip=0) : Promise<UserDataObject[]> {
         if (this.userCanRead) {
-            return await this.userModel.getAll(limit,skip)
+            return await this.userModel.getAll(filter,limit,skip)
            
         }
         else{
@@ -107,9 +107,9 @@ export class UserService implements IDisposable {
         }        
     }
 
-    async getCount() : Promise<number> {
+    async getCount(filter={}) : Promise<number> {
         if (this.userCanRead) {
-            return await this.userModel.getCount()
+            return await this.userModel.getCount(filter)
            
         }
         else{

@@ -131,7 +131,11 @@ export class UserModel implements IDisposable {
         return new UserDataObject()
     }
 
-    async getAll(limit=0,skip=0) : Promise<UserDataObject[]> {
+    async getAll(filter:any={},limit=0,skip=0) : Promise<UserDataObject[]> {
+
+        for (const [key, value] of Object.entries(filter)) {
+            filter[key]=new RegExp(`.*${value}.*`)
+        }            
 
         let limitStage = [{
             $limit : limit
@@ -142,8 +146,11 @@ export class UserModel implements IDisposable {
 
         let pipeline = [
             { 
-                $match: {} 
+                $match: filter
             },
+            { 
+                $sort: { email : 1 }
+            },            
             {
                 $project: {
                     _id: 1,
@@ -156,21 +163,26 @@ export class UserModel implements IDisposable {
             }
         ] 
 
-        if (limit > 0) {
-            //@ts-ignore
-            pipeline = limitStage.concat(pipeline)
-        }
         if (skip > 0) {
             //@ts-ignore
-            pipeline = skipStage.concat(pipeline)
+            pipeline = pipeline.concat(skipStage)
+        }        
+        if (limit > 0) {
+            //@ts-ignore
+            pipeline = pipeline.concat(limitStage)
         }        
 
         const cursor = this.collection.aggregate(pipeline);
         return (await cursor.toArray() as UserDataObject[])
     }
 
-    async getCount() : Promise<number> {
-        return await this.collection.countDocuments();
+    async getCount(filter:any={}) : Promise<number> {
+        let localFilter = structuredClone(filter)
+
+        for (const [key, value] of Object.entries(localFilter)) {
+            localFilter[key]=new RegExp(`.*${value}.*`)
+        }         
+        return await this.collection.countDocuments(localFilter);
     }    
 
     async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any) : Promise<Boolean> {

@@ -25,8 +25,7 @@
             .done(function() {
                 setTimeout(() => {
                     if(!app.md.user_form.accountSettings){
-                        app.setViewForPendingOperation('content_view')
-                        app.ajax('content_view', '/<%= prefix %>/users')
+                        app.reloadLastBreadCrumb('content_view')
                     }
                     app.drawer.hide();
                     app.toastShow('Saved','User saved successfully.',{type:"success"})           

@@ -520,24 +520,26 @@ var app = {
     }              
   }
 
-  app.renderListNavigationBar=(elementId,listPagesTotalNumber,listPageNumber,sourceUrl)=>{
+  app.renderListNavigationBar=(elementId,listPagesTotalNumber,listPageNumber,sourceUrl,searchValue)=>{
     startDisabled = ""
     endDisabled = ""
 
     if (listPageNumber == 1) {
       startDisabled="disabled='disabled'"
     }
-    else if (listPageNumber == listPagesTotalNumber) {
+    if (listPageNumber == listPagesTotalNumber) {
       endDisabled="disabled='disabled'"
     }
 
     element = document.getElementById(elementId);
     element.innerHTML=`
-      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=1')" ${startDisabled}><i class="bi bi-skip-start-fill"></i></button> 
-      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber - 1}')" ${startDisabled}><i class="bi bi-rewind-fill"></i></button>
-      <button class="lp_button">${listPageNumber}</button>  
-      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber + 1}')" ${endDisabled}><i class="bi bi-fast-forward-fill"></i></button> 
-      <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPagesTotalNumber}')" ${endDisabled}><i class="bi bi-skip-end-fill"></i></button>     
+      <center>
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=1&search_value=${searchValue}')" ${startDisabled}><i class="bi bi-skip-start-fill"></i></button> 
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber - 1}&search_value=${searchValue}')" ${startDisabled}><i class="bi bi-rewind-fill"></i></button>
+        <label style="font-size:small">${listPageNumber}/${listPagesTotalNumber}</label>  
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber + 1}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-fast-forward-fill"></i></button> 
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPagesTotalNumber}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-skip-end-fill"></i></button>     
+      </center>
     `
               
   }

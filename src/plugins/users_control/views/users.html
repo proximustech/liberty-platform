@@ -11,7 +11,7 @@
         </div>
     <% } %>
     <div style="max-width: 250px;margin-bottom: 10px;">
-        <sl-input id="user_search_box" placeholder="Search..." size="medium" autocomplete="one-time-code" pill>
+        <sl-input id="user_search_box" placeholder="Type: filter, Intro: search" size="medium" autocomplete="one-time-code" pill onkeydown="app.md.listSearch(this,event)" value="<%= searchValue %>">
             <sl-icon name="search" slot="prefix"></sl-icon>
         </sl-input>    
     </div>
@@ -64,5 +64,12 @@
 <script>
     app.setSmartTable('users_table')
     app.setModuleTitle(`<strong><sl-icon name="person" label="Settings"></sl-icon> Users</strong>`)
-    app.renderListNavigationBar("list_navigation_bar",<%= listPagesTotalNumber %>,<%= listPageNumber %>,'<%= prefix %>/users')
+    app.renderListNavigationBar("list_navigation_bar",<%= listPagesTotalNumber %>,<%= listPageNumber %>,'<%= prefix %>/users',document.getElementById("user_search_box").value)
+    app.md.listSearch = (element,event) =>{
+        var pressedKeyCode = event.keyCode || event.which;
+        if (pressedKeyCode == 13 ) {
+            app.ajax('content_view','/<%= prefix %>/users?search_value='+element.value)
+            
+        }
+    }
 </script>
