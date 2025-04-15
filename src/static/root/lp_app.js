@@ -148,9 +148,36 @@ var app = {
     toastHeader.innerHTML=`<strong class="me-auto">${title}</strong>`
     toastBody.innerHTML=`<div>${body}</div>`
     
+    let closeIconColor="black"
+
+    if ('type' in options){
+      if (options['type']=='success') {
+        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
+        let backgroundColor="#0284c7"
+        toastHeader.style.background=`linear-gradient(274deg, ${backgroundColor} 0%, white 0%, ${backgroundColor} 100%)`
+        toastHeader.style.color="white"
+      }
+      if (options['type']=='info') {
+        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
+        toastHeader.style.backgroundColor="#02c7a2"
+        toastHeader.style.color="black"
+      }                
+      if (options['type']=='warning') {
+        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-exclamation-triangle" style="margin-right:10px"></i>`)
+        toastHeader.style.backgroundColor="#c7bb02"
+      }
+      if (options['type']=='error') {
+        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-cloud-lightning-fill" style="margin-right:10px"></i>`)
+        toastHeader.style.backgroundColor="#c72702"
+        toastHeader.style.color="wheat"
+        closeIconColor="wheat"
+      }
+
+    }
+
     if ('closable' in options){
       if (options['closable']==true) {
-        toastHeader.insertAdjacentHTML("beforeend",`<button id="toast_close_button" type="button" class="btn-close" aria-label="Close" onclick="document.getElementById('toasts_container').removeChild(document.getElementById('app_toast_${toastIdex}'))"></button>`)
+        toastHeader.insertAdjacentHTML("beforeend",`<span id="toast_close_button" style="font-size:large;color:${closeIconColor}" aria-label="Close" onclick="document.getElementById('toasts_container').removeChild(document.getElementById('app_toast_${toastIdex}'))"><i class="bi bi-x-circle"></i></span>`)
       }
       else autohide = true
     } else autohide = true
@@ -170,28 +197,7 @@ var app = {
         )
       }
     }
-    if ('type' in options){
-      if (options['type']=='success') {
-        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-        let backgroundColor="#228b6d"
-        toastHeader.style.background=`linear-gradient(274deg, ${backgroundColor} 0%, white 0%, ${backgroundColor} 100%)`
-        toastHeader.style.color="white"
-      }
-      if (options['type']=='info') {
-        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="lightskyblue"
-        toastHeader.style.color="black"
-      }                
-      if (options['type']=='warning') {
-        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-exclamation-triangle" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="#ffffba"
-      }
-      if (options['type']=='error') {
-        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-cloud-lightning-fill" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="#ffbaba"
-      }
 
-    }
     toast.show()
   }
 
