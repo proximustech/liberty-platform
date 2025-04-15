@@ -25,7 +25,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             let searchValue:any = ctx.request.query.search_value || ""
-            let listRegistersNumber:number = parseInt(ctx.request.query.list_registers_number as string) || 2
+            let listRegistersNumber:number = parseInt(ctx.request.query.list_registers_number as string) || 10
             let listPageNumber:number = parseInt(ctx.request.query.list_page_number as string) || 1            
 
             let filter:any = {}
