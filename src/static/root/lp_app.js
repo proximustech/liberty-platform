@@ -491,7 +491,7 @@ var app = {
   }
   app.setModuleTitle = (
     title,html=`
-      <div id="app.moduleTitle" class="module_title"></div>              
+      <div id="app.moduleTitle" class="lp_module_title"></div>              
     `
   ) => {
     let headerBar = document.getElementById("app.headerBar")

@@ -2,7 +2,7 @@
     app.md = {}
 </script>
 
-<div class="lp_contrast_container module_fixed_bar">
+<div class="lp_contrast_container lp_module_fixed_bar">
     <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
         <div class="btn-group" role="group" aria-label="" style="margin-bottom: 10px;">
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();app.ajax('app_drawer', '/<%= prefix %>/role_form')"><i class="bi bi-plus-circle"></i> Add</button>
@@ -44,7 +44,7 @@
                     </div>                                   
                     <strong>Name:</strong> <%= role.name %>
                 </div>
-                <div class="register_container_body">
+                <div class="lp_register_container_body">
 
                 </div>                
             </div>

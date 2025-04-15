@@ -2,7 +2,7 @@
     app.md = {}
 </script>
 
-<div class="lp_contrast_container module_fixed_bar">
+<div class="lp_contrast_container lp_module_fixed_bar">
     <% if ( UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
         <div class="btn-group" role="group" aria-label="" style="margin-bottom: 10px;">
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();app.ajax('app_drawer', '/<%= prefix %>/user_form');">
@@ -47,7 +47,7 @@
                     </div> 
                     <strong>Mail:</strong> <%= user.email %>                                                            
                 </div>
-                <div class="register_container_body">
+                <div class="lp_register_container_body">
                     <% let roleName = undefined %>
                     <% roleName = rolesUuidMap.get(user.role_uuid) %>
                     <% if(roleName==undefined){ roleName="-"} %>
