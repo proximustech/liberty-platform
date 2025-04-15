@@ -501,6 +501,11 @@ var app = {
     `
   ) => {
     let headerBar = document.getElementById("app.headerBar")
+    if (app.isSmallScreen()) {
+      headerBar.style.width="50%"
+    } else {
+      headerBar.style.width="85%"
+    }
     headerBar.innerHTML=html
     let moduleTitle = document.getElementById("app.moduleTitle")
     moduleTitle.innerHTML=title
