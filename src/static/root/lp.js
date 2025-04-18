@@ -551,6 +551,12 @@ var app = {
         <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber + 1}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-fast-forward-fill"></i></button> 
         <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPagesTotalNumber}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-skip-end-fill"></i></button>     
       </center>
-    `
-              
+    ` 
   }
+
+  app.ajaxOnPressedKey = (event,triggerKeyCode,targetId,url) =>{
+    var pressedKeyCode = event.keyCode || event.which;
+    if (pressedKeyCode === triggerKeyCode || triggerKeyCode === "all") {
+        app.ajax(targetId,url)
+    }
+  } 
