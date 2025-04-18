@@ -70,7 +70,7 @@
             })
             .done(function() {
                 setTimeout(() => {
-                    app.ajax('content_view', '/<%= prefix %>/roles')
+                    app.reloadLastBreadCrumb('content_view')
                     app.drawer.hide();
                     app.toastShow('Saved','Role saved successfully.',{type:"success"})           
                     

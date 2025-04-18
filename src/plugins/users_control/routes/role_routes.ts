@@ -23,7 +23,22 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
-            viewVars.roles = await roleService.getAll()
+            let searchValue:any = ctx.request.query.search_value || ""
+            let listRegistersNumber:number = parseInt(ctx.request.query.list_registers_number as string) || 10
+            let listPageNumber:number = parseInt(ctx.request.query.list_page_number as string) || 1            
+
+            let filter:any = {}
+            if (searchValue !== "") {
+                filter["name"] = searchValue
+            }
+
+            let documentsCount:number = await roleService.getCount(filter)
+            viewVars.listPagesTotalNumber= Math.ceil(documentsCount / listRegistersNumber)
+            let skipRegistersNumber = (listPageNumber * listRegistersNumber) - listRegistersNumber
+
+            viewVars.listPageNumber = listPageNumber
+            viewVars.searchValue = searchValue
+            viewVars.roles = await roleService.getAll(filter,listRegistersNumber,skipRegistersNumber)
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.roles_list.userHasPermissionOnElement=" +  UserHasPermissionOnElement         
 

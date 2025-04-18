@@ -74,15 +74,25 @@ export class RoleService implements IDisposable {
         }  
     }
 
-    async getAll() : Promise<RoleDataObject[]> {
+    async getAll(filter:any={},limit=0,skip=0) : Promise<RoleDataObject[]> {
         if (this.userCanRead) {
-            return await this.roleModel.getAll()
+            return await this.roleModel.getAll(filter,limit,skip)
            
         }
         else{
             throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
         }  
     }
+
+    async getCount(filter={}) : Promise<number> {
+        if (this.userCanRead) {
+            return await this.roleModel.getCount(filter)
+           
+        }
+        else{
+            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
+        }        
+    }  
     
     getUuidMapFromList(list:RoleDataObject[]) : Map<string, string> {
         //let result:any = {}
