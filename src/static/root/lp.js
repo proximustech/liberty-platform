@@ -543,13 +543,18 @@ var app = {
     }
 
     element = document.getElementById(elementId);
+
+    separator="?"
+    if (sourceUrl.includes('?')) {
+      separator='&'
+    }
     element.innerHTML=`
       <center>
-        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=1&search_value=${searchValue}')" ${startDisabled}><i class="bi bi-skip-start-fill"></i></button> 
-        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber - 1}&search_value=${searchValue}')" ${startDisabled}><i class="bi bi-rewind-fill"></i></button>
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}${separator}list_page_number=1&search_value=${searchValue}')" ${startDisabled}><i class="bi bi-skip-start-fill"></i></button> 
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}${separator}list_page_number=${listPageNumber - 1}&search_value=${searchValue}')" ${startDisabled}><i class="bi bi-rewind-fill"></i></button>
         <label style="font-size:small">${listPageNumber}/${listPagesTotalNumber}</label>  
-        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPageNumber + 1}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-fast-forward-fill"></i></button> 
-        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}?list_page_number=${listPagesTotalNumber}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-skip-end-fill"></i></button>     
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}${separator}list_page_number=${listPageNumber + 1}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-fast-forward-fill"></i></button> 
+        <button class="lp_button" onclick="app.ajax('content_view','${sourceUrl}${separator}list_page_number=${listPagesTotalNumber}&search_value=${searchValue}')" ${endDisabled}><i class="bi bi-skip-end-fill"></i></button>     
       </center>
     ` 
   }
