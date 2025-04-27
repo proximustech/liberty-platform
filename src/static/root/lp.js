@@ -106,7 +106,11 @@ var app = {
         let targetHistory = app.breadCrumbsMap.get(breadCrumbTargetId)
         let breadCrumbIndex = 0
         targetHistory.forEach(breadCrumb => {
-          html+=`<span class="badge text-bg-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}',${breadCrumbIndex});app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')">${breadCrumb.label}</span> ` 
+          let label = breadCrumb.label
+          if (label=="*") {
+            label='<i class="bi bi-box-fill"></i>'
+          }          
+          html+=`<span class="badge text-bg-secondary" onclick="app.popBreadCrumb('${breadCrumbTargetId}',${breadCrumbIndex});app.ajax('${breadCrumbTargetId}','${breadCrumb.url}','${breadCrumb.label}')">${label}</span> ` 
           breadCrumbIndex++
         });
         document.getElementById(renderTargetId).innerHTML=html
