@@ -307,8 +307,12 @@ var app = {
         document.getElementById(targetId).style.display="none"
         $('#'+targetId).html(html).fadeIn(300);
         if (targetId=="content_view") {
+          let addBreadCrumb = true
+          if (url.includes("search_value")) {
+            addBreadCrumb = false
+          }
           try {
-            if (app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
+            if (addBreadCrumb && app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
               app.addBreadCrumb(targetId,url,label,resetBreadCrumbsMap)
             }
             
