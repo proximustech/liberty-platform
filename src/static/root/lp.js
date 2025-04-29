@@ -80,8 +80,8 @@ var app = {
       },
       popBreadCrumb : (targetId,position=undefined) => {
         let url = ""
-        targetHistory = app.breadCrumbsMap.get(targetId)                
         if (app.breadCrumbsMap.has(targetId)) {
+          targetHistory = app.breadCrumbsMap.get(targetId)                
           if (typeof position == 'undefined'){
             url = targetHistory.pop().url
           }
@@ -98,7 +98,10 @@ var app = {
         return url
       },
       reloadLastBreadCrumb : (targetId) => {
-        let lastUrl = app.popBreadCrumb(targetId)
+        let lastUrl = ""
+        try {
+          lastUrl = app.breadCrumbsMap.get(targetId)[app.breadCrumbsMap.get(targetId).length - 1].url
+        } catch (error) {}
         app.ajax(targetId,lastUrl)
       },
       renderBreadCrumbs : (renderTargetId,breadCrumbTargetId) => {
@@ -307,12 +310,16 @@ var app = {
         document.getElementById(targetId).style.display="none"
         $('#'+targetId).html(html).fadeIn(300);
         if (targetId=="content_view") {
-          let addBreadCrumb = true
           if (url.includes("search_value")) {
-            addBreadCrumb = false
+            try {
+              let lastUrl = app.breadCrumbsMap.get(targetId)[app.breadCrumbsMap.get(targetId).length - 1].url
+              if (lastUrl.includes("search_value")) {
+                app.popBreadCrumb(targetId)
+              }
+            } catch (error) {}
           }
           try {
-            if (addBreadCrumb && app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
+            if (app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
               app.addBreadCrumb(targetId,url,label,resetBreadCrumbsMap)
             }
             
