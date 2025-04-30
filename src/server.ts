@@ -7,6 +7,7 @@ const serve = require('koa-static')
 const session = require('koa-session');
 const passport = require('koa-passport');
 //const pino = require('koa-pino-logger')()
+import { LoggerServiceFactory } from "./factories/LoggerServiceFactory";
 import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
@@ -22,6 +23,7 @@ export let eventEmitter : EventEmitter
 
   const authorizer: AuthorizerCasbin = new AuthorizerCasbin()
   await authorizer.initialize()
+  let logger = LoggerServiceFactory.create()
 
   eventEmitter = new EventEmitter()
   //const orm = await MikroORM.init();
@@ -73,10 +75,10 @@ export let eventEmitter : EventEmitter
 
         await next()
 
-      } catch(err:any) {
-        console.log(err.status)
-        ctx.status = err.status || 500;
-        ctx.body = err.message;
+      } catch(error:any) {
+        logger.error(error)
+        ctx.status = error.status || 500;
+        ctx.body = "Generic Server Error.";
       }
 
   });
