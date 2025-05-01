@@ -14,6 +14,7 @@ import { EventEmitter } from "node:events";
 import { Config } from "./values/config";
 
 import {AuthorizerCasbinMongo as AuthorizerCasbin} from "./services/authorizer_casbin_mongo";
+import { ExceptionSessionInvalid } from "./types/exceptions";
 
 //import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
 //export let globalEntityManager : EntityManager
@@ -76,9 +77,19 @@ export let eventEmitter : EventEmitter
         await next()
 
       } catch(error:any) {
-        logger.error(error)
-        ctx.status = error.status || 500;
-        ctx.body = "Generic Server Error.";
+
+        if (error instanceof ExceptionSessionInvalid) {
+          try {
+            ctx.logout()
+          } catch (error) {}
+          ctx.body = "app.event.logged_out"        
+        }
+        else {
+          logger.error(error)
+          ctx.status = error.status || 500;
+          ctx.body = "Generic Server Error.";          
+        }       
+
       }
 
   });

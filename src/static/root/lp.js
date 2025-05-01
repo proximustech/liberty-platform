@@ -304,27 +304,33 @@ var app = {
         dataType:"html"
     })
     .done(function(html) {
-        if (targetId=="content_view") {
-          app.setModuleTitle(`<i class="bi bi-box-fill"></i>`)
+        if (html==="app.event.logged_out") {
+          window.onbeforeunload = (event) => {}
+          window.location.replace("/login?event=logged_out")
         }
-        document.getElementById(targetId).style.display="none"
-        $('#'+targetId).html(html).fadeIn(300);
-        if (targetId=="content_view") {
-          if (url.includes("search_value")) {
-            try {
-              let lastUrl = app.breadCrumbsMap.get(targetId)[app.breadCrumbsMap.get(targetId).length - 1].url
-              if (lastUrl.includes("search_value")) {
-                app.popBreadCrumb(targetId)
-              }
-            } catch (error) {}
+        else {
+          if (targetId=="content_view") {
+            app.setModuleTitle(`<i class="bi bi-box-fill"></i>`)
           }
-          try {
-            if (app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
+          document.getElementById(targetId).style.display="none"
+          $('#'+targetId).html(html).fadeIn(300);
+          if (targetId=="content_view") {
+            if (url.includes("search_value")) {
+              try {
+                let lastUrl = app.breadCrumbsMap.get(targetId)[app.breadCrumbsMap.get(targetId).length - 1].url
+                if (lastUrl.includes("search_value")) {
+                  app.popBreadCrumb(targetId)
+                }
+              } catch (error) {}
+            }
+            try {
+              if (app.breadCrumbsMap.get("content_view")[app.breadCrumbsMap.get("content_view").length - 1].url !== url) {
+                app.addBreadCrumb(targetId,url,label,resetBreadCrumbsMap)
+              }
+              
+            } catch (error) {
               app.addBreadCrumb(targetId,url,label,resetBreadCrumbsMap)
             }
-            
-          } catch (error) {
-            app.addBreadCrumb(targetId,url,label,resetBreadCrumbsMap)
           }
         }
     })

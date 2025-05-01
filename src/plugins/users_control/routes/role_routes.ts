@@ -5,7 +5,7 @@ import { RoleDataObject,RoleDataObjectSpecs,RoleDataObjectValidator } from "../d
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService"
-import { ExceptionCsrfTokenFailed,ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exceptions";
+import { ExceptionSessionInvalid,ExceptionCsrfTokenFailed,ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exceptions";
 import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
 import { RouteService } from "../../../services/route_service";
 
@@ -20,7 +20,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.get('/roles', async (ctx:Context) => {
 
-        viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
+        if (typeof(ctx.session.passport.user)==="undefined") {
+            throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
+        }
+
+        viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid || "",ctx.session.passport.user.uuid)
         const roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
             let searchValue:any = ctx.request.query.search_value || ""
@@ -63,6 +67,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.get('/role_form', async (ctx:Context) => {
         
+        if (typeof(ctx.session.passport.user)==="undefined") {
+            throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
+        }
+
         viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
         let roleService = RoleServiceFactory.create(prefix,viewVars.userPermissions)
         try {
@@ -113,6 +121,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     })    
 
     router.post('/role',koaBody(), async (ctx:Context) => {
+
+        if (typeof(ctx.session.passport.user)==="undefined") {
+            throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
+        }
 
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
 
@@ -223,6 +235,10 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.delete('/role',koaBody(), async (ctx:Context) => {
 
+        if (typeof(ctx.session.passport.user)==="undefined") {
+            throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
+        }
+                
         let userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
 
         const roleService = RoleServiceFactory.create(prefix,userPermissions)

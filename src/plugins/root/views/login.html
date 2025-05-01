@@ -26,7 +26,7 @@
       </head>
     <body>
         <div id="message_container" style="display: none;">
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <div id="message_container_1" class="alert alert-dismissible fade show" role="alert">
             <p id="message"></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>        
@@ -151,12 +151,23 @@
             
           }
           if (event==="invalid_credentials") {
-            let message_container=document.getElementById("message_container")
+            let message_container=document.getElementById("message_container");
+            let message_container_1=document.getElementById("message_container_1")
             let message=document.getElementById("message")
 
             message_container.style.display="contents"
+            message_container_1.classList.add("alert-danger");
             message.innerHTML = "Invalid credentials or Invalid Federated User."
           }
+          else if (event==="logged_out") {
+            let message_container=document.getElementById("message_container")
+            let message_container_1=document.getElementById("message_container_1")
+            let message=document.getElementById("message")
+
+            message_container.style.display="contents"
+            message_container_1.classList.add("alert-warning");
+            message.innerHTML = "Your session became invalid."
+          }          
           document.getElementById("user").focus()
         </script>
     </body>

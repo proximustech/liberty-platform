@@ -58,3 +58,15 @@ export class ExceptionCsrfTokenFailed extends Error {
   }
 
 }
+
+export class ExceptionSessionInvalid extends Error {
+
+  public static exceptionSessionInvalid: string = "Session Invalid";
+
+  constructor(message: string) {
+    super(message);
+    this.name = "ExceptionSessionInvalid";
+    this.stack = (<any> new Error()).stack;
+  }
+
+}
