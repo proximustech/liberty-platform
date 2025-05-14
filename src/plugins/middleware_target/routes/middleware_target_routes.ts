@@ -1,10 +1,11 @@
+import { Context } from "koa";
 import Router from "koa-router"
 import { exposedMiddlewareTargets } from "../../../values/middlewares"
 
 
 let getRouter = (viewVars: any) => {
     const router = new Router();
-    router.get('/middleware_target', async (ctx) => {
+    router.get('/middleware_target', async (ctx:Context) => {
         viewVars = {
             third: "",
             headerFile: "../../../html/header.html",
