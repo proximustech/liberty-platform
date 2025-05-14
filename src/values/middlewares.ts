@@ -4,7 +4,7 @@ import {MiddlewareManager} from 'js-middleware';
 //Targets
 let middlewareTargets = {}
 //BaseManagers
-let middlewareBaseManagers = {}
+let middlewareBaseManagers:any = {}
 
 //////++++++ Target Definition START ///////
 let middlewareServiceName = "thirdService"
@@ -14,14 +14,21 @@ middlewareTargets[middlewareServiceName]=new Third()
 // @ts-ignore
 middlewareBaseManagers[middlewareServiceName] = new MiddlewareManager(middlewareTargets[middlewareServiceName])
 
-/*
-///+++ Base Definition START ///
-import {ThirdMiddleware_1} from "../plugins/middleware_base/middleware/middleware_base_middleware"
-// @ts-ignore
-middlewareBaseManagers[middlewareServiceName].use(new(ThirdMiddleware_1))
-///--- Base Definition END ///
-*/
+let registeredPlugins:any = {
+    "thirdService":[
+        "../plugins/middleware_base/services/middleware_injector"
+    ]
+}
 
+let pluginMiddlewareInjector = undefined
+for (const [exposedMiddlewareServiceName, value] of Object.entries(registeredPlugins)) {
+
+    registeredPlugins[exposedMiddlewareServiceName].forEach((path: string) => {
+        pluginMiddlewareInjector = require(path)
+        pluginMiddlewareInjector.default.inject(middlewareBaseManagers[exposedMiddlewareServiceName])        
+    });
+
+}
 
 
 //////------ Target Definition END ///////
