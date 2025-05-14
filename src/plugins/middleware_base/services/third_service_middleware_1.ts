@@ -9,13 +9,13 @@ export class ThirdMiddleware_1 {
         this.middlewareMethods = ['thirdMethod'];
       }
 
-    thirdMethod(target:any){
+    thirdMethod(){
         // @ts-ignore
         return next => param => {
             console.log('initial param : ' + param);
             param = param + " changed "
             console.log('final param : ' + param);
             return next(param);
-          }
+        }
     }
 }
