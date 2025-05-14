@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import Router from "koa-router"
-import { exposedMiddlewareTargets } from "../../../values/middlewares"
+import { exposedMiddlewareTargets } from "../values/middlewares"
 
 
 let getRouter = (viewVars: any) => {
