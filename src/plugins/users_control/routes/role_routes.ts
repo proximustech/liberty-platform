@@ -35,6 +35,11 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             if (searchValue !== "") {
                 filter["name"] = searchValue
             }
+            let outputFormat:any = ctx.request.query.output_format || "html"
+            if (outputFormat=="json") {
+                ctx.body = JSON.stringify(await roleService.getAll(filter,1000,0))
+                return
+            }            
 
             let documentsCount:number = await roleService.getCount(filter)
             viewVars.listPagesTotalNumber= Math.ceil(documentsCount / listRegistersNumber)
