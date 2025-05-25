@@ -16,6 +16,8 @@ import { Config } from "./values/config";
 import {AuthorizerCasbinMongo as AuthorizerCasbin} from "./services/authorizer_casbin_mongo";
 import { ExceptionSessionInvalid } from "./types/exceptions";
 
+import { GlobalServices } from "./services/global_services";
+
 //import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
 //export let globalEntityManager : EntityManager
 export let eventEmitter : EventEmitter
@@ -24,6 +26,7 @@ export let eventEmitter : EventEmitter
 
   const authorizer: AuthorizerCasbin = new AuthorizerCasbin()
   await authorizer.initialize()
+  GlobalServices.casbinAuthorizer = authorizer
   let logger = LoggerServiceFactory.create()
 
   eventEmitter = new EventEmitter()
