@@ -166,7 +166,7 @@ var app = {
       }
       if (options['type']=='info') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="#02c7a2"
+        toastHeader.style.backgroundColor="rgb(119, 201, 220)"
         toastHeader.style.color="black"
       }                
       if (options['type']=='warning') {
@@ -216,11 +216,11 @@ var app = {
         element.removeChild(element.firstChild)
         element.disabled = false
   }
-  app.setViewForPendingOperation = (id) => {
+  app.setViewForPendingOperation = (id,height='90%') => {
         let element = document.getElementById(id)
         element.innerHTML=`
         <div style="text-align:center">
-          <div style="height: 90%"></div>
+          <div style="height: ${height}"></div>
           <div class="spinner-grow text-secondary" role="status"></div>
         </div>
         `
