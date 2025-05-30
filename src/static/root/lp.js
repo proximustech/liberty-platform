@@ -270,15 +270,18 @@ var app = {
     }
 
     let html = `
+    <div style="box-shadow:var(--effect-outstandig-box-shadow)">
       <sl-details ${open}>
         <span slot="summary">${title}</span>
         ${innerHtml}
       </sl-details>
-      <div style="height:5px"></div>
+    </div>
+    <div style="height:5px"></div>
     `
     app.modules_menu.insertAdjacentHTML("beforeend",html)
     try{
       document.getElementById(`${module_name}_module_menu_content`).style.display="block"
+      document.getElementById(`${module_name}_module_menu_content`).style.boxShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
     }catch{}
   }
   app.confirmDelete = (title,body,deleteFunctionCall) => {
