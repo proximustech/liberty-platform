@@ -160,8 +160,7 @@ var app = {
     if ('type' in options){
       if (options['type']=='success') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-        let backgroundColor="#0284c7"
-        toastHeader.style.background=`linear-gradient(274deg, ${backgroundColor} 0%, white 0%, ${backgroundColor} 100%)`
+        toastHeader.style.backgroundColor=`var(--main-contrast-color)`
         toastHeader.style.color="white"
       }
       if (options['type']=='info') {

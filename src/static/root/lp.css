@@ -1,6 +1,7 @@
 :root {
     --main-bg-color: #ffffff;
-    --main-contrast-color: #0284c7
+    --main-contrast-color: #0284c7;
+    /*--main-contrast-color: cornflowerblue;*/
   }
   .lp_app_menu {
     height: 100%;
@@ -17,7 +18,8 @@
     visibility: hidden;
   }
   .lp_module_title{
-    background: linear-gradient(274deg, rgba(2,0,36,1) 0%, rgba(255,255,255,1) 0%, var(--main-contrast-color) 100%);
+    /*background: linear-gradient(274deg, rgba(2,0,36,1) 0%, rgba(255,255,255,1) 0%, var(--main-contrast-color) 100%);*/
+    background-color: var(--main-contrast-color);
     border-color: transparent;
     border-style: none;
     text-align: left;
@@ -83,6 +85,9 @@
       border-bottom-left-radius: 12px;
       border-bottom-right-radius: 12px;
       padding: 5px;
+      border-top-color: #8ec0d9;
+      /*border-top-color: #c5bdf9;*/
+      border-top-width: 3px;
   }
   .lp_register_container_body {
       margin-top: 8px;
@@ -90,4 +95,16 @@
   }
   .lp_bread_crumbs_container{
     margin-bottom: 15px;
+  }
+  .lp_input{
+    /*background-color: #fdfaeb;*/
+    /*background-color: #f4f5ff;*/
+  }
+  .center {
+    text-align:center;
+    width:100%;
+  }
+  .center:first-child {
+      margin:auto;
+      text-align:left;
   }
