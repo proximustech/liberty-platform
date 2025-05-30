@@ -21,24 +21,23 @@
 <br>
 <br>
 <br>
-<br>
 <table 
     id="users_table" 
+    data-classes="table"
     data-toggle="table" 
     data-search="true" 
     data-search-align="left" 
     data-search-selector="#user_search_box" 
     data-search-highlight="true"
-    data-sortable="true"
     style="border-style: hidden;"
 >
     <thead>
         <tr>
-            <th data-sortable="true">Sort by Mail</th>
+            <th></th>
         </tr>
     </thead>
     <% users.forEach(user => { %>
-    <tr>
+    <tr style="border: hidden;">
         <td>
             <div class="lp_container">
                 <div class="lp_contrast_container" style="padding-bottom: 8px;">
