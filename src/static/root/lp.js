@@ -529,7 +529,7 @@ var app = {
     }
     headerBar.innerHTML=html
     let moduleTitle = document.getElementById("app.moduleTitle")
-    moduleTitle.innerHTML=title
+    moduleTitle.innerHTML=`<center>${title}</center>`
   }
 
   app.resizeContetView=(event)=>{
