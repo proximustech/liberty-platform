@@ -305,8 +305,8 @@ var app = {
         url:url,
         dataType:"html"
     })
-    .done(function(html) {
-        if (html==="app.event.logged_out") {
+    .done(function(httpResponse) {
+        if (httpResponse==="app.event.logged_out") {
           window.onbeforeunload = (event) => {}
           window.location.replace("/login?event=logged_out")
         }
@@ -315,7 +315,7 @@ var app = {
             app.setModuleTitle(`<i class="bi bi-box-fill"></i>`)
           }
           document.getElementById(targetId).style.display="none"
-          $('#'+targetId).html(html).fadeIn(300);
+          $('#'+targetId).html(httpResponse).fadeIn(300);
           if (targetId=="content_view") {
             if (url.includes("search_value")) {
               try {
@@ -337,7 +337,20 @@ var app = {
         }
     })
     .fail(function(error) {
-      app.toastShow('Connection Error','There is an error with the network or the server',{type:"error"})
+      try {
+        let toastTitle = "Error"
+        const jsonResponse= JSON.parse(error.responseText)
+        const toastBody = jsonResponse.messages[0].message
+
+        document.getElementById(targetId).innerHTML=""
+        app.setModuleTitle(``)
+        app.toastShow(toastTitle,toastBody,{type:"error"})
+      } catch (error) {
+        document.getElementById(targetId).innerHTML=""
+        app.setModuleTitle(``)
+        app.toastShow('Functional Error','There is some error receiving the response from the server',{type:"error"})
+        
+      }
     })
 
   } 
