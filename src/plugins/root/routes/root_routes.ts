@@ -3,6 +3,7 @@ import Router from "koa-router"
 import koaBody from "koa-body"
 import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
+import { ExceptionSessionInvalid } from "../../../types/exceptions";
 
 const passport = require('koa-passport')
 
@@ -15,6 +16,11 @@ let getRouter = (appViewVars: any) => {
     router.get('/', async (ctx:Context) => {
         try {
             if (ctx.isAuthenticated()) {
+
+                if (typeof(ctx.session.passport.user)==="undefined") {
+                    throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
+                }  
+
                 viewVars.userPermissions = await ctx.authorizer.getRoleAndSubjectPermissions(ctx.session.passport.user.role_uuid,ctx.session.passport.user.uuid)
                 viewVars.modulesContent = ""
                 await DynamicViews.addViewVarContent(dynamicViewsDefinition,"root","modulesContent",viewVars,ctx)
