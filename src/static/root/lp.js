@@ -272,7 +272,7 @@ var app = {
     let html = `
     <div style="box-shadow:var(--effect-outstandig-box-shadow)">
       <sl-details ${open}>
-        <span slot="summary">${title}</span>
+        <span slot="summary"><label style="font-size:large">${title}</label></span>
         ${innerHtml}
       </sl-details>
     </div>
@@ -548,15 +548,15 @@ var app = {
   }
 
   app.resizeContetView=(event)=>{
-    let contentViewWidthDiffPixels = 220
+    let contentViewWidthDiffPixels = 300
     //Mantaining content ViewWidth in small screen devices
     if (app.isSmallScreen()) {
       contentViewWidthDiffPixels = 0
     }
     if (app.app_menu_visible) {
-      document.getElementById("content_view").style.marginLeft = "226px";
+      document.getElementById("content_view").style.marginLeft = "306px";
       document.getElementById("content_view").style.width = window.window.innerWidth  - contentViewWidthDiffPixels - 10;
-      document.getElementById("app_menu").style.width= "220px";
+      document.getElementById("app_menu").style.width= "300px";
       if (app.isSmallScreen()) {
         try {app.drawer.hide()} catch (error) {}
       }                

@@ -10,7 +10,6 @@
       <link href="https://getbootstrap.com/docs/5.3/examples/sidebars/sidebars.css" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/light.css" rel="stylesheet" >
       <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-      <link href="static/root/lp.css" rel="stylesheet" />
       
       <!--
       <link href="static/_lib/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -20,6 +19,8 @@
       <link href="static/_lib/shoelace/shoelace.light.css" rel="stylesheet" >
       <link href="static/_lib/select2.min.css" rel="stylesheet" />      
       -->
+
+      <link href="static/root/lp.css" rel="stylesheet" />
 
     </head>
     <body style="overscroll-behavior: contain;">  
@@ -50,7 +51,7 @@
             </div>
         </nav>    
         <div class="lp_app_menu" id="app_menu" style="transition: width .3s ease-in-out;border-radius: 7px; overflow: auto;height: 93%; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);background-color: var(--main-bg-color);  overflow-x: hidden;">
-            <div class="flex-shrink-0 p-3" style="width: 220px;">
+            <div class="flex-shrink-0 p-3" style="width: 300px;">
               <div style="text-align: center; font-weight: bold;">
                 <img src="static/platform_images/host.png" style="max-width: 150px;" />
                 <br/>
@@ -83,8 +84,6 @@
         <script src="https://cdn.amcharts.com/lib/5/themes/Kelly.js"></script>       
         <script src="https://cdn.amcharts.com/lib/5/themes/Responsive.js"></script>       
         <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-        <script src="static/root/lp.js"></script>      
-        <script src="static/componentsDefinition.js" type="module" ></script>
         
         <!--
         <script src="static/_lib/bootstrap/bootstrap.bundle.min.js"></script>
@@ -98,8 +97,10 @@
         <script src="static/_lib/amcharts5/themes/Kelly.js"></script>       
         <script src="static/_lib/amcharts5/themes/Responsive.js"></script>       
         <script src="static/_lib/amcharts5/themes/Animated.js"></script>          
-        <script src="static/componentsDefinition.js" type="module" ></script>
         -->
+
+        <script src="static/root/lp.js"></script>      
+        <script src="static/componentsDefinition.js" type="module" ></script>  
 
         <script>
           window.onbeforeunload = (event) => {event.preventDefault()}
