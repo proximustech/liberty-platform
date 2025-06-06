@@ -2,18 +2,22 @@
   <sl-tree style="--indent-size:7px">
       <% if (UserHasPermissionOnElement(userPermissions,['users_control.user'],['read'])) { %>
         <sl-tree-item onclick="app.ajax('content_view','/users_control/users','Users',true);app.app_menu_inteligentClose()" >
-          <sl-icon name="person" label="Settings"></sl-icon>
-          Users
+          <label style="font-size: larger;">
+            <sl-icon name="person" label="Settings"></sl-icon>
+            Users
+          </label>
         </sl-tree-item>
       <% } %>
       <% if (UserHasPermissionOnElement(userPermissions,['users_control.role'],['read'])) { %>
         <sl-tree-item onclick="app.ajax('content_view','/users_control/roles','Roles',true);app.app_menu_inteligentClose()" >
-          <sl-icon name="people" label="Settings"></sl-icon>
-          Roles
+          <label style="font-size: larger;">
+            <sl-icon name="people" label="Settings"></sl-icon>
+            Roles
+          </label>
         </sl-tree-item>
       <% } %>
   </sl-tree>
 </div>
 <script>
-  app.modules_menu.s_appendItem(`<i class="bi bi-lock"></i> Permissions`,"permissions",document.getElementById("permissions_module_menu_content").outerHTML)
+  app.modules_menu.s_appendItem(`<i class="bi bi-person-bounding-box"></i> Access Control`,"permissions",document.getElementById("permissions_module_menu_content").outerHTML)
 </script>
