@@ -46,15 +46,18 @@ export class UserModel implements IDisposable {
 
     }
 
-    async updateOne(user:UserDataObject){
+    async updateOne(user:UserDataObject,protectCustomData:Boolean=true){
         user._id = new ObjectId(user.uuid)
         const cursor = this.collection.find({uuid : String(user.uuid)});
 
         while (await cursor.hasNext()) {
-            let document = (await cursor.next() as UserDataObject);
-            user.salt = document.salt
+            let oldUser = (await cursor.next() as UserDataObject);
+            if (!protectCustomData) {
+                user.custom_protected_data = oldUser.custom_protected_data
+            }
+            user.salt = oldUser.salt
             if (user.password===passwordMask) {
-                user.password = document.password
+                user.password = oldUser.password
             }
             else {
                 user.salt = Random.getRandomString()

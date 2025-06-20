@@ -11,6 +11,7 @@ export class UserDataObject {
     last_name:string = ""
 
     role_uuid:string = ""
+    custom_protected_data:any = {}
 }
 
 export const passwordMask:string = "----------"

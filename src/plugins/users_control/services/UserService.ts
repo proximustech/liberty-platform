@@ -47,7 +47,7 @@ export class UserService implements IDisposable {
         }
     }
 
-    async updateOne(user:UserDataObject,checkPermissions=true){
+    async updateOne(user:UserDataObject,checkPermissions=true,protectCustomData:Boolean=true){
 
         let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
 
@@ -57,7 +57,7 @@ export class UserService implements IDisposable {
         
         if (checkPermissions) {
             if (this.userCanWrite) {
-                return await this.userModel.updateOne(user)
+                return await this.userModel.updateOne(user,protectCustomData)
                 
             }
             else{
@@ -65,7 +65,7 @@ export class UserService implements IDisposable {
             }            
         }
         else{
-            return await this.userModel.updateOne(user)
+            return await this.userModel.updateOne(user,protectCustomData)
         }
 
     }
