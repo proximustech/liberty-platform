@@ -52,7 +52,7 @@ export class UserModel implements IDisposable {
 
         while (await cursor.hasNext()) {
             let oldUser = (await cursor.next() as UserDataObject);
-            if (!protectCustomData) {
+            if (protectCustomData) {
                 user.custom_protected_data = oldUser.custom_protected_data
             }
             user.salt = oldUser.salt
