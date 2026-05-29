@@ -132,8 +132,8 @@ export class UserService implements IDisposable {
 
     }    
    
-    dispose(){
-        this.userModel.dispose()
+    async dispose(): Promise<void> {
+        await this.userModel.dispose()
     }      
 
 }

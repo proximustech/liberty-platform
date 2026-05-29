@@ -115,8 +115,8 @@ export class RoleService implements IDisposable {
         }  
     }
     
-    dispose(){
-        this.roleModel.dispose()
+    async dispose(): Promise<void> {
+        await this.roleModel.dispose()
     }      
 
 }

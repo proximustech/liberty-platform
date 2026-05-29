@@ -73,7 +73,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             }
 
         } finally {
-            userService.dispose()
+            await userService.dispose()
         }
 
     })
@@ -124,7 +124,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             }
         } finally {
-            userService.dispose()
+            await userService.dispose()
         }
     })   
 
@@ -182,8 +182,8 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             }
         } finally {
-            userService.dispose()
-            roleService.dispose()
+            await userService.dispose()
+            await roleService.dispose()
         }
     })    
 
@@ -323,7 +323,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     
                 }                
             } finally {
-                userService.dispose()
+                await userService.dispose()
             }
 
         }
@@ -386,7 +386,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             }            
         } finally {
-            userService.dispose()
+            await userService.dispose()
         }
 
     })

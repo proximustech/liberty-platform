@@ -66,7 +66,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 logger.error(error)
             }
         } finally  {
-            roleService.dispose()
+            await roleService.dispose()
         }
     })
 
@@ -121,7 +121,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 logger.error(error)
             }
         } finally {
-            roleService.dispose()
+            await roleService.dispose()
         }
     })    
 
@@ -233,7 +233,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             }               
         } finally{
-            roleService.dispose()
+            await roleService.dispose()
         }
 
     })
@@ -300,7 +300,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
                 
             }                       
         } finally {
-            roleService.dispose()
+            await roleService.dispose()
 
         }
 

@@ -138,8 +138,8 @@ export class RoleModel implements IDisposable {
         return false
     }
     
-    dispose(){
-        this.mongoService.dispose()
+    async dispose(): Promise<void> {
+        await this.mongoService.dispose()
     }      
 
 }
