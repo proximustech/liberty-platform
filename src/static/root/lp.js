@@ -600,4 +600,14 @@ var app = {
     if (pressedKeyCode === triggerKeyCode || triggerKeyCode === "all") {
         app.ajax(targetId,url)
     }
+  }
+
+  app.toggleTheme = () => {
+    const html = document.documentElement
+    const isDark = html.classList.toggle('sl-theme-dark')
+    html.setAttribute('data-bs-theme', isDark ? 'dark' : 'light')
+    document.getElementById('sl-light').disabled = isDark
+    document.getElementById('sl-dark').disabled = !isDark
+    document.getElementById('theme_label').innerHTML = isDark ? 'Light Mode' : 'Dark Mode'
+    localStorage.setItem('sl-theme', isDark ? 'dark' : 'light')
   } 

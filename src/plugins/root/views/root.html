@@ -8,7 +8,8 @@
       <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
       <link href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css" rel="stylesheet">
       <link href="https://getbootstrap.com/docs/5.3/examples/sidebars/sidebars.css" rel="stylesheet">
-      <link href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/light.css" rel="stylesheet" >
+      <link href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/light.css" rel="stylesheet" id="sl-light" >
+      <link href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/dark.css" rel="stylesheet" id="sl-dark" disabled>
       <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
       
       <!--
@@ -42,6 +43,8 @@
                     </a>
                     <ul class="dropdown-menu" id="top_menu" style="top: 46px; left: -90px;">
                         <li><a class="dropdown-item" href="#" onclick="app.ajax('app_drawer','/users_control/account_settings');app.drawer.show();if (app.isSmallScreen()){$('.navbar-toggler').click()};if(app.app_menu_visible && app.isSmallScreen()){app.toggleBar(false)}" ><i class="bi bi-person"></i> <%= labels.accountSettings %></a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="app.toggleTheme()"><i class="bi bi-moon-stars"></i> <span id="theme_label">Dark Mode</span></a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout" onclick="window.onbeforeunload = (event) => {}" ><i class="bi bi-door-open"></i> <%= labels.logOut %></a></li>
                     </ul>
@@ -104,9 +107,13 @@
 
         <script>
           window.onbeforeunload = (event) => {event.preventDefault()}
-          window.addEventListener('resize',app.resizeContetView,true)             
+          window.addEventListener('resize',app.resizeContetView,true)
           //Show left bar at start
           app.toggleBar()
+          //Apply saved theme
+          if (localStorage.getItem('sl-theme') === 'dark') {
+            app.toggleTheme()
+          }
         </script>
         <%- modulesContent %>
       <!-- Register shoelace components to be used in dynamic content  -->
