@@ -106,7 +106,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
-            RouteService.setCsrfToken(viewVars,ctx)
+            RouteService.setCsrfToken(ctx)
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {
@@ -164,7 +164,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.user_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
-            RouteService.setCsrfToken(viewVars,ctx)
+            RouteService.setCsrfToken(ctx)
 
             return ctx.render('plugins/'+prefix+'/views/user_form', viewVars);
         } catch (error) {

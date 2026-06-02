@@ -64,7 +64,7 @@
             let result = $.ajax({
                 type:"POST",
                 url:"<%= prefix %>/role",
-                data:"csrfToken=<%= csrfToken %>"+"&json="+JSON.stringify(role),
+                data:"csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1]+"&json="+JSON.stringify(role),
                 processData: false,
                 dataType:"text"
             })
@@ -100,7 +100,7 @@
     app.md.deleteRole=(uuid)=> {
         let result = $.ajax({
             type:"DELETE",
-            url:"<%= prefix %>/role?uuid="+uuid+"&csrfToken=<%= csrfToken %>"
+            url:"<%= prefix %>/role?uuid="+uuid+"&csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1]
         })
         .done(function() {      
             setTimeout(() =>{

@@ -104,7 +104,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
             viewVars.roleValidateFunction = "app.md.role_form.roleValidateFunction=" + RoleDataObjectValidator.validateFunction
             viewVars.UserHasPermissionOnElement = UserHasPermissionOnElement
             viewVars.userHasPermissionOnElement = "app.md.role_form.userHasPermissionOnElement=" +  UserHasPermissionOnElement
-            RouteService.setCsrfToken(viewVars,ctx)
+            RouteService.setCsrfToken(ctx)
             
             return ctx.render('plugins/'+prefix+'/views/role_form', viewVars);
         } catch (error) {
