@@ -37,7 +37,13 @@
     z-index: 1;
     min-width: 268px;
     box-shadow: var(--effect-outstandig-box-shadow);
-  }        
+  }
+  @media (max-width: 992px) {
+    .lp_module_fixed_bar {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
   .lp_button {
     height: 40px;
     background-color: white;
