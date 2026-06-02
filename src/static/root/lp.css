@@ -3,6 +3,21 @@
     --main-contrast-color: #0284c7;
     --effect-outstandig-box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.2) 0px -1px 0px inset;
     /*--main-contrast-color: cornflowerblue;*/
+    --shadow-default: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    --shadow-card: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    --color-validation: red;
+    --color-footer-bg: aliceblue;
+    --color-badge-bg: green;
+    --color-badge-text: white;
+    --color-detail-border: rgb(129, 180, 255);
+    --color-detail-shadow: rgb(129, 180, 255);
+    --color-border-light: gainsboro;
+    --toast-default-bg: white;
+    --toast-default-color: black;
+    --toast-info-bg: rgb(119, 201, 220);
+    --toast-warning-bg: #c7bb02;
+    --toast-error-bg: #c72702;
+    --toast-error-text: wheat;
   }
   .lp_app_menu {
     height: 100%;

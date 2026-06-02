@@ -137,7 +137,7 @@ var app = {
     let html = `
       <div id="app_toast_${toastIdex}" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
         <div id="app_toast_header_${toastIdex}" class="toast-header"></div>
-        <div id="app_toast_body_${toastIdex}" class="toast-body" style="background-color: white !important"></div>
+        <div id="app_toast_body_${toastIdex}" class="toast-body" style="background-color: var(--toast-default-bg) !important"></div>
       </div>              
     `
     toastsContainer.insertAdjacentHTML("beforeend",html)
@@ -149,34 +149,34 @@ var app = {
     let timeout = 4000
     let autohide = false
 
-    toastHeader.style.backgroundColor="white"
-    toastHeader.style.color="black"
+    toastHeader.style.backgroundColor="var(--toast-default-bg)"
+    toastHeader.style.color="var(--toast-default-color)"
 
     toastHeader.innerHTML=`<strong class="me-auto">${title}</strong>`
     toastBody.innerHTML=`<div>${body}</div>`
     
-    let closeIconColor="black"
+    let closeIconColor="var(--toast-default-color)"
 
     if ('type' in options){
       if (options['type']=='success') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
         toastHeader.style.backgroundColor=`var(--main-contrast-color)`
-        toastHeader.style.color="white"
+        toastHeader.style.color="var(--color-badge-text)"
       }
       if (options['type']=='info') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="rgb(119, 201, 220)"
-        toastHeader.style.color="black"
+        toastHeader.style.backgroundColor="var(--toast-info-bg)"
+        toastHeader.style.color="var(--toast-default-color)"
       }                
       if (options['type']=='warning') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-exclamation-triangle" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="#c7bb02"
+        toastHeader.style.backgroundColor="var(--toast-warning-bg)"
       }
       if (options['type']=='error') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-cloud-lightning-fill" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor="#c72702"
-        toastHeader.style.color="wheat"
-        closeIconColor="wheat"
+        toastHeader.style.backgroundColor="var(--toast-error-bg)"
+        toastHeader.style.color="var(--toast-error-text)"
+        closeIconColor="var(--toast-error-text)"
       }
 
     }
@@ -281,7 +281,7 @@ var app = {
     app.modules_menu.insertAdjacentHTML("beforeend",html)
     try{
       document.getElementById(`${module_name}_module_menu_content`).style.display="block"
-      document.getElementById(`${module_name}_module_menu_content`).style.boxShadow="2px 2px 2px rgba(0, 0, 0, 0.2)"
+      document.getElementById(`${module_name}_module_menu_content`).style.boxShadow="var(--shadow-card)"
     }catch{}
   }
   app.confirmDelete = (title,body,deleteFunctionCall) => {
