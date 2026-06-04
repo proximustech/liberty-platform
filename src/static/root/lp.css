@@ -18,6 +18,7 @@
     --toast-warning-bg: #c7bb02;
     --toast-error-bg: #c72702;
     --toast-error-text: wheat;
+    --img-bg: transparent;
   }
   .lp_app_menu {
     height: 100%;
@@ -152,6 +153,7 @@
       --toast-warning-bg: #f59e0b;
       --toast-error-bg: #ef4444;
       --toast-error-text: #ffffff;
+      --img-bg: rgba(191, 196, 205, 0.92);
   }
   .sl-theme-dark .lp_container {
       background-color: #1f2228;
