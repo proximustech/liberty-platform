@@ -147,16 +147,27 @@ var app = {
     const toastElement = document.getElementById(`app_toast_${toastIdex}`)
     const toast = bootstrap.Toast.getOrCreateInstance(toastElement)
 
-    const toastHeader = document.getElementById(`app_toast_header_${toastIdex}`)
-    const toastBody = document.getElementById(`app_toast_body_${toastIdex}`)
-    let timeout = 4000
-    let autohide = false
+     const toastHeader = document.getElementById(`app_toast_header_${toastIdex}`)
+     const toastBody = document.getElementById(`app_toast_body_${toastIdex}`)
+     let timeout = 4000
+     let autohide = false
 
-    toastHeader.style.backgroundColor="var(--toast-default-bg)"
-    toastHeader.style.color="var(--toast-default-color)"
+     toastHeader.style.backgroundColor="var(--toast-default-bg)"
+     toastHeader.style.color="var(--toast-default-color)"
 
-    toastHeader.innerHTML=`<strong class="me-auto">${title}</strong>`
-    toastBody.innerHTML=`<div>${body}</div>`
+     // Apply dark mode styling to toast body if in dark mode
+     const isDarkMode = document.documentElement.classList.contains('sl-theme-dark')
+     if (isDarkMode) {
+       toastBody.style.backgroundColor="#3d3d3dff"
+       toastBody.style.color="#e5e7eb"
+     }
+     else {
+       toastBody.style.backgroundColor="#fafbffff"      
+       toastBody.style.color="#3d3d3dff"
+     }
+
+     toastHeader.innerHTML=`<strong class="me-auto">${title}</strong>`
+     toastBody.innerHTML=`<div>${body}</div>`
     
     let closeIconColor="var(--toast-default-color)"
 
