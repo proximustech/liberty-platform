@@ -26,8 +26,8 @@
     </head>
     <body style="overscroll-behavior: contain;">  
         <nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary" style="background-color: var(--main-bg-color) !important; box-shadow: var(--shadow-default);border-top-style: solid; border-top-color: var(--main-contrast-color);border-top-width: thick;">
-            <div class="container-fluid">
-              <button onclick="app.toggleBar()" class="btn" role="button">
+            <div class="container-fluid" style="display: flex; align-items: center; gap: 12px;">
+              <button onclick="app.toggleBar()" class="lp-toggle-bar-btn" role="button" style="height: 44px; display: flex; align-items: center; justify-content: center;">
                 <i class="bi bi-layout-sidebar-inset" style="font-size: x-large;"></i>
               </button>
               <!-- <a class="navbar-brand" href="#"><%= labels.appName %></a> -->
