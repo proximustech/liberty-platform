@@ -222,7 +222,29 @@
   .sl-theme-dark .dropdown-item {
       color: #e5e7eb;
   }
-  .sl-theme-dark .dropdown-item:hover {
-      background-color: #374151;
-      color: #ffffff;
-  }
+   .sl-theme-dark .dropdown-item:hover {
+       background-color: #374151;
+       color: #ffffff;
+   }
+   .sl-theme-dark .btn-outline-secondary {
+       color: #a8c5ff;
+       border-color: #516fa0;
+       background-color: transparent;
+   }
+   .sl-theme-dark .btn-outline-secondary:hover {
+       color: #ffffff;
+       background-color: #516fa0;
+       border-color: #6a7fa8;
+   }
+   .sl-theme-dark .btn-outline-secondary:active {
+       color: #ffffff;
+       background-color: #3d5480;
+       border-color: #516fa0;
+   }
+   .sl-theme-dark sl-input::part(input)::placeholder {
+       color: #8a9dc4 !important;
+       opacity: 1;
+   }
+   .sl-theme-dark sl-input::part(input) {
+       color: #a8c5ff;
+   }
