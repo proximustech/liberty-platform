@@ -1,3 +1,4 @@
+<% if (UserHasPermissionOnElement(userPermissions,['users_control.user','users_control.role'],['read'])) { %>
 <div id="permissions_module_menu_content" class="lp_contrast_container" style="display: none">
   <sl-tree style="--indent-size:7px">
       <% if (UserHasPermissionOnElement(userPermissions,['users_control.user'],['read'])) { %>
@@ -21,3 +22,4 @@
 <script>
   app.modules_menu.s_appendItem(`<i class="bi bi-person-bounding-box"></i> Access Control`,"permissions",document.getElementById("permissions_module_menu_content").outerHTML)
 </script>
+<% } %>
