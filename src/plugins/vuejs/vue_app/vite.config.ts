@@ -2,6 +2,9 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   plugins: [
     vue({
       template: {
@@ -16,10 +19,14 @@ export default defineConfig({
   build: {
     outDir: '../../../static/vuejs',
     emptyOutDir: true,
+    lib: {
+      entry: 'src/main.ts',
+      name: 'VueApp',
+      formats: ['iife'],
+      fileName: () => 'main.js',
+    },
     rollupOptions: {
       output: {
-        entryFileNames: 'main.js',
-        chunkFileNames: 'main.js',
         assetFileNames: 'main.[ext]',
       },
     },

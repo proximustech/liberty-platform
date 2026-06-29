@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   startCount: number
+  lpApp: any
 }>()
 
 const count = ref(props.startCount)
@@ -35,7 +36,7 @@ const count = ref(props.startCount)
       <div style="margin-top: 24px">
         <sl-button
           variant="text"
-          @click="() => (window as any).app.ajax('content_view', '/vuejs', 'Home', true)"
+          @click="() => lpApp.ajax('content_view', '/vuejs', 'Home', true)"
         >
           ← Back to Home
         </sl-button>

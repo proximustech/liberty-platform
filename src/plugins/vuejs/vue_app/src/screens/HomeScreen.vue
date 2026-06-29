@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   userName: string
+  lpApp: any
 }>()
 </script>
 
@@ -21,7 +22,7 @@ defineProps<{
       <div style="margin-top: 16px">
         <sl-button
           variant="primary"
-          @click="() => (window as any).app.ajax('content_view', '/vuejs/counter', 'Counter', true)"
+          @click="() => lpApp.ajax('content_view', '/vuejs/counter', 'Counter', true)"
         >
           Go to Counter screen
         </sl-button>

@@ -13,4 +13,10 @@ declare global {
       props: Record<string, any>
     }
   }
+
+  // app is a global var defined in lp.js, accessed via globalThis.app inside iife bundles
+  var app: {
+    ajax: (targetId: string, url: string, label?: string, resetBreadcrumbs?: boolean) => void
+    app_menu_inteligentClose: () => void
+  }
 }
