@@ -23,6 +23,12 @@
 
       <link href="static/root/lp.css" rel="stylesheet" />
 
+      <script>
+        // Prevent white flash on dark mode by applying theme immediately
+        if (localStorage.getItem('sl-theme') === 'dark') {
+          document.documentElement.classList.add('sl-theme-dark')
+        }
+      </script>
     </head>
     <body style="overscroll-behavior: contain;">  
         <nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary" style="background-color: var(--main-bg-color) !important; box-shadow: var(--shadow-default);border-top-style: solid; border-top-color: var(--main-contrast-color);border-top-width: thick;">
@@ -105,16 +111,20 @@
         <script src="static/root/lp.js"></script>      
         <script src="static/componentsDefinition.js" type="module" ></script>  
 
-        <script>
-          window.onbeforeunload = (event) => {event.preventDefault()}
-          window.addEventListener('resize',app.resizeContetView,true)
-          //Show left bar at start
-          app.toggleBar()
-          //Apply saved theme
-          if (localStorage.getItem('sl-theme') === 'dark') {
-            app.toggleTheme()
-          }
-        </script>
+         <script>
+           window.onbeforeunload = (event) => {event.preventDefault()}
+           window.addEventListener('resize',app.resizeContetView,true)
+           //Show left bar at start
+           app.toggleBar()
+           //Apply saved theme styling (already applied in head, just sync the UI)
+           if (localStorage.getItem('sl-theme') === 'dark') {
+             const html = document.documentElement
+             html.setAttribute('data-bs-theme', 'dark')
+             document.getElementById('sl-light').disabled = true
+             document.getElementById('sl-dark').disabled = false
+             document.getElementById('theme_label').innerHTML = 'Light Mode'
+           }
+         </script>
         <%- modulesContent %>
       <!-- Register shoelace components to be used in dynamic content  -->
       <div style="display: none;">
