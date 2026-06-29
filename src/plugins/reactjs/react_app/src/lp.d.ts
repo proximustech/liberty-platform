@@ -5,6 +5,7 @@ declare global {
     __LP_PROPS__: {
       screen: string
       props: Record<string, any>
+      _mountId: string
     }
   }
 }

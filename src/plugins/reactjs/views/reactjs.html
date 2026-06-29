@@ -1,5 +1,38 @@
+<div id="<%- mountId %>"></div>
 <script>
   window.__LP_PROPS__ = <%- safeProps %>
+  ;(function(){
+    var props = window.__LP_PROPS__
+    var s = document.createElement('script')
+    s.src = 'static/reactjs/main.js?v=' + Date.now()
+    document.body.appendChild(s)
+
+    if (props.screen === 'dashboard') {
+      var reactReady = false
+
+      function tryChart() {
+        if (!reactReady) return
+        if (typeof am5 === 'undefined') { setTimeout(tryChart, 100); return }
+
+        var chartEl = document.getElementById(props.props.chartId)
+        if (!chartEl) { setTimeout(tryChart, 100); return }
+
+        // Force synchronous reflow so the browser computes the element dimensions
+        // before amCharts tries to measure them — critical on mobile
+        var h = chartEl.offsetHeight
+        var w = chartEl.offsetWidth
+
+        if (w === 0 || h === 0) { setTimeout(tryChart, 100); return }
+
+        app.setModuleTitle('<strong><i class="bi bi-pie-chart"></i> React Dashboard</strong>')
+        app.graphShowPie(props.props.chartId, props.props.chartData)
+      }
+
+      document.addEventListener('lp:react:mounted', function handler() {
+        document.removeEventListener('lp:react:mounted', handler)
+        reactReady = true
+        tryChart()
+      })
+    }
+  })()
 </script>
-<div id="root"></div>
-<script type="module" src="static/reactjs/main.js"></script>

@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 interface CounterScreenProps {
   startCount: number
+  lpApp: any
 }
 
-export default function CounterScreen({ startCount }: CounterScreenProps) {
+export default function CounterScreen({ startCount, lpApp }: CounterScreenProps) {
   const [count, setCount] = useState(startCount)
 
   return (
@@ -38,7 +39,7 @@ export default function CounterScreen({ startCount }: CounterScreenProps) {
         </div>
         <div style={{ marginTop: '24px' }}>
           {/* @ts-ignore */}
-          <sl-button variant="text" onclick="app.ajax('content_view','/reactjs','Home',true)">
+          <sl-button variant="text" onclick={() => lpApp.ajax('content_view', '/reactjs', 'Home', true)}>
             ← Back to Home
           {/* @ts-ignore */}
           </sl-button>

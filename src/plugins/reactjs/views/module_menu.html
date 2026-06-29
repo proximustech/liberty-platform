@@ -12,8 +12,14 @@
         Counter
       </label>
     </sl-tree-item>
+    <sl-tree-item onclick="app.ajax('content_view','/reactjs/dashboard','Dashboard',true);app.app_menu_inteligentClose()">
+      <label style="font-size: larger;">
+        <sl-icon name="pie-chart" label="Dashboard"></sl-icon>
+        Dashboard
+      </label>
+    </sl-tree-item>
   </sl-tree>
 </div>
 <script>
-  app.modules_menu.s_appendItem(`<i class="bi bi-filetype-jsx"></i> React Demo`, "reactjs", document.getElementById("reactjs_module_menu_content").outerHTML)
+  app.modules_menu.s_appendItem(`<i class="bi bi-braces"></i> React Demo`, "reactjs", document.getElementById("reactjs_module_menu_content").outerHTML)
 </script>
