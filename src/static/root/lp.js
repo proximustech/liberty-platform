@@ -162,7 +162,7 @@ var app = {
        toastBody.style.color="#e5e7eb"
      }
      else {
-       toastBody.style.backgroundColor="#fafbffff"      
+       toastBody.style.backgroundColor="#ecececff"      
        toastBody.style.color="#3d3d3dff"
      }
 
