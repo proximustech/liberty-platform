@@ -1,0 +1,19 @@
+<div id="reactjs_module_menu_content" class="lp_contrast_container" style="display: none">
+  <sl-tree style="--indent-size:7px">
+    <sl-tree-item onclick="app.ajax('content_view','/reactjs','Home',true);app.app_menu_inteligentClose()">
+      <label style="font-size: larger;">
+        <sl-icon name="house" label="Home"></sl-icon>
+        Home
+      </label>
+    </sl-tree-item>
+    <sl-tree-item onclick="app.ajax('content_view','/reactjs/counter','Counter',true);app.app_menu_inteligentClose()">
+      <label style="font-size: larger;">
+        <sl-icon name="plus-slash-minus" label="Counter"></sl-icon>
+        Counter
+      </label>
+    </sl-tree-item>
+  </sl-tree>
+</div>
+<script>
+  app.modules_menu.s_appendItem(`<i class="bi bi-filetype-jsx"></i> React Demo`, "reactjs", document.getElementById("reactjs_module_menu_content").outerHTML)
+</script>
