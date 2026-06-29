@@ -13,8 +13,6 @@ interface DashboardScreenProps {
 
 export default function DashboardScreen({ chartId, chartData, lpApp }: DashboardScreenProps) {
 
-  // Signal the EJS layer that React has mounted and the chart container is in the DOM.
-  // The EJS inline script listens for this event and calls app.graphShowPie.
   useEffect(() => {
     document.dispatchEvent(new CustomEvent('lp:react:mounted'))
   }, [])
@@ -44,49 +42,49 @@ export default function DashboardScreen({ chartId, chartData, lpApp }: Dashboard
 
   return (
     <div className="lp_container">
-      <div className="lp_contrast_container" style={{ padding: '24px' }}>
+      <div className="lp_contrast_container p-3 p-md-4">
         <h4>
           {/* @ts-ignore */}
           <sl-icon name="pie-chart" /> Dashboard
         </h4>
-        <p style={{ color: 'var(--sl-color-neutral-500)', fontSize: '0.9em' }}>
-          Chart data was injected server-side. All UI actions call <code>lpApp</code> functions from <code>lp.js</code>.
+        <p className="text-secondary" style={{ fontSize: '0.9em' }}>
+          Chart data injected server-side. UI actions call <code>lpApp</code> functions from <code>lp.js</code>.
         </p>
 
-        {/* Chart container — id set server-side, chart rendered by EJS after lp:react:mounted event */}
+        {/* Chart — height uses clamp so it's usable on both mobile and desktop */}
         <div
           id={chartId}
-          style={{ width: '100%', height: '300px', marginBottom: '24px' }}
+          style={{ width: '100%', height: 'clamp(220px, 40vw, 350px)', marginBottom: '24px' }}
         />
 
-        {/* Toast buttons */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        {/* Toast + dialog buttons — wrap to new line on mobile */}
+        <div className="d-flex flex-wrap gap-2">
           {/* @ts-ignore */}
           <sl-button variant="success" onclick={handleToastSuccess}>
             {/* @ts-ignore */}
             <sl-icon slot="prefix" name="check-circle" />
-            Toast Success
+            Success
           {/* @ts-ignore */}
           </sl-button>
           {/* @ts-ignore */}
           <sl-button variant="warning" onclick={handleToastWarning}>
             {/* @ts-ignore */}
             <sl-icon slot="prefix" name="exclamation-triangle" />
-            Toast Warning
+            Warning
           {/* @ts-ignore */}
           </sl-button>
           {/* @ts-ignore */}
           <sl-button variant="danger" onclick={handleToastError}>
             {/* @ts-ignore */}
             <sl-icon slot="prefix" name="x-circle" />
-            Toast Error
+            Error
           {/* @ts-ignore */}
           </sl-button>
           {/* @ts-ignore */}
           <sl-button variant="neutral" onclick={handleDialog}>
             {/* @ts-ignore */}
             <sl-icon slot="prefix" name="chat-square-text" />
-            Open Dialog
+            Dialog
           {/* @ts-ignore */}
           </sl-button>
         </div>

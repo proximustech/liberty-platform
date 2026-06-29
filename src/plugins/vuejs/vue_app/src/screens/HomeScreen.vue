@@ -7,7 +7,7 @@ defineProps<{
 
 <template>
   <div class="lp_container">
-    <div class="lp_contrast_container" style="padding: 24px">
+    <div class="lp_contrast_container p-3 p-md-4">
       <h4>
         <sl-icon name="house" />
         Vue Demo
@@ -15,16 +15,18 @@ defineProps<{
       <p>
         Welcome, <strong>{{ userName }}</strong>. This screen was rendered by Vue 3.
       </p>
-      <p style="color: var(--sl-color-neutral-500); font-size: 0.9em">
+      <p class="text-secondary" style="font-size: 0.9em">
         The data above was passed server-side: Koa route → EJS bridge →
         <code>window.__LP_PROPS__</code> → Vue props.
       </p>
-      <div style="margin-top: 16px">
+      <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
         <sl-button
           variant="primary"
+          style="width: 100%"
           @click="() => lpApp.ajax('content_view', '/vuejs/counter', 'Counter', true)"
         >
-          Go to Counter screen
+          <sl-icon slot="prefix" name="plus-slash-minus" />
+          Counter screen
         </sl-button>
       </div>
     </div>

@@ -11,36 +11,43 @@ const count = ref(props.startCount)
 
 <template>
   <div class="lp_container">
-    <div class="lp_contrast_container" style="padding: 24px">
+    <div class="lp_contrast_container p-3 p-md-4">
       <h4>
         <sl-icon name="plus-slash-minus" />
         Counter Demo
       </h4>
-      <p style="color: var(--sl-color-neutral-500); font-size: 0.9em">
+      <p class="text-secondary" style="font-size: 0.9em">
         Initial value <code>{{ startCount }}</code> was injected server-side.
         The counter below is pure Vue reactive state.
       </p>
-      <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px">
-        <sl-button variant="neutral" @click="count--">
-          <sl-icon slot="prefix" name="dash" />
-          Decrement
+
+      <!-- Counter controls - centered, touch-friendly on mobile -->
+      <div class="d-flex align-items-center justify-content-center gap-3 my-4">
+        <sl-button variant="neutral" size="large" circle @click="count--">
+          <sl-icon name="dash" />
         </sl-button>
-        <span style="font-size: 2rem; font-weight: bold; min-width: 3rem; text-align: center">
+
+        <span :style="{
+          fontSize: 'clamp(2rem, 8vw, 3.5rem)',
+          fontWeight: 'bold',
+          minWidth: '4rem',
+          textAlign: 'center',
+          lineHeight: 1,
+        }">
           {{ count }}
         </span>
-        <sl-button variant="primary" @click="count++">
-          <sl-icon slot="prefix" name="plus" />
-          Increment
+
+        <sl-button variant="primary" size="large" circle @click="count++">
+          <sl-icon name="plus" />
         </sl-button>
       </div>
-      <div style="margin-top: 24px">
-        <sl-button
-          variant="text"
-          @click="() => lpApp.ajax('content_view', '/vuejs', 'Home', true)"
-        >
-          ← Back to Home
-        </sl-button>
-      </div>
+
+      <sl-button
+        variant="text"
+        @click="() => lpApp.ajax('content_view', '/vuejs', 'Home', true)"
+      >
+        ← Back to Home
+      </sl-button>
     </div>
   </div>
 </template>
