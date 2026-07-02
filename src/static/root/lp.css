@@ -58,6 +58,44 @@
     z-index: 1;
     max-width: 303px;
   }
+  .lp_module_fixed_bar .lp_fixed_bar_toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .lp_module_fixed_bar .lp_fixed_bar_toggle button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    color: inherit;
+    opacity: 0.6;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .lp_module_fixed_bar .lp_fixed_bar_toggle:hover button {
+    opacity: 1;
+  }
+  .lp_module_fixed_bar .lp_fixed_bar_toggle .lp_fixed_bar_toggle_space {
+    flex: 1;
+  }
+  .lp_module_fixed_bar .lp_fixed_bar_content {
+    overflow: hidden;
+    transition: max-height 0.2s ease, opacity 0.2s ease;
+    max-height: 500px;
+    opacity: 1;
+  }
+  .lp_module_fixed_bar.lp_fixed_bar_collapsed .lp_fixed_bar_content {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .lp_module_fixed_bar.lp_fixed_bar_collapsed {
+    padding-bottom: 0;
+  }
   @media (max-width: 992px) {
     .lp_module_fixed_bar {
       margin-left: auto;
