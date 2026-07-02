@@ -14,6 +14,8 @@
     --color-border-light: gainsboro;
     --toast-default-bg: white;
     --toast-default-color: black;
+     --toast-success-bg: #016a9f;
+     --toast-success-text: white;
     --toast-info-bg: rgb(119, 201, 220);
     --toast-warning-bg: #c7bb02;
     --toast-error-bg: #c72702;
@@ -157,13 +159,15 @@
        --color-detail-border: #4b5563;
        --color-detail-shadow: #374151;
        --color-border-light: #374151;
-       --toast-default-bg: white;
-       --toast-default-color: black;
-       --toast-info-bg: rgb(119, 201, 220);
-       --toast-warning-bg: #c7bb02;
-       --toast-error-bg: #c72702;
-       --toast-error-text: wheat;
-       --img-bg: rgba(191, 196, 205, 0.92);
+        --toast-default-bg: white;
+        --toast-default-color: black;
+         --toast-success-bg: #3a4d6f;
+         --toast-success-text: white;
+        --toast-info-bg: rgb(119, 201, 220);
+        --toast-warning-bg: #c7bb02;
+        --toast-error-bg: #c72702;
+        --toast-error-text: wheat;
+        --img-bg: rgba(191, 196, 205, 0.92);
    }
   .sl-theme-dark .lp_container {
       background-color: #1f2228;
@@ -251,14 +255,14 @@
         background-color: rgba(81, 111, 160, 0.25);
     }
 
-   /* Toast styling - modern and sober */
-   .toast {
-       border: none;
-       border-radius: 10px;
-       overflow: hidden;
-       margin-bottom: 10px;
-       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-   }
+    /* Toast styling - modern and sober */
+    .toast {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
    
    .toast-header {
        border: none;
@@ -292,10 +296,10 @@
        margin-right: auto !important;
    }
 
-   /* Dark mode toast adjustments */
-   .sl-theme-dark .toast {
-       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-   }
+    /* Dark mode toast adjustments */
+    .sl-theme-dark .toast {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
 
    .sl-theme-dark .toast-body[style*="var(--toast-default-bg)"] {
        background-color: #1f2228 !important;

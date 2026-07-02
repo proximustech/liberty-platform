@@ -172,11 +172,11 @@ var app = {
     let closeIconColor="var(--toast-default-color)"
 
     if ('type' in options){
-      if (options['type']=='success') {
-        toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
-        toastHeader.style.backgroundColor=`var(--main-contrast-color)`
-        toastHeader.style.color="var(--color-badge-text)"
-      }
+       if (options['type']=='success') {
+         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
+         toastHeader.style.backgroundColor="var(--toast-success-bg)"
+         toastHeader.style.color="var(--toast-success-text)"
+       }
       if (options['type']=='info') {
         toastHeader.insertAdjacentHTML("afterbegin",`<i class="bi bi-chat-dots" style="margin-right:10px"></i>`)
         toastHeader.style.backgroundColor="var(--toast-info-bg)"
