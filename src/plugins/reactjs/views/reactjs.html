@@ -12,13 +12,12 @@
 
       function tryChart() {
         if (!reactReady) return
-        if (typeof am5 === 'undefined') { setTimeout(tryChart, 100); return }
 
         var chartEl = document.getElementById(props.props.chartId)
         if (!chartEl) { setTimeout(tryChart, 100); return }
 
         // Force synchronous reflow so the browser computes the element dimensions
-        // before amCharts tries to measure them — critical on mobile
+        // before the chart library tries to measure them — critical on mobile
         var h = chartEl.offsetHeight
         var w = chartEl.offsetWidth
 
