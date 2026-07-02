@@ -3,6 +3,15 @@ var app = {
     drawer:document.getElementById("app_drawer"),
     dialog:document.getElementById("app_dialog"),
     wideScreenMinPixels : 992,
+      // Rendering backend for the chart abstraction layer (app.graphShow*).
+      // Supported values: 'amcharts' | 'chartjs'. Chart.js is MIT licensed and
+      // free for commercial use (no watermark). Consumers of graphShowPie /
+      // graphShowBars do not need to change when this value changes.
+      chartEngine : 'chartjs',
+      // Per-engine namespaces holding each backend's implementation of the
+      // chart abstraction layer (graphShowPie / graphShowBars).
+      chartJs:{},
+      amCharts:{},
       top_menu : document.getElementById("top_menu"),
       modules_menu : document.getElementById("modules_menu"),
       app_menu_visible : false,
@@ -124,6 +133,7 @@ var app = {
       }
   }
 
+  app.chartJs.chartjsInstances = {}
   app.setSmartTable = (tableId) => {
     $('#'+tableId).bootstrapTable()
     document.getElementsByClassName("fixed-table-body")[0].classList.remove("fixed-table-body")
@@ -373,7 +383,152 @@ var app = {
     }
   }
 
-  app.graphShowPie = (containerId,dataArray) => {
+  // ==========================================================================
+  // Chart abstraction layer
+  // --------------------------------------------------------------------------
+  // Public API (do NOT change signatures — consumers depend on them):
+  //   app.graphShowPie(containerId, dataArray)
+  //   app.graphShowBars(containerId, dataArray)
+  // where dataArray is Array<{ category: string, value: number }>.
+  //
+  // The actual rendering is delegated to a backend selected by app.chartEngine
+  // ('amcharts' or 'chartjs'), so switching libraries is transparent to callers.
+  // ==========================================================================
+
+  app.graphShowPie = (containerId, dataArray) => {
+    if (app.chartEngine === 'chartjs') {
+      app.chartJs.graphShowPie(containerId, dataArray)
+    } else {
+      app.amCharts.graphShowPie(containerId, dataArray)
+    }
+  }
+
+  app.graphShowBars = (containerId, dataArray) => {
+    if (app.chartEngine === 'chartjs') {
+      app.chartJs.graphShowBars(containerId, dataArray)
+    } else {
+      app.amCharts.graphShowBars(containerId, dataArray)
+    }
+  }
+
+  // ---- Shared helpers -------------------------------------------------------
+
+  // A palette roughly matching amCharts' "Kelly" theme feel. Used by Chart.js.
+  app.chartJs.chartPalette = [
+    '#F3C300', '#875692', '#F38400', '#A1CAF1', '#BE0032',
+    '#C2B280', '#848482', '#008856', '#E68FAC', '#0067A5',
+    '#F99379', '#604E97', '#F6A600', '#B3446C', '#DCD300',
+    '#882D17', '#8DB600', '#654522', '#E25822', '#2B3D26'
+  ]
+
+  // Destroy any existing Chart.js instance bound to this container before
+  // creating a new one (mirrors amCharts' root.dispose() behaviour).
+  app.chartJs.destroy = (containerId) => {
+    try {
+      let existing = app.chartJs.chartjsInstances[containerId]
+      if (existing) {
+        existing.destroy()
+        delete app.chartJs.chartjsInstances[containerId]
+      }
+    } catch (e) {}
+  }
+
+  // The abstraction historically targets a plain <div id=containerId>. Chart.js
+  // needs a <canvas>. This returns a canvas that fills the container, creating
+  // one inside the div if the container isn't already a canvas.
+  app.chartJs.canvas = (containerId) => {
+    let el = document.getElementById(containerId)
+    if (!el) { return null }
+    if (el.tagName && el.tagName.toLowerCase() === 'canvas') { return el }
+    // Reuse an existing generated canvas if present, otherwise create one.
+    let canvas = el.querySelector('canvas[data-lp-chart="1"]')
+    if (!canvas) {
+      el.innerHTML = ''
+      canvas = document.createElement('canvas')
+      canvas.setAttribute('data-lp-chart', '1')
+      canvas.style.width = '100%'
+      canvas.style.height = '100%'
+      el.appendChild(canvas)
+    }
+    return canvas
+  }
+
+  // ---- Chart.js backend -----------------------------------------------------
+
+  app.chartJs.graphShowPie = (containerId, dataArray) => {
+    if (typeof Chart === 'undefined') {
+      // Library still loading (can happen on slower mobile connections).
+      setTimeout(function(){ app.chartJs.graphShowPie(containerId, dataArray) }, 100)
+      return
+    }
+    let canvas = app.chartJs.canvas(containerId)
+    if (!canvas) { return }
+    app.chartJs.destroy(containerId)
+
+    let data = dataArray || []
+    let labels = data.map(d => d.category)
+    let values = data.map(d => d.value)
+    let colors = data.map((d, i) => app.chartJs.chartPalette[i % app.chartJs.chartPalette.length])
+    let total = values.reduce((a, b) => a + (Number(b) || 0), 0)
+
+    app.chartJs.chartjsInstances[containerId] = new Chart(canvas.getContext('2d'), {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{ data: values, backgroundColor: colors, borderColor: '#ffffff', borderWidth: 1 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: app.isSmallScreen() ? 'bottom' : 'right' },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                let v = ctx.parsed
+                let pct = total ? (v / total * 100).toFixed(1) : '0.0'
+                return ctx.label + ': ' + v + ' (' + pct + '%)'
+              }
+            }
+          }
+        }
+      }
+    })
+  }
+
+  app.chartJs.graphShowBars = (containerId, dataArray) => {
+    if (typeof Chart === 'undefined') {
+      setTimeout(function(){ app.chartJs.graphShowBars(containerId, dataArray) }, 100)
+      return
+    }
+    let canvas = app.chartJs.canvas(containerId)
+    if (!canvas) { return }
+    app.chartJs.destroy(containerId)
+
+    let data = dataArray || []
+    let labels = data.map(d => d.category)
+    let values = data.map(d => d.value)
+    let colors = data.map((d, i) => app.chartJs.chartPalette[i % app.chartJs.chartPalette.length])
+
+    app.chartJs.chartjsInstances[containerId] = new Chart(canvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{ label: 'Category', data: values, backgroundColor: colors, borderColor: colors, borderWidth: 1 }]
+      },
+      options: {
+        indexAxis: 'y', // horizontal bars, matching the amCharts version
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true } }
+      }
+    })
+  }
+
+  // ---- amCharts backend (original implementation, unchanged behaviour) -------
+
+  app.amCharts.graphShowPie = (containerId,dataArray) => {
 
     am5.ready(function() {
 
@@ -423,7 +578,7 @@ var app = {
   }
 
 
-  app.graphShowBars = (containerId,dataArray) => {
+  app.amCharts.graphShowBars = (containerId,dataArray) => {
     
     am5.ready(function() {
 
