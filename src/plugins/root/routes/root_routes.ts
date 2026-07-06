@@ -17,7 +17,7 @@ let getRouter = (appViewVars: any) => {
         try {
             if (ctx.isAuthenticated()) {
 
-                if (typeof(ctx.session.passport.user)==="undefined") {
+                if (typeof(ctx.session?.passport?.user)==="undefined") {
                     throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
                 }  
 

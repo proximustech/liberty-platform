@@ -9,7 +9,6 @@ import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
 import { RouteService } from "../../../services/route_service";
 
 import koaBody from 'koa-body';
-import { vi } from "@faker-js/faker";
 
 module.exports = function(router:Router,appViewVars:any,prefix:string){
 
@@ -20,7 +19,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.get('/users', async (ctx:Context) => {
 
-        if (typeof(ctx.session.passport.user)==="undefined") {
+        if (typeof(ctx.session?.passport?.user)==="undefined") {
             throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
         }        
         
@@ -80,7 +79,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.get('/account_settings', async (ctx:Context) => {
 
-        if (typeof(ctx.session.passport.user)==="undefined") {
+        if (typeof(ctx.session?.passport?.user)==="undefined") {
             throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
         }        
 
@@ -130,7 +129,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.get('/user_form', async (ctx:Context) => {
 
-        if (typeof(ctx.session.passport.user)==="undefined") {
+        if (typeof(ctx.session?.passport?.user)==="undefined") {
             throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
         }
 
@@ -189,7 +188,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.post('/user',koaBody(), async (ctx:Context) => {
 
-        if (typeof(ctx.session.passport.user)==="undefined") {
+        if (typeof(ctx.session?.passport?.user)==="undefined") {
             throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
         }
 
@@ -332,7 +331,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     router.delete('/user',koaBody(), async (ctx:Context) => {
 
-        if (typeof(ctx.session.passport.user)==="undefined") {
+        if (typeof(ctx.session?.passport?.user)==="undefined") {
             throw new ExceptionSessionInvalid(ExceptionSessionInvalid.exceptionSessionInvalid);
         }
 
