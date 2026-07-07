@@ -8,7 +8,6 @@ const session = require('koa-session');
 const passport = require('koa-passport');
 //const pino = require('koa-pino-logger')()
 import { LoggerServiceFactory } from "./factories/LoggerServiceFactory";
-import testRoutes from "./routes/test_route"
 import {routePlugins} from "./values/route_plugins"
 import { EventEmitter } from "node:events";
 import { Config } from "./values/config";
@@ -126,7 +125,6 @@ export let eventEmitter : EventEmitter
     app.use(getRouter.default(appViewVars).routes())
   });  
 
-  app.use(testRoutes.routes())
   //app.use((ctx, next) => RequestContext.create(orm.em, next));
   
   app.use(mount('/static',serve(path.join(__dirname, '/static'))))

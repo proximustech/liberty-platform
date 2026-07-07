@@ -1,4 +1,4 @@
-import { TestDependence } from "../../src/services/test_dependence_service";
+import { TestDependence } from "../../services/test_dependence_service";
 
 let testDependenceService = new TestDependence()
 
