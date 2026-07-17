@@ -1,3 +1,4 @@
+<img src="https://github.com/proximustech/liberty-platform/raw/master/assets/images/liberty_platform.png" width="100%">
 # Liberty Platform
 
 **A flexible, low-complexity admin framework for Node.js with Frontend multi-framework support**
