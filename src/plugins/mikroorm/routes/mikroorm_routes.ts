@@ -10,6 +10,10 @@ let getRouter = async (viewVars: any) => {
     const em:EntityManager = globalEntityManager.fork();
 
     const router = new Router();
+
+    //TODO from server.ts
+    //app.use((ctx, next) => RequestContext.create(orm.em, next));
+
     router.get('/mikroorm', async (ctx) => {
 
         const author = new Author('Jon Snow');

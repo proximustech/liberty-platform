@@ -16,9 +16,6 @@ import { ExceptionSessionInvalid } from "./types/exceptions";
 
 import { GlobalServices } from "./services/global_services";
 
-//import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
-//export let globalEntityManager : EntityManager
-
 (async () => {
 
   const authorizer: AuthorizerCasbin = new AuthorizerCasbin()
@@ -27,9 +24,6 @@ import { GlobalServices } from "./services/global_services";
   let logger = LoggerServiceFactory.create()
   GlobalServices.logger = logger
 
-  //const orm = await MikroORM.init();
-
-  //globalEntityManager = orm.em
   const app = new Koa()
   //app.use(pino)
   
@@ -121,9 +115,7 @@ import { GlobalServices } from "./services/global_services";
     getRouter = require ("./plugins/"+pluginName+"/routes/"+pluginName+"_routes")
     // @ts-ignore
     app.use(getRouter.default(appViewVars).routes())
-  });  
-
-  //app.use((ctx, next) => RequestContext.create(orm.em, next));
+  });
   
   app.use(mount('/static',serve(path.join(__dirname, '/static'))))
   
