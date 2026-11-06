@@ -1,6 +1,9 @@
 import Router from "koa-router"
 import { events_events } from "../values/events_list"
-import { eventEmitter } from "../../../server";
+import { EventEmitter } from "node:events";
+
+//TODO: use EventEmitter in GlobalServices
+export let eventEmitter : EventEmitter = new EventEmitter()
 
 // FIX: Error: write EIO — without an 'error' listener on the EventEmitter, any
 // synchronous exception thrown inside a registered listener propagates unhandled to

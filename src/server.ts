@@ -9,7 +9,6 @@ const passport = require('koa-passport');
 //const pino = require('koa-pino-logger')()
 import { LoggerServiceFactory } from "./factories/LoggerServiceFactory";
 import {routePlugins} from "./values/route_plugins"
-import { EventEmitter } from "node:events";
 import { Config } from "./values/config";
 
 import {AuthorizerCasbinMongo as AuthorizerCasbin} from "./services/authorizer_casbin_mongo";
@@ -19,7 +18,6 @@ import { GlobalServices } from "./services/global_services";
 
 //import { MikroORM,RequestContext,EntityManager } from '@mikro-orm/sqlite';
 //export let globalEntityManager : EntityManager
-export let eventEmitter : EventEmitter
 
 (async () => {
 
@@ -29,7 +27,6 @@ export let eventEmitter : EventEmitter
   let logger = LoggerServiceFactory.create()
   GlobalServices.logger = logger
 
-  eventEmitter = new EventEmitter()
   //const orm = await MikroORM.init();
 
   //globalEntityManager = orm.em
