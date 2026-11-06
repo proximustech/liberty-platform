@@ -5,7 +5,7 @@ import { RoleServiceFactory } from "../factories/RoleServiceFactory";
 import { UserDataObject,UserDataObjectSpecs,UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
 import { ExceptionCsrfTokenFailed,ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject, ExceptionSessionInvalid } from "../../../types/exceptions";
-import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
+import { GlobalServices } from "../../../services/global_services";
 import { RouteService } from "../../../services/route_service";
 
 import koaBody from 'koa-body';
@@ -15,7 +15,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     let viewVars = {...appViewVars};
     viewVars.prefix = prefix
 
-    let logger = LoggerServiceFactory.create()
+    let logger = GlobalServices.logger
 
     router.get('/users', async (ctx:Context) => {
 

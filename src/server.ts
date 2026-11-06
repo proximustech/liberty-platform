@@ -27,6 +27,7 @@ export let eventEmitter : EventEmitter
   await authorizer.initialize()
   GlobalServices.casbinAuthorizer = authorizer
   let logger = LoggerServiceFactory.create()
+  GlobalServices.logger = logger
 
   eventEmitter = new EventEmitter()
   //const orm = await MikroORM.init();
@@ -138,6 +139,38 @@ export let eventEmitter : EventEmitter
       debug: false
   });
   
+  // FIX: Error: write EIO — Koa distinguishes two error surfaces:
+  //   - server.on('error'): net.Server errors (port in use, etc.)
+  //   - app.on('error'):    HTTP context errors (client socket closed,
+  //                         failed render, koa-static writing to a client
+  //                         that aborted the download, etc.)
+  // Without app.on('error'), Koa falls back to its default onerror which calls
+  // console.error(). If stdout is already compromised at that point, that
+  // console.error() triggers a cascading EIO. With this listener, EIO/EPIPE/
+  // ECONNRESET/ECONNABORTED are silently discarded (normal network behaviour);
+  // everything else is logged.
+  app.on('error', (err: any, ctx: any) => {
+      if (['EIO', 'EPIPE', 'ECONNRESET', 'ECONNABORTED'].includes(err.code)) return
+      logger.error({ err, url: ctx?.url }, 'app error')
+  })
+
+  // FIX: Error: write EIO — last line of defence for I/O errors that escape the
+  // handlers above (e.g. pino stream errors before the listener in PinoLogger.create()
+  // is attached, or errors thrown by third-party modules).
+  // EIO/EPIPE/ECONNRESET are ignored; any other unexpected error is logged
+  // without re-throwing, to keep the process alive.
+  process.on('uncaughtException', (err: any) => {
+      if (['EIO', 'EPIPE', 'ECONNRESET'].includes(err.code)) return
+      logger.error(err, 'uncaughtException')
+  })
+
+  // FIX: Error: write EIO — unhandled rejected Promises (e.g. em.persist().flush()
+  // without await) crash the process in Node >= 15, interrupting active streams and
+  // potentially causing EIO in concurrent handlers. This handler catches and logs them.
+  process.on('unhandledRejection', (reason: any) => {
+      logger.error(reason, 'unhandledRejection')
+  })
+
   const server = app
       .listen(8000, async () => {
           console.log(`Server listening on port: 8000`)

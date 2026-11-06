@@ -1,6 +1,6 @@
 import Router from "koa-router"
 import { Context } from "koa";
-import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
+import { GlobalServices } from "../../../services/global_services";
 
 import koaBody from 'koa-body';
 
@@ -10,7 +10,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
 
     let apiPrefix = "/api/v1"
 
-    let logger = LoggerServiceFactory.create()
+    let logger = GlobalServices.logger
 
     router.get(apiPrefix+'/oidc_callback',koaBody(), async (ctx:Context) => {
 

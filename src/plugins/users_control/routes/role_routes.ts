@@ -6,7 +6,7 @@ import { DynamicViews } from "../../../services/dynamic_views_service";
 import { dynamicViewsDefinition } from "../values/dynamic_views"
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService"
 import { ExceptionSessionInvalid,ExceptionCsrfTokenFailed,ExceptionNotAuthorized,ExceptionRecordAlreadyExists,ExceptionInvalidObject } from "../../../types/exceptions";
-import { LoggerServiceFactory } from "../../../factories/LoggerServiceFactory";
+import { GlobalServices } from "../../../services/global_services";
 import { RouteService } from "../../../services/route_service";
 
 import koaBody from 'koa-body';
@@ -16,7 +16,7 @@ module.exports = function(router:Router,appViewVars:any,prefix:string){
     let viewVars = {...appViewVars};
     viewVars.prefix = prefix
 
-    let logger = LoggerServiceFactory.create()
+    let logger = GlobalServices.logger
 
     router.get('/roles', async (ctx:Context) => {
 
