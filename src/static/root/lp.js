@@ -433,23 +433,102 @@ var app = {
     } catch (e) {}
   }
 
+  // A container with no data to plot must not show a grid nor an empty box:
+  // any existing chart is destroyed, the generated canvas hidden and the
+  // imposed chart height collapsed (restored automatically by canvas() as
+  // soon as data renders). Template divs that this backend never touched are
+  // left as they are.
+  app.chartJs.noData = (containerId) => {
+    app.chartJs.destroy(containerId)
+    let el = document.getElementById(containerId)
+    if (!el) { return }
+    if (el.tagName && el.tagName.toLowerCase() === 'canvas') {
+      el.style.visibility = 'hidden'
+      return
+    }
+    let canvas = el.querySelector('canvas[data-lp-chart="1"]')
+    if (!canvas) { return }
+    canvas.style.visibility = 'hidden'
+    // Remember the imposed height so canvas() can put it back later.
+    el.dataset.lpChartHeight = el.style.height
+    el.style.height = '0px'
+  }
+
   // The abstraction historically targets a plain <div id=containerId>. Chart.js
   // needs a <canvas>. This returns a canvas that fills the container, creating
   // one inside the div if the container isn't already a canvas.
+  //
+  // Sizing contract (Chart.js responsive model):
+  //   - Chart.js measures the canvas's PARENT container (ResizeObserver on
+  //     canvas.parentNode) and then overwrites the canvas styles with fixed
+  //     pixel values, so the container must be the sole size authority.
+  //   - The container is therefore made position:relative with a definite
+  //     height (fallback applied only when the client gave none), and the
+  //     canvas is position:absolute so it can never feed back into the
+  //     container's own height (no circular sizing / overflow beyond the box).
   app.chartJs.canvas = (containerId) => {
     let el = document.getElementById(containerId)
     if (!el) { return null }
-    if (el.tagName && el.tagName.toLowerCase() === 'canvas') { return el }
+
+    let elIsCanvas = el.tagName && el.tagName.toLowerCase() === 'canvas'
+
+    // If the client provides the canvas itself, promote its (possibly
+    // full-page) parent into the dedicated relative wrapper instead of
+    // letting Chart.js size the canvas against an arbitrary parent.
+    if (elIsCanvas) {
+      let wrapper = el.parentElement
+      if (!wrapper) { return el }
+
+      if (getComputedStyle(wrapper).position === 'static') {
+        wrapper.style.position = 'relative'
+      }
+      if (!parseFloat(getComputedStyle(wrapper).height)) {
+        // Keep the canvas's own current display height when it is
+        // meaningful, otherwise fall back to a sane default.
+        let canvasHeight = getComputedStyle(el).height
+        wrapper.style.height = (parseFloat(canvasHeight) > 0 ? canvasHeight : '240px')
+      }
+
+      el.style.position = 'absolute'
+      el.style.top = '0'
+      el.style.left = '0'
+      el.style.width = '100%'
+      el.style.height = '100%'
+      return el
+    }
+
+    // The wrapper div is the dedicated chart container: ensure it is
+    // relatively positioned and has a DEFINITE height. A 0px or 'auto'
+    // height renders nothing and makes Chart.js fall back to the canvas
+    // default aspect (height = width / 2), so the canvas overflows the
+    // zero-height box and paints the axes grid over the rest of the page.
+    if (getComputedStyle(el).position === 'static') {
+      el.style.position = 'relative'
+    }
+    // Restore a height that a previous no-data collapse had zeroed out.
+    if (el.dataset.lpChartHeight !== undefined) {
+      el.style.height = el.dataset.lpChartHeight
+      delete el.dataset.lpChartHeight
+    }
+    if (!parseFloat(getComputedStyle(el).height)) {
+      el.style.height = '240px'
+    }
+
     // Reuse an existing generated canvas if present, otherwise create one.
+    // position:absolute makes the canvas resolve against the container's box
+    // without participating in the container's height calculation.
     let canvas = el.querySelector('canvas[data-lp-chart="1"]')
     if (!canvas) {
-      el.innerHTML = ''
       canvas = document.createElement('canvas')
       canvas.setAttribute('data-lp-chart', '1')
-      canvas.style.width = '100%'
-      canvas.style.height = '100%'
+      el.innerHTML = ''
       el.appendChild(canvas)
     }
+    canvas.style.position = 'absolute'
+    canvas.style.top = '0'
+    canvas.style.left = '0'
+    canvas.style.width = '100%'
+    canvas.style.height = '100%'
     return canvas
   }
 
@@ -461,15 +540,20 @@ var app = {
       setTimeout(function(){ app.chartJs.graphShowPie(containerId, dataArray) }, 100)
       return
     }
-    let canvas = app.chartJs.canvas(containerId)
-    if (!canvas) { return }
-    app.chartJs.destroy(containerId)
-
     let data = dataArray || []
     let labels = data.map(d => d.category)
     let values = data.map(d => d.value)
     let colors = data.map((d, i) => app.chartJs.chartPalette[i % app.chartJs.chartPalette.length])
     let total = values.reduce((a, b) => a + (Number(b) || 0), 0)
+
+    if (!labels.length) {
+      app.chartJs.noData(containerId)
+      return
+    }
+    let canvas = app.chartJs.canvas(containerId)
+    if (!canvas) { return }
+    canvas.style.visibility = 'visible'
+    app.chartJs.destroy(containerId)
 
     app.chartJs.chartjsInstances[containerId] = new Chart(canvas.getContext('2d'), {
       type: 'pie',
@@ -501,14 +585,19 @@ var app = {
       setTimeout(function(){ app.chartJs.graphShowBars(containerId, dataArray) }, 100)
       return
     }
-    let canvas = app.chartJs.canvas(containerId)
-    if (!canvas) { return }
-    app.chartJs.destroy(containerId)
-
     let data = dataArray || []
     let labels = data.map(d => d.category)
     let values = data.map(d => d.value)
     let colors = data.map((d, i) => app.chartJs.chartPalette[i % app.chartJs.chartPalette.length])
+
+    if (!labels.length) {
+      app.chartJs.noData(containerId)
+      return
+    }
+    let canvas = app.chartJs.canvas(containerId)
+    if (!canvas) { return }
+    canvas.style.visibility = 'visible'
+    app.chartJs.destroy(containerId)
 
     app.chartJs.chartjsInstances[containerId] = new Chart(canvas.getContext('2d'), {
       type: 'bar',
