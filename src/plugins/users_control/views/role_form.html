@@ -1,188 +1,259 @@
 <script>
-    app.md.role_form={}
-    app.md.role_form.role=JSON.parse(`<%- JSON.stringify(role) %>`)
-    app.md.role_form.roleValidateSchema = JSON.parse(`<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`)
-    eval(`<%- roleValidateFunction %>`)
+  app.md.role_form = {};
+  app.md.role_form.role = JSON.parse(`<%- JSON.stringify(role) %>`);
+  app.md.role_form.roleValidateSchema = JSON.parse(
+    `<%- JSON.stringify(roleValidateSchema).replaceAll("\\","\\\\") %>`,
+  );
+  eval(`<%- roleValidateFunction %>`);
 
-    app.md.role_form.rolePermissions = JSON.parse(`<%- JSON.stringify(rolePermissions) %>`)
-    app.md.role_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)   
-    eval(`<%- userHasPermissionOnElement %>`)
+  app.md.role_form.rolePermissions = JSON.parse(
+    `<%- JSON.stringify(rolePermissions) %>`,
+  );
+  app.md.role_form.userPermissions = JSON.parse(
+    `<%- JSON.stringify(userPermissions) %>`,
+  );
+  eval(`<%- userHasPermissionOnElement %>`);
 
-    app.md.permissionsSchema = {}
+  app.md.permissionsSchema = {};
 
-    app.md.renderPluginSchemaConfig = (pluginName,pluginSchemaConfig) => {
-        let permissionsHTML = ""
-        pluginSchemaConfig.schema.forEach(permissionConfig => {
-            permissionsHTML += `
+  app.md.renderPluginSchemaConfig = (pluginName, pluginSchemaConfig) => {
+    let permissionsHTML = "";
+    pluginSchemaConfig.schema.forEach((permissionConfig) => {
+      permissionsHTML += `
             <div class="alert alert-primary" role="alert">
                 <strong>${permissionConfig.resource.charAt(0).toUpperCase() + permissionConfig.resource.slice(1)}: </strong><br>
 
-            `
-            let disabled="disabled='disabled'"
-            if (app.md.role_form.userHasPermissionOnElement(app.md.role_form.userPermissions,[`<%= prefix %>.role`],['write'])) {
-                disabled = ""
-            }   
-            permissionConfig.permissions.forEach(permission => {
-                let checked = ""
-                if (app.md.role_form.userHasPermissionOnElement(app.md.role_form.rolePermissions,[`${pluginName}.${permissionConfig.resource}`],[permission])) {
-                    checked = "checked"
-                }             
+            `;
+      let disabled = "disabled='disabled'";
+      if (
+        app.md.role_form.userHasPermissionOnElement(
+          app.md.role_form.userPermissions,
+          [`<%= prefix %>.role`],
+          ["write"],
+        )
+      ) {
+        disabled = "";
+      }
+      permissionConfig.permissions.forEach((permission) => {
+        let checked = "";
+        if (
+          app.md.role_form.userHasPermissionOnElement(
+            app.md.role_form.rolePermissions,
+            [`${pluginName}.${permissionConfig.resource}`],
+            [permission],
+          )
+        ) {
+          checked = "checked";
+        }
 
-                permissionsHTML += `
+        permissionsHTML += `
                     <input id="${pluginName}.${permissionConfig.resource}" type="checkbox" data-role="permission" value="${permission}" ${checked} ${disabled}> ${permission.charAt(0).toUpperCase() + permission.slice(1)} <br>
-                `
-            });
-            permissionsHTML += "</div>"
-        });
-        let element = document.createElement("div");
-        element.innerHTML = `
+                `;
+      });
+      permissionsHTML += "</div>";
+    });
+    let element = document.createElement("div");
+    element.innerHTML = `
             <div style='margin-bottom:10px'>
                 <sl-details summary="${pluginSchemaConfig.label}">
                     ${permissionsHTML}
                 </sl-details>        
             </div>
-        `
-        document.getElementById("permissions").appendChild(element)
-    }    
-   
-    app.md.submitRole = (triggerElement) => {
+        `;
+    document.getElementById("permissions").appendChild(element);
+  };
 
-        let role = app.md.role_form.role
-        let roleValidationResult = app.md.role_form.roleValidateFunction(role,app.md.role_form.roleValidateSchema)
-       
-        if (roleValidationResult.isValid) {
+  app.md.submitRole = (triggerElement) => {
+    let role = app.md.role_form.role;
+    let roleValidationResult = app.md.role_form.roleValidateFunction(
+      role,
+      app.md.role_form.roleValidateSchema,
+    );
 
-            let permissionElements = Array.from(document.querySelectorAll('[data-role="permission"]'))
-            let permissions = []
-            permissionElements.forEach(element => {
-                permissions.push({"resource":element.id,"permission":element.value,"enabled":element.checked})
+    if (roleValidationResult.isValid) {
+      let permissionElements = Array.from(
+        document.querySelectorAll('[data-role="permission"]'),
+      );
+      let permissions = [];
+      permissionElements.forEach((element) => {
+        permissions.push({
+          resource: element.id,
+          permission: element.value,
+          enabled: element.checked,
+        });
+      });
+
+      role.permissions = permissions;
+
+      app.setElementForPendingOperation(triggerElement);
+      let result = $.ajax({
+        type: "POST",
+        url: "<%= prefix %>/role",
+        data:
+          "csrfToken=" +
+          (document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/) || [])[1] +
+          "&json=" +
+          JSON.stringify(role),
+        processData: false,
+        dataType: "text",
+      })
+        .done(function () {
+          setTimeout(() => {
+            app.reloadLastBreadCrumb("content_view");
+            app.drawer.hide();
+            app.toastShow("Saved", "Role saved successfully.", {
+              type: "success",
             });
-
-            role.permissions=permissions
-
-            app.setElementForPendingOperation(triggerElement)
-            let result = $.ajax({
-                type:"POST",
-                url:"<%= prefix %>/role",
-                data:"csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1]+"&json="+JSON.stringify(role),
-                processData: false,
-                dataType:"text"
-            })
-            .done(function() {
-                setTimeout(() => {
-                    app.reloadLastBreadCrumb('content_view')
-                    app.drawer.hide();
-                    app.toastShow('Saved','Role saved successfully.',{type:"success"})           
-                    
-                }, 1000);
-            })
-            .fail(function(data) {
-                try {
-                    app.unsetElementForPendingOperation(triggerElement)
-                    for (messageData of JSON.parse(data.responseText).messages) {
-                        app.toastShow('Form data Error',messageData.message,{closable:true,type:"error"})
-                        break;
-                    }
-
-                } catch (error) {}
-            })
-            .always(function() {
-            });              
-        } else {
-            try {
-                app.toastShow('Form data Error',roleValidationResult.messages[0].message,{closable:true,type:"error"})
-            } catch (error) {}
-        }
-
-      
+          }, 1000);
+        })
+        .fail(function (data) {
+          try {
+            app.unsetElementForPendingOperation(triggerElement);
+            for (messageData of JSON.parse(data.responseText).messages) {
+              app.toastShow("Form data Error", messageData.message, {
+                closable: true,
+                type: "error",
+              });
+              break;
+            }
+          } catch (error) {}
+        })
+        .always(function () {});
+    } else {
+      try {
+        app.toastShow(
+          "Form data Error",
+          roleValidationResult.messages[0].message,
+          { closable: true, type: "error" },
+        );
+      } catch (error) {}
     }
+  };
 
-    app.md.deleteRole=(uuid)=> {
-        let result = $.ajax({
-            type:"DELETE",
-            url:"<%= prefix %>/role?uuid="+uuid+"&csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1]
-        })
-        .done(function() {      
-            setTimeout(() =>{
-                app.ajax('content_view','/<%= prefix %>/roles')
-                app.drawer.hide();
-                app.dialog.hide()
-                app.toastShow('Deleted','Role deleted successfully.',{type:"success"}) 
-            },1000)   
-        })
-        .fail(function(data) {
-            try {
-                app.dialog.hide()
-                for (messageData of JSON.parse(data.responseText).messages) {
-                    app.toastShow('Error on Delete',messageData.message,{closable:true,type:"error"})
-                    break;
-                }
-
-            } catch (error) {}
-        })
-        .always(function() {
-        }); 
-    
-    }    
-
+  app.md.deleteRole = (uuid) => {
+    let result = $.ajax({
+      type: "DELETE",
+      url:
+        "<%= prefix %>/role?uuid=" +
+        uuid +
+        "&csrfToken=" +
+        (document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/) || [])[1],
+    })
+      .done(function () {
+        setTimeout(() => {
+          app.ajax("content_view", "/<%= prefix %>/roles");
+          app.drawer.hide();
+          app.dialog.hide();
+          app.toastShow("Deleted", "Role deleted successfully.", {
+            type: "success",
+          });
+        }, 1000);
+      })
+      .fail(function (data) {
+        try {
+          app.dialog.hide();
+          for (messageData of JSON.parse(data.responseText).messages) {
+            app.toastShow("Error on Delete", messageData.message, {
+              closable: true,
+              type: "error",
+            });
+            break;
+          }
+        } catch (error) {}
+      })
+      .always(function () {});
+  };
 </script>
 <% if (!editing) { %>
-    <h3>Create Role</h3>
+<h3>Create Role</h3>
 <% } else { %>
-    <sl-alert open>
-        <strong>Editing Role</strong><br />
-        <%= role.name %>
-      </sl-alert>
+<sl-alert open>
+  <strong>Editing Role</strong><br />
+  <%= role.name %>
+</sl-alert>
 
 <% } %>
-    <sl-tab-group id="role_form_tab_group">
-        <sl-tab slot="nav" panel="general">General</sl-tab>
-        <sl-tab slot="nav" panel="permissions">Permissions</sl-tab>
-        <% if (editing && UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
-            <sl-tab slot="nav" panel="operations">Operations</sl-tab>
-         
-        <% } %>
-    
-        <sl-tab-panel name="general">
-            <% let fieldsEnabled = false; if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { fieldsEnabled = true }%>
-            <%- roleFieldRender("role","name",role.name,roleMetadata.name,fieldsEnabled) %>          
-        </sl-tab-panel>
-        <sl-tab-panel id="permissions" name="permissions">
-            <%- permissionsModulesContent %> 
-        </sl-tab-panel>
+<sl-tab-group id="role_form_tab_group">
+  <sl-tab slot="nav" panel="general">General</sl-tab>
+  <sl-tab slot="nav" panel="permissions">Permissions</sl-tab>
+  <% if (editing &&
+  UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
+  <sl-tab slot="nav" panel="operations">Operations</sl-tab>
 
-        <% if (editing && UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
-            <sl-tab-panel name="operations">
-                <sl-details summary="Delete">
-                    <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete Role','Are you sure to delete the role <strong><%= role.name %></strong> ?','app.md.deleteRole(`<%= role.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete Role</button>
-                    <br>
-                </sl-details>
-    
-            </sl-tab-panel>
-         
-        <% } %>
-        
-    </sl-tab-group>
+  <% } %>
 
-    <div slot="footer" style="padding: 20px;background-color: var(--color-footer-bg);border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-        <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
-        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])){ %>
-            <button type="button" class="btn btn-primary" style="background-color: var(--main-contrast-color);" onclick="app.md.submitRole(this)">Save</sl-button>
-        <% } %>
-    </div>
+  <sl-tab-panel name="general">
+    <% let fieldsEnabled = false; if
+    (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) {
+    fieldsEnabled = true }%> <%-
+    roleFieldRender("role","name",role.name,roleMetadata.name,fieldsEnabled) %>
+  </sl-tab-panel>
+  <sl-tab-panel id="permissions" name="permissions">
+    <%- permissionsModulesContent %>
+  </sl-tab-panel>
+
+  <% if (editing &&
+  UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])) { %>
+  <sl-tab-panel name="operations">
+    <sl-details summary="Delete">
+      <button
+        type="button"
+        class="btn btn-outline-danger"
+        onclick="
+          app.confirmDelete(
+            'Delete Role',
+            'Are you sure to delete the role <strong><%= role.name %></strong> ?',
+            'app.md.deleteRole(`<%= role.uuid %>`)',
+          )
+        "
+      >
+        <i class="bi bi-trash-fill"></i> Delete Role
+      </button>
+      <br />
+    </sl-details>
+  </sl-tab-panel>
+
+  <% } %>
+</sl-tab-group>
+
+<div
+  slot="footer"
+  style="
+    padding: 20px;
+    background-color: var(--color-footer-bg);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  "
+>
+  <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">
+    Close
+  </button>
+  <% if
+  (UserHasPermissionOnElement(userPermissions,[prefix+'.role'],['write'])){ %>
+  <button
+    type="button"
+    class="btn btn-primary"
+    style="background-color: var(--main-contrast-color)"
+    onclick="app.md.submitRole(this)"
+  >
+    Save
+  </button>
+  <% } %>
+</div>
 
 <script>
-
-    $(document).ready(function() {
-        document.getElementById('role_form_tab_group').show('general')
-        if (app.md.role_form.role.name==="") {
-            setTimeout(()=>{document.getElementById("role_name").focus()},500)        
-        }          
-    });
-
-
-    for (const [pluginName, pluginSchemaConfig] of Object.entries(app.md.permissionsSchema)) {
-        app.md.renderPluginSchemaConfig(pluginName,pluginSchemaConfig)
+  $(document).ready(function () {
+    document.getElementById("role_form_tab_group").show("general");
+    if (app.md.role_form.role.name === "") {
+      setTimeout(() => {
+        document.getElementById("role_name").focus();
+      }, 500);
     }
+  });
 
+  for (const [pluginName, pluginSchemaConfig] of Object.entries(
+    app.md.permissionsSchema,
+  )) {
+    app.md.renderPluginSchemaConfig(pluginName, pluginSchemaConfig);
+  }
 </script>

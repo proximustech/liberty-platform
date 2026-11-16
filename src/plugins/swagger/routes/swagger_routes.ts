@@ -1,27 +1,28 @@
-import Router from "koa-router"
-import { koaSwagger } from 'koa2-swagger-ui';
-const yamljs = require('yamljs');
+import Router from "koa-router";
+import { koaSwagger } from "koa2-swagger-ui";
+const yamljs = require("yamljs");
 
-const spec = yamljs.load('./src/plugins/swagger/openapi.yaml');
+const spec = yamljs.load("./src/plugins/swagger/openapi.yaml");
 
 let getRouter = (viewVars: any) => {
+  viewVars = {};
 
-    viewVars = {}
+  const router = new Router({ prefix: "/api" });
+  router.get(
+    "/docs",
+    koaSwagger({ routePrefix: false, swaggerOptions: { spec } }),
+  );
+  router.get("/status", async (ctx) => {
+    try {
+      ctx.body = {
+        status: "success",
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
-    const router = new Router({ prefix: '/api' });
-    router.get('/docs', koaSwagger({ routePrefix: false, swaggerOptions: { spec }}));
-    router.get('/status', async (ctx) => {
-        try {
-            ctx.body = {
-                status: 'success'
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    })
+  return router;
+};
 
-
-    return router
-}
-
-export default getRouter
+export default getRouter;

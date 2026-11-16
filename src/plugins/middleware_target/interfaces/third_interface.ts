@@ -1,3 +1,3 @@
-export interface IThird { 
-    thirdMethod: (param:string)=> string
- }
+export interface IThird {
+  thirdMethod: (param: string) => string;
+}

@@ -1,4 +1,4 @@
-export interface ISecond { 
-    data: string, 
-    secondMethod: ()=> string 
- }
+export interface ISecond {
+  data: string;
+  secondMethod: () => string;
+}

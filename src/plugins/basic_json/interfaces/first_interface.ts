@@ -1,4 +1,4 @@
-export interface IFirst { 
-    data: string, 
-    firstMethod: ()=> string 
- }
+export interface IFirst {
+  data: string;
+  firstMethod: () => string;
+}

@@ -1,71 +1,138 @@
 <script>
-    app.md = {}
+  app.md = {};
 </script>
 
-<div class="lp_contrast_container lp_module_fixed_bar lp_fixed_bar_collapsed" id="users_fixed_bar">
-    <div class="lp_fixed_bar_toggle" onclick="(function(bar){bar.classList.toggle('lp_fixed_bar_collapsed');var icon=bar.querySelector('.lp_fixed_bar_toggle i');icon.className=bar.classList.contains('lp_fixed_bar_collapsed')?'bi bi-chevron-down':'bi bi-chevron-up';})(document.getElementById('users_fixed_bar'))">
-        <span class="lp_fixed_bar_toggle_space"></span>
-        <button title="Toggle bar">
-            <i class="bi bi-chevron-down"></i>
-        </button>
-    </div>
-    <div class="lp_fixed_bar_content">
-        <% if ( UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
-            <div class="btn-group" role="group" aria-label="" style="margin-bottom: 10px;">
-                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();app.ajax('app_drawer', '/<%= prefix %>/user_form');">
-                    <i class="bi bi-plus-circle"></i> Add
-                </button>
-            </div>
-        <% } %>
-        <div style="max-width: 250px;margin-bottom: 10px;margin-left: auto;margin-right: auto;">
-            <sl-input id="user_search_box" placeholder="Type: filter, Intro: search" size="medium" autocomplete="one-time-code" pill onkeydown="app.ajaxOnPressedKey(event,13,'content_view',`/<%= prefix %>/users?search_value=${this.value}`)" value="<%= searchValue %>">
-                <sl-icon name="search" slot="prefix"></sl-icon>
-            </sl-input>    
-        </div>
-        <div id="list_navigation_bar"></div>
-    </div>
-</div>
-<table 
-    id="users_table" 
-    data-classes="table"
-    data-toggle="table" 
-    data-search="true" 
-    data-search-align="left" 
-    data-search-selector="#user_search_box" 
-    data-search-highlight="true"
-    style="border-style: hidden;"
+<div
+  class="lp_contrast_container lp_module_fixed_bar lp_fixed_bar_collapsed"
+  id="users_fixed_bar"
 >
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <% users.forEach(user => { %>
-    <tr style="border: hidden;">
-        <td>
-            <div class="lp_container">
-                <div class="lp_contrast_container" style="padding-bottom: 8px;">
-                    <div>
-                        <button class="lp_button" onclick="app.setViewForPendingOperation('app_drawer');app.drawer.show();app.ajax('app_drawer', '/<%= prefix %>/user_form?uuid=<%= user.uuid %>');"><i class="bi bi-pencil"></i></button>
-                    </div> 
-                    <strong>Mail:</strong> <%= user.email %>                                                            
-                </div>
-                <div class="lp_register_container_body">
-                    <% let roleName = undefined %>
-                    <% roleName = rolesUuidMap.get(user.role_uuid) %>
-                    <% if(roleName==undefined){ roleName="-"} %>
-                    <p><strong>Name:</strong> <%= user.name %> <%= user.last_name %></p>
-                    <p><strong>Role:</strong> <%= roleName %></p>
-
-                </div>
-                
-            </div>
-        </td>
+  <div
+    class="lp_fixed_bar_toggle"
+    onclick="
+      (function (bar) {
+        bar.classList.toggle('lp_fixed_bar_collapsed');
+        var icon = bar.querySelector('.lp_fixed_bar_toggle i');
+        icon.className = bar.classList.contains('lp_fixed_bar_collapsed')
+          ? 'bi bi-chevron-down'
+          : 'bi bi-chevron-up';
+      })(document.getElementById('users_fixed_bar'))
+    "
+  >
+    <span class="lp_fixed_bar_toggle_space"></span>
+    <button title="Toggle bar">
+      <i class="bi bi-chevron-down"></i>
+    </button>
+  </div>
+  <div class="lp_fixed_bar_content">
+    <% if (
+    UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
+    <div
+      class="btn-group"
+      role="group"
+      aria-label=""
+      style="margin-bottom: 10px"
+    >
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-secondary"
+        onclick="
+          app.setViewForPendingOperation('app_drawer');
+          app.drawer.show();
+          app.ajax('app_drawer', '/<%= prefix %>/user_form');
+        "
+      >
+        <i class="bi bi-plus-circle"></i> Add
+      </button>
+    </div>
+    <% } %>
+    <div
+      style="
+        max-width: 250px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+      "
+    >
+      <sl-input
+        id="user_search_box"
+        placeholder="Type: filter, Intro: search"
+        size="medium"
+        autocomplete="one-time-code"
+        pill
+        onkeydown="
+          app.ajaxOnPressedKey(
+            event,
+            13,
+            'content_view',
+            `/<%= prefix %>/users?search_value=${this.value}`,
+          )
+        "
+        value="<%= searchValue %>"
+      >
+        <sl-icon name="search" slot="prefix"></sl-icon>
+      </sl-input>
+    </div>
+    <div id="list_navigation_bar"></div>
+  </div>
+</div>
+<table
+  id="users_table"
+  data-classes="table"
+  data-toggle="table"
+  data-search="true"
+  data-search-align="left"
+  data-search-selector="#user_search_box"
+  data-search-highlight="true"
+  style="border-style: hidden"
+>
+  <thead>
+    <tr>
+      <th></th>
     </tr>
-    <% }) %>
+  </thead>
+  <% users.forEach(user => { %>
+  <tr style="border: hidden">
+    <td>
+      <div class="lp_container">
+        <div class="lp_contrast_container" style="padding-bottom: 8px">
+          <div>
+            <button
+              class="lp_button"
+              onclick="
+                app.setViewForPendingOperation('app_drawer');
+                app.drawer.show();
+                app.ajax(
+                  'app_drawer',
+                  '/<%= prefix %>/user_form?uuid=<%= user.uuid %>',
+                );
+              "
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+          </div>
+          <strong>Mail:</strong>
+          <%= user.email %>
+        </div>
+        <div class="lp_register_container_body">
+          <% let roleName = undefined %> <% roleName =
+          rolesUuidMap.get(user.role_uuid) %> <% if(roleName==undefined){
+          roleName="-"} %>
+          <p>
+            <strong>Name:</strong>
+            <%= user.name %> <%= user.last_name %>
+          </p>
+          <p>
+            <strong>Role:</strong>
+            <%= roleName %>
+          </p>
+        </div>
+      </div>
+    </td>
+  </tr>
+  <% }) %>
 </table>
 <script>
-    app.setSmartTable('users_table')
-    app.setModuleTitle(`<strong><sl-icon name="person" label="Settings"></sl-icon> Users</strong>`)
-    app.renderListNavigationBar("list_navigation_bar",<%= listPagesTotalNumber %>,<%= listPageNumber %>,'<%= prefix %>/users',document.getElementById("user_search_box").value)
+  app.setSmartTable('users_table')
+  app.setModuleTitle(`<strong><sl-icon name="person" label="Settings"></sl-icon> Users</strong>`)
+  app.renderListNavigationBar("list_navigation_bar",<%= listPagesTotalNumber %>,<%= listPageNumber %>,'<%= prefix %>/users',document.getElementById("user_search_box").value)
 </script>

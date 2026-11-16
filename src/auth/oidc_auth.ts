@@ -1,6 +1,6 @@
-const passport = require('koa-passport');
-const OpenIDConnectStrategy = require('passport-openidconnect');
-import { MongoDbUserAuthenticator  as Authenticator } from "../plugins/users_control/services/mongodb_authenticator_user";
+const passport = require("koa-passport");
+const OpenIDConnectStrategy = require("passport-openidconnect");
+import { MongoDbUserAuthenticator as Authenticator } from "../plugins/users_control/services/mongodb_authenticator_user";
 import { Config } from "../values/config";
 
 /*
@@ -49,34 +49,39 @@ Microsoft notes:
 */
 
 const auth_options = {
-    issuer: Config.OIDC_ISSUER,
-    authorizationURL: Config.OIDC_AUTHORIZATION_URL,
-    tokenURL: Config.OIDC_TOKEN_URL,
-    userInfoURL: Config.OIDC_USER_INFO_URL,
-    clientID: Config.OIDC_CLIENT_ID,
-    clientSecret: Config.OIDC_CLIENT_SECRET,
-    callbackURL: Config.OIDC_CALLBACK_URL,
-    skipUserProfile: false,
-    scope:"profile"
-  };
+  issuer: Config.OIDC_ISSUER,
+  authorizationURL: Config.OIDC_AUTHORIZATION_URL,
+  tokenURL: Config.OIDC_TOKEN_URL,
+  userInfoURL: Config.OIDC_USER_INFO_URL,
+  clientID: Config.OIDC_CLIENT_ID,
+  clientSecret: Config.OIDC_CLIENT_SECRET,
+  callbackURL: Config.OIDC_CALLBACK_URL,
+  skipUserProfile: false,
+  scope: "profile",
+};
 
-passport.serializeUser((user:any, done:any) => { done(null, user); });
-passport.deserializeUser((user:any, done:any) => {
+passport.serializeUser((user: any, done: any) => {
+  done(null, user);
+});
+passport.deserializeUser((user: any, done: any) => {
   return done(null, user);
 });
 
-passport.use(new OpenIDConnectStrategy(auth_options, async function verify (issuer:string, profile:any, done:any) {
-
+passport.use(
+  new OpenIDConnectStrategy(auth_options, async function verify(
+    issuer: string,
+    profile: any,
+    done: any,
+  ) {
     //Available in profile: profile.displayName,profile.username //only when scope:"profile" and skipUserProfile: false are set.
-    let authenticator = new Authenticator(profile.username)
-    let authenticatedUser:any = await authenticator.authenticate()
+    let authenticator = new Authenticator(profile.username);
+    let authenticatedUser: any = await authenticator.authenticate();
 
-    
-    if ( authenticatedUser === false) {
+    if (authenticatedUser === false) {
       return done(null, false);
     } else {
-      authenticatedUser.federated = true
+      authenticatedUser.federated = true;
       return done(null, authenticatedUser);
-    }  
-
-}));
+    }
+  }),
+);

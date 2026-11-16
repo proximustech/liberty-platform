@@ -1,21 +1,21 @@
 export class ThirdMiddleware_1 {
-    middlewareMethods: string[];
+  middlewareMethods: string[];
 
-    constructor() {
-        /**
-         * Or Define function names for middleweare target.
-         * @type {Array}
-         */
-        this.middlewareMethods = ['thirdMethod'];
-      }
+  constructor() {
+    /**
+     * Or Define function names for middleweare target.
+     * @type {Array}
+     */
+    this.middlewareMethods = ["thirdMethod"];
+  }
 
-    thirdMethod(){
-        // @ts-ignore
-        return next => param => {
-            console.log('initial param : ' + param);
-            param = param + " changed "
-            console.log('final param : ' + param);
-            return next(param);
-        }
-    }
+  thirdMethod() {
+    // @ts-ignore
+    return (next) => (param) => {
+      console.log("initial param : " + param);
+      param = param + " changed ";
+      console.log("final param : " + param);
+      return next(param);
+    };
+  }
 }

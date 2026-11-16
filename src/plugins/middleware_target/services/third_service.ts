@@ -1,7 +1,7 @@
-import {IThird} from "../interfaces/third_interface"
+import { IThird } from "../interfaces/third_interface";
 
 export class Third implements IThird {
-    thirdMethod(param:string){
-        return param
-    }
+  thirdMethod(param: string) {
+    return param;
+  }
 }

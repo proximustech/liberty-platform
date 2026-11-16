@@ -1,30 +1,26 @@
-import Router from "koa-router"
-import { Second } from "../services/second_service"
+import Router from "koa-router";
+import { Second } from "../services/second_service";
 
-const secondService = new Second()
+const secondService = new Second();
 
 let getRouter = (viewVars: any) => {
+  viewVars = {
+    second: "",
+    headerFile: "../../../html/header.html",
+    footerFile: "../../../html/footer.html",
+  };
 
-    viewVars = {
-        second: "",
-        headerFile: "../../../html/header.html",
-        footerFile: "../../../html/footer.html",
+  const router = new Router();
+  router.get("/basic_html", async (ctx) => {
+    try {
+      viewVars.second = secondService.secondMethod();
+      return ctx.render("plugins/basic_html/views/second", viewVars);
+    } catch (error) {
+      console.error(error);
     }
+  });
 
-    const router = new Router();
-    router.get('/basic_html', async (ctx) => {
-        try {
-            viewVars.second = secondService.secondMethod()
-            return ctx.render('plugins/basic_html/views/second', viewVars);
-        } catch (error) {
-            console.error(error)
-        }
-    })
+  return router;
+};
 
-
-    return router
-}
-
-
-export default getRouter
-
+export default getRouter;

@@ -1,139 +1,172 @@
 import { IDisposable } from "../../../interfaces/disposable_interface";
-import { ExceptionNotAuthorized,ExceptionInvalidObject } from "../../../types/exceptions";
+import {
+  ExceptionNotAuthorized,
+  ExceptionInvalidObject,
+} from "../../../types/exceptions";
 import { UserHasPermissionOnElement } from "../services/UserPermissionsService";
-import { UserDataObject, UserDataObjectValidator, passwordMask } from "../dataObjects/UserDataObject";
+import {
+  UserDataObject,
+  UserDataObjectValidator,
+  passwordMask,
+} from "../dataObjects/UserDataObject";
 import { UserModel } from "../models/UserModel";
 
 export class UserService implements IDisposable {
-    
-    private userModel:UserModel
-    private userPermissions:any
-    private serviceSecurityElement:string
-    private userCanRead:boolean
-    private userCanWrite:boolean
+  private userModel: UserModel;
+  private userPermissions: any;
+  private serviceSecurityElement: string;
+  private userCanRead: boolean;
+  private userCanWrite: boolean;
 
-    constructor(userModel:UserModel,serviceSecurityElementPrefix:string,userPermissions:any){
-        this.userModel= userModel
-        this.serviceSecurityElement=serviceSecurityElementPrefix+".user"
-        this.userPermissions=userPermissions
-        this.userCanRead = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["read"])
-        this.userCanWrite = UserHasPermissionOnElement(this.userPermissions,[this.serviceSecurityElement],["write"])
+  constructor(
+    userModel: UserModel,
+    serviceSecurityElementPrefix: string,
+    userPermissions: any,
+  ) {
+    this.userModel = userModel;
+    this.serviceSecurityElement = serviceSecurityElementPrefix + ".user";
+    this.userPermissions = userPermissions;
+    this.userCanRead = UserHasPermissionOnElement(
+      this.userPermissions,
+      [this.serviceSecurityElement],
+      ["read"],
+    );
+    this.userCanWrite = UserHasPermissionOnElement(
+      this.userPermissions,
+      [this.serviceSecurityElement],
+      ["write"],
+    );
+  }
+
+  async create(user: UserDataObject, checkPermissions = true) {
+    if (user.password == passwordMask) {
+      let errorMessages = [{ field: "password", message: "Invalid password" }];
+      throw new ExceptionInvalidObject(
+        ExceptionInvalidObject.invalidObject,
+        errorMessages,
+      );
     }
 
-    async create(user:UserDataObject,checkPermissions=true){
+    let userValidationResult = UserDataObjectValidator.validateFunction(
+      user,
+      UserDataObjectValidator.validateSchema,
+    );
 
-        if (user.password == passwordMask) {
-            let errorMessages = [{field:"password",message:"Invalid password"}]
-            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,errorMessages)             
-        }
-
-        let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
-
-        if (!userValidationResult.isValid) {
-            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
-        }
-
-        if (checkPermissions) {
-            if (this.userCanWrite) {
-                return await this.userModel.create(user)            
-            }
-            else{
-                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-            }
-            
-        }
-        else {
-            return await this.userModel.create(user)
-        }
+    if (!userValidationResult.isValid) {
+      throw new ExceptionInvalidObject(
+        ExceptionInvalidObject.invalidObject,
+        userValidationResult.messages,
+      );
     }
 
-    async updateOne(user:UserDataObject,checkPermissions=true,protectCustomData:Boolean=true){
+    if (checkPermissions) {
+      if (this.userCanWrite) {
+        return await this.userModel.create(user);
+      } else {
+        throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
+      }
+    } else {
+      return await this.userModel.create(user);
+    }
+  }
 
-        let userValidationResult=UserDataObjectValidator.validateFunction(user,UserDataObjectValidator.validateSchema)
+  async updateOne(
+    user: UserDataObject,
+    checkPermissions = true,
+    protectCustomData: Boolean = true,
+  ) {
+    let userValidationResult = UserDataObjectValidator.validateFunction(
+      user,
+      UserDataObjectValidator.validateSchema,
+    );
 
-        if (!userValidationResult.isValid) {
-            throw new ExceptionInvalidObject(ExceptionInvalidObject.invalidObject,userValidationResult.messages)
-        }        
-        
-        if (checkPermissions) {
-            if (this.userCanWrite) {
-                return await this.userModel.updateOne(user,protectCustomData)
-                
-            }
-            else{
-                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-            }            
-        }
-        else{
-            return await this.userModel.updateOne(user,protectCustomData)
-        }
-
+    if (!userValidationResult.isValid) {
+      throw new ExceptionInvalidObject(
+        ExceptionInvalidObject.invalidObject,
+        userValidationResult.messages,
+      );
     }
 
-    async deleteByUuId(UserUuId:string){
-        if (this.userCanWrite) {
-            return await this.userModel.deleteByUuId(UserUuId) 
-           
-        }
-        else{
-            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-        }              
+    if (checkPermissions) {
+      if (this.userCanWrite) {
+        return await this.userModel.updateOne(user, protectCustomData);
+      } else {
+        throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
+      }
+    } else {
+      return await this.userModel.updateOne(user, protectCustomData);
     }
+  }
 
-    async getByUuId(uuid:string,checkPermissions=true) : Promise<UserDataObject> {
-        if (checkPermissions) {
-            if (this.userCanRead) {
-                return await this.userModel.getByUuId(uuid)
-               
-            }
-            else{
-                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-            }            
-        }
-        else{
-            return await this.userModel.getByUuId(uuid)
-
-        }
- 
+  async deleteByUuId(UserUuId: string) {
+    if (this.userCanWrite) {
+      return await this.userModel.deleteByUuId(UserUuId);
+    } else {
+      throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
     }
+  }
 
-    async getAll(filter:any={},limit=0,skip=0) : Promise<UserDataObject[]> {
-        if (this.userCanRead) {
-            return await this.userModel.getAll(filter,limit,skip)
-           
-        }
-        else{
-            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-        }        
+  async getByUuId(
+    uuid: string,
+    checkPermissions = true,
+  ): Promise<UserDataObject> {
+    if (checkPermissions) {
+      if (this.userCanRead) {
+        return await this.userModel.getByUuId(uuid);
+      } else {
+        throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
+      }
+    } else {
+      return await this.userModel.getByUuId(uuid);
     }
+  }
 
-    async getCount(filter={}) : Promise<number> {
-        if (this.userCanRead) {
-            return await this.userModel.getCount(filter)
-           
-        }
-        else{
-            throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-        }        
-    }    
+  async getAll(
+    filter: any = {},
+    limit = 0,
+    skip = 0,
+  ): Promise<UserDataObject[]> {
+    if (this.userCanRead) {
+      return await this.userModel.getAll(filter, limit, skip);
+    } else {
+      throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
+    }
+  }
 
-    async fieldValueExists(processedDocumentUuid:string,fieldName:string,fieldValue:any,checkPermissions=true) : Promise<Boolean> {
-        if (checkPermissions) {
-            if (this.userCanRead) {
-                return await this.userModel.fieldValueExists(processedDocumentUuid,fieldName,fieldValue)
-            }
-            else{
-                throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);            
-            }                    
-        }
-        else {
-            return await this.userModel.fieldValueExists(processedDocumentUuid,fieldName,fieldValue)
-        }
+  async getCount(filter = {}): Promise<number> {
+    if (this.userCanRead) {
+      return await this.userModel.getCount(filter);
+    } else {
+      throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
+    }
+  }
 
-    }    
-   
-    async dispose(): Promise<void> {
-        await this.userModel.dispose()
-    }      
+  async fieldValueExists(
+    processedDocumentUuid: string,
+    fieldName: string,
+    fieldValue: any,
+    checkPermissions = true,
+  ): Promise<Boolean> {
+    if (checkPermissions) {
+      if (this.userCanRead) {
+        return await this.userModel.fieldValueExists(
+          processedDocumentUuid,
+          fieldName,
+          fieldValue,
+        );
+      } else {
+        throw new ExceptionNotAuthorized(ExceptionNotAuthorized.notAuthorized);
+      }
+    } else {
+      return await this.userModel.fieldValueExists(
+        processedDocumentUuid,
+        fieldName,
+        fieldValue,
+      );
+    }
+  }
 
+  async dispose(): Promise<void> {
+    await this.userModel.dispose();
+  }
 }

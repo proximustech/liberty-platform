@@ -1,20 +1,20 @@
-    openapi: 3.0.0
-    info:
-      title: Sample API
-      description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-      version: 0.1.9
-    servers:
-      - url: http://localhost:8000/api
-        description: Development server.
-    paths:
-      /status:
-        get:
-          summary: Status example.
-          description: API Example.
-          responses:
-            '200':    # status code
-              description: A JSON response
-              content:
-                application/json:
-                  schema: 
-                    type: object
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+servers:
+  - url: http://localhost:8000/api
+    description: Development server.
+paths:
+  /status:
+    get:
+      summary: Status example.
+      description: API Example.
+      responses:
+        "200": # status code
+          description: A JSON response
+          content:
+            application/json:
+              schema:
+                type: object

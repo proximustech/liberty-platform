@@ -1,16 +1,15 @@
 interface HomeScreenProps {
-  userName: string
-  lpApp: any
+  userName: string;
+  lpApp: any;
 }
 
 export default function HomeScreen({ userName, lpApp }: HomeScreenProps) {
-
   const openDashboard = () => {
-    lpApp.setViewForPendingOperation('app_drawer')
-    lpApp.drawer.label = 'React Dashboard'
-    lpApp.drawer.show()
-    lpApp.ajax('app_drawer', '/reactjs/dashboard', 'Dashboard')
-  }
+    lpApp.setViewForPendingOperation("app_drawer");
+    lpApp.drawer.label = "React Dashboard";
+    lpApp.drawer.show();
+    lpApp.ajax("app_drawer", "/reactjs/dashboard", "Dashboard");
+  };
 
   return (
     <div className="lp_container">
@@ -20,36 +19,40 @@ export default function HomeScreen({ userName, lpApp }: HomeScreenProps) {
           <sl-icon name="house" /> React Demo
         </h4>
         <p>
-          Welcome, <strong>{userName}</strong>. This screen was rendered by React 19.
+          Welcome, <strong>{userName}</strong>. This screen was rendered by
+          React 19.
         </p>
-        <p className="text-secondary" style={{ fontSize: '0.9em' }}>
-          The data above was passed server-side: Koa route → EJS bridge → <code>window.__LP_PROPS__</code> → React props.
+        <p className="text-secondary" style={{ fontSize: "0.9em" }}>
+          The data above was passed server-side: Koa route → EJS bridge →{" "}
+          <code>window.__LP_PROPS__</code> → React props.
         </p>
         <div className="d-flex flex-column flex-sm-row gap-2 mt-3">
           {/* @ts-ignore */}
           <sl-button
             variant="primary"
-            style={{ width: '100%' }}
-            onclick={() => lpApp.ajax('content_view', '/reactjs/counter', 'Counter', true)}
+            style={{ width: "100%" }}
+            onclick={() =>
+              lpApp.ajax("content_view", "/reactjs/counter", "Counter", true)
+            }
           >
             {/* @ts-ignore */}
             <sl-icon slot="prefix" name="plus-slash-minus" />
             Counter screen
-          {/* @ts-ignore */}
+            {/* @ts-ignore */}
           </sl-button>
           {/* @ts-ignore */}
           <sl-button
             variant="neutral"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             onclick={openDashboard}
           >
             {/* @ts-ignore */}
             <sl-icon slot="prefix" name="pie-chart" />
             Open Dashboard
-          {/* @ts-ignore */}
+            {/* @ts-ignore */}
           </sl-button>
         </div>
       </div>
     </div>
-  )
+  );
 }

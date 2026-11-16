@@ -1,6 +1,11 @@
-<form hx-post="/ajax_views/save" hx-on::after-request="app.closeDetail()" hx-swap="outerHTML" hx-target="#item_detail">
-    <input type="text" class="form-control" name="title" value="<%= title %>">
-    <input type="hidden" name="id" value="<%= id %>">
-    <br/>
-    <button class="btn btn-primary" type="submit">Submit</button>
+<form
+  hx-post="/ajax_views/save"
+  hx-on::after-request="app.closeDetail()"
+  hx-swap="outerHTML"
+  hx-target="#item_detail"
+>
+  <input type="text" class="form-control" name="title" value="<%= title %>" />
+  <input type="hidden" name="id" value="<%= id %>" />
+  <br />
+  <button class="btn btn-primary" type="submit">Submit</button>
 </form>

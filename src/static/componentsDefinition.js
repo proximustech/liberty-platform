@@ -1,4 +1,4 @@
 //Lit components definition
-import {SimpleGreeting} from './lp_components/simple_greeting.js'
+import { SimpleGreeting } from "./lp_components/simple_greeting.js";
 
-customElements.define('simple-greeting', SimpleGreeting);
+customElements.define("simple-greeting", SimpleGreeting);

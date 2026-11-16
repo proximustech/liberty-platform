@@ -1,3 +1,3 @@
-export interface IDisposable { 
-    dispose(): Promise<void>; 
- }
+export interface IDisposable {
+  dispose(): Promise<void>;
+}

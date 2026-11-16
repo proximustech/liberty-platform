@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
 const props = defineProps<{
-  startCount: number
-  lpApp: any
-}>()
+  startCount: number;
+  lpApp: any;
+}>();
 
-const count = ref(props.startCount)
+const count = ref(props.startCount);
 </script>
 
 <template>
@@ -27,13 +27,15 @@ const count = ref(props.startCount)
           <sl-icon name="dash" />
         </sl-button>
 
-        <span :style="{
-          fontSize: 'clamp(2rem, 8vw, 3.5rem)',
-          fontWeight: 'bold',
-          minWidth: '4rem',
-          textAlign: 'center',
-          lineHeight: 1,
-        }">
+        <span
+          :style="{
+            fontSize: 'clamp(2rem, 8vw, 3.5rem)',
+            fontWeight: 'bold',
+            minWidth: '4rem',
+            textAlign: 'center',
+            lineHeight: 1,
+          }"
+        >
           {{ count }}
         </span>
 

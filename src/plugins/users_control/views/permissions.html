@@ -1,5 +1,10 @@
 <script>
-    //Feed the app.md.permissionsSchema object in the "users_control" plugin -> role_form.html view
-    app.md.usersControl_permissionsSchema = JSON.parse(`<%- JSON.stringify(usersControl_permissionsSchema) %>`)
-    app.md.permissionsSchema = {...app.md.permissionsSchema, ...app.md.usersControl_permissionsSchema}
+  //Feed the app.md.permissionsSchema object in the "users_control" plugin -> role_form.html view
+  app.md.usersControl_permissionsSchema = JSON.parse(
+    `<%- JSON.stringify(usersControl_permissionsSchema) %>`,
+  );
+  app.md.permissionsSchema = {
+    ...app.md.permissionsSchema,
+    ...app.md.usersControl_permissionsSchema,
+  };
 </script>

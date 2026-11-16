@@ -1,8 +1,7 @@
-import { PrimaryKey, Property } from '@mikro-orm/sqlite';
+import { PrimaryKey, Property } from "@mikro-orm/sqlite";
 //import { types } from '@mikro-orm/core';
 
 export abstract class BaseEntity {
-
   @PrimaryKey()
   id!: number;
 
@@ -13,5 +12,4 @@ export abstract class BaseEntity {
   //@Property({ type: types.date, onUpdate: () => new Date() })
   @Property({ onUpdate: () => new Date() })
   updatedAt = new Date();
-
 }

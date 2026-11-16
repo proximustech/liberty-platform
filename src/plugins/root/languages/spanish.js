@@ -1,3 +1,3 @@
 exports.labels = {
-    root_content:"Contenido",
-}
+  root_content: "Contenido",
+};

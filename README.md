@@ -14,24 +14,28 @@ Liberty Platform is a highly flexible admin enterprise framework that stands out
 ## 🌟 Key Features
 
 ### ✨ No Framework Lock-in
+
 - **Multi-framework support**: Use React, Vue, EJS, Vanilla JS. Any per plugin
 - Mix and match frontend technologies based on your needs
 
 ### 🔐 Enterprise-Grade Security
+
 - **Authentication**: Passport.js: local auth, OIDC, etc...
 - **Permissions**: Casbin-based RBAC with attribute-level control
 - Fine-grained access control ready to use
 
 ### 🧩 Flexible Plugin System
+
 - Custom **IDynamicView** plugin architecture for Javascript Frontends
 - Backend Middleware architecture for backend plugins
 - Extend functionality without constraints
 
-###  Performance & Simplicity
+### Performance & Simplicity
+
 - Full SSR without client-side hydration overhead
 - Faster time-to-interactive with a well designed architecture
 
-##  Why Choose Liberty Platform?
+## Why Choose Liberty Platform?
 
 ### ✅ Perfect for:
 
@@ -44,6 +48,7 @@ Liberty Platform is a highly flexible admin enterprise framework that stands out
 - Access from Desktop and Mobile is needed
 
 ### 🎯 Unique Advantages:
+
 1. **Hosts multiple applications**: Permissions can split granularly across all the registered apps
-3. **Desktop and Mobile oriented**: Default available UI controls are oriented also to provide a Mobile App look and feel
-4. **Graphs Toolkit**: Simple and Powerful toolkit for generating Statistic Graphs
+2. **Desktop and Mobile oriented**: Default available UI controls are oriented also to provide a Mobile App look and feel
+3. **Graphs Toolkit**: Simple and Powerful toolkit for generating Statistic Graphs

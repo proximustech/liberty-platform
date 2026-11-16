@@ -1,214 +1,262 @@
 <script>
-    app.md.user_form={}
-    app.md.user_form.user=JSON.parse(`<%- JSON.stringify(user) %>`)
-    app.md.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema).replaceAll("\\","\\\\") %>`)
-    eval(`<%- userValidateFunction %>`)
-    app.md.user_form.accountSettings = <%= accountSettings %>
+  app.md.user_form={}
+  app.md.user_form.user=JSON.parse(`<%- JSON.stringify(user) %>`)
+  app.md.user_form.userValidateSchema = JSON.parse(`<%- JSON.stringify(userValidateSchema).replaceAll("\\","\\\\") %>`)
+  eval(`<%- userValidateFunction %>`)
+  app.md.user_form.accountSettings = <%= accountSettings %>
 
-    app.md.user_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
-    eval(`<%- userHasPermissionOnElement %>`) 
-   
-    app.md.submitUser =(triggerElement) => {
+  app.md.user_form.userPermissions = JSON.parse(`<%- JSON.stringify(userPermissions) %>`)
+  eval(`<%- userHasPermissionOnElement %>`)
 
-        let user = app.md.user_form.user
-        let userValidationResult = app.md.user_form.userValidateFunction(user,app.md.user_form.userValidateSchema)
-        
-        if (userValidationResult.isValid) {
-            app.setElementForPendingOperation(triggerElement)
-            let result = $.ajax({
-                type:"POST",
-                url:"<%= prefix %>/user",
-                data:"csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1]+"&json="+JSON.stringify(user),
-                processData: false,
-                dataType:"text"
-            })
-            .done(function() {
-                setTimeout(() => {
-                    if(!app.md.user_form.accountSettings){
-                        app.reloadLastBreadCrumb('content_view')
-                    }
-                    app.drawer.hide();
-                    app.toastShow('Saved','User saved successfully.',{type:"success"})           
-                    
-                }, 1000);
-            })
-            .fail(function(data) {
-                try {
-                    app.unsetElementForPendingOperation(triggerElement)
-                    for (messageData of JSON.parse(data.responseText).messages) {
-                        app.toastShow('Form data Error',messageData.message,{closable:true,type:"error"})
-                        break;
-                    }
+  app.md.submitUser =(triggerElement) => {
 
-                } catch (error) {}
-            })
-            .always(function() {
-            });              
-        } else {
-            try {
-                app.toastShow('Form data Error',userValidationResult.messages[0].message,{closable:true,type:"error"})
-            } catch (error) {}
-        }
+      let user = app.md.user_form.user
+      let userValidationResult = app.md.user_form.userValidateFunction(user,app.md.user_form.userValidateSchema)
 
-      
-    }
+      if (userValidationResult.isValid) {
+          app.setElementForPendingOperation(triggerElement)
+          let result = $.ajax({
+              type:"POST",
+              url:"<%= prefix %>/user",
+              data:"csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1]+"&json="+JSON.stringify(user),
+              processData: false,
+              dataType:"text"
+          })
+          .done(function() {
+              setTimeout(() => {
+                  if(!app.md.user_form.accountSettings){
+                      app.reloadLastBreadCrumb('content_view')
+                  }
+                  app.drawer.hide();
+                  app.toastShow('Saved','User saved successfully.',{type:"success"})
 
-    app.md.deleteUser = (uuid) => {
-        let result = $.ajax({
-            type:"DELETE",
-            url:"<%= prefix %>/user?uuid="+uuid+"&csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1],
-        })
-        .done(function() {      
-            setTimeout(() =>{
-                app.setViewForPendingOperation('content_view')
-                app.ajax('content_view', '/<%= prefix %>/users')
-                app.drawer.hide();
-                app.dialog.hide()
-                app.toastShow('Deleted','User deleted successfully.',{type:"success"}) 
-            },1000)   
-        })
-        .fail(function(data) {
-            try {
-                app.dialog.hide()
-                for (messageData of JSON.parse(data.responseText).messages) {
-                    app.toastShow('Error on Delete',messageData.message,{closable:true,type:"error"})
-                    break;
-                }
+              }, 1000);
+          })
+          .fail(function(data) {
+              try {
+                  app.unsetElementForPendingOperation(triggerElement)
+                  for (messageData of JSON.parse(data.responseText).messages) {
+                      app.toastShow('Form data Error',messageData.message,{closable:true,type:"error"})
+                      break;
+                  }
 
-            } catch (error) {}
-        })
-        .always(function() {
-        }); 
-    
-    }    
+              } catch (error) {}
+          })
+          .always(function() {
+          });
+      } else {
+          try {
+              app.toastShow('Form data Error',userValidationResult.messages[0].message,{closable:true,type:"error"})
+          } catch (error) {}
+      }
 
-    app.md.setRole = (selectElement) => {
-        app.md.user_form.user.role_uuid=selectElement.value
-    }
 
-    app.md.generatePassword = () => {
+  }
 
-        const lowerChars = "abcdefghijklmnopqrstuvwxyz";  
-        const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";     
-        const numChars = "0123456789";
-        const specialChars = "!#;:,.?@";
+  app.md.deleteUser = (uuid) => {
+      let result = $.ajax({
+          type:"DELETE",
+          url:"<%= prefix %>/user?uuid="+uuid+"&csrfToken="+(document.cookie.match(/(?:^|;\s*)csrfToken=([^;]*)/)|| [])[1],
+      })
+      .done(function() {
+          setTimeout(() =>{
+              app.setViewForPendingOperation('content_view')
+              app.ajax('content_view', '/<%= prefix %>/users')
+              app.drawer.hide();
+              app.dialog.hide()
+              app.toastShow('Deleted','User deleted successfully.',{type:"success"})
+          },1000)
+      })
+      .fail(function(data) {
+          try {
+              app.dialog.hide()
+              for (messageData of JSON.parse(data.responseText).messages) {
+                  app.toastShow('Error on Delete',messageData.message,{closable:true,type:"error"})
+                  break;
+              }
 
-        let chars = "";
-        
-        chars += specialChars;
-        chars += lowerChars;
-        chars += numChars;
-        chars += specialChars;
-        chars += upperChars;
-        chars += numChars;
-        chars += specialChars;
+          } catch (error) {}
+      })
+      .always(function() {
+      });
 
-        let min = 12
-        let max = 20
+  }
 
-        let pass = "";
-        for (let i = 0; i < Math.floor(Math.random() * (max - min + 1) + min); i++) {
-            const randIdx = Math.floor(Math.random() * chars.length);
-            pass += chars[randIdx];
-        }
+  app.md.setRole = (selectElement) => {
+      app.md.user_form.user.role_uuid=selectElement.value
+  }
 
-        let randIdx = Math.floor(Math.random() * lowerChars.length);
-        pass += lowerChars[randIdx];        
-        randIdx = Math.floor(Math.random() * upperChars.length);
-        pass += upperChars[randIdx];        
-        randIdx = Math.floor(Math.random() * numChars.length);
-        pass += numChars[randIdx];        
-        randIdx = Math.floor(Math.random() * specialChars.length);
-        pass += specialChars[randIdx];        
+  app.md.generatePassword = () => {
 
-        return pass;
+      const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+      const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const numChars = "0123456789";
+      const specialChars = "!#;:,.?@";
 
-    }
+      let chars = "";
 
-    app.md.setGeneratedPassword = () => {
+      chars += specialChars;
+      chars += lowerChars;
+      chars += numChars;
+      chars += specialChars;
+      chars += upperChars;
+      chars += numChars;
+      chars += specialChars;
 
-        let generatedPassword=app.md.generatePassword()
-        app.md.user_form.user.password = generatedPassword
-        document.getElementById('user_password').value=generatedPassword
-        document.getElementById('user_password').passwordVisible=true
-        document.getElementById('user_password_validation_message').innerHTML=''
-        try {
-            navigator.clipboard.writeText(generatedPassword)
-            app.toastShow('Copied','Password copied to Clipboard',{type:"info"})
-        } catch (error) {}
+      let min = 12
+      let max = 20
 
-    } 
+      let pass = "";
+      for (let i = 0; i < Math.floor(Math.random() * (max - min + 1) + min); i++) {
+          const randIdx = Math.floor(Math.random() * chars.length);
+          pass += chars[randIdx];
+      }
 
+      let randIdx = Math.floor(Math.random() * lowerChars.length);
+      pass += lowerChars[randIdx];
+      randIdx = Math.floor(Math.random() * upperChars.length);
+      pass += upperChars[randIdx];
+      randIdx = Math.floor(Math.random() * numChars.length);
+      pass += numChars[randIdx];
+      randIdx = Math.floor(Math.random() * specialChars.length);
+      pass += specialChars[randIdx];
+
+      return pass;
+
+  }
+
+  app.md.setGeneratedPassword = () => {
+
+      let generatedPassword=app.md.generatePassword()
+      app.md.user_form.user.password = generatedPassword
+      document.getElementById('user_password').value=generatedPassword
+      document.getElementById('user_password').passwordVisible=true
+      document.getElementById('user_password_validation_message').innerHTML=''
+      try {
+          navigator.clipboard.writeText(generatedPassword)
+          app.toastShow('Copied','Password copied to Clipboard',{type:"info"})
+      } catch (error) {}
+
+  }
 </script>
 <% if (!editing) { %>
-    <h3>Create User</h3>
+<h3>Create User</h3>
 <% } else { %>
-    <sl-alert open>
-        <strong>Editing User</strong><br />
-        <%= user.name %>
-      </sl-alert>
+<sl-alert open>
+  <strong>Editing User</strong><br />
+  <%= user.name %>
+</sl-alert>
 
 <% } %>
-    <sl-tab-group id="user_form_tab_group">
-        <sl-tab slot="nav" panel="general">General</sl-tab>
-        <% if (editing && !accountSettings && UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
-            <sl-tab slot="nav" panel="operations">Operations</sl-tab>
-         
-        <% } %>
-    
-        <sl-tab-panel name="general">
-            <% let fieldsEnabled = false; if (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write'])) { fieldsEnabled = true }%>
-            <%- userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled) %>
-            <div style="text-align: right;">
-            <% if (fieldsEnabled) { %>
-                <button class="btn btn-primary" onclick="app.md.setGeneratedPassword()" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; margin-top: 10px;background-color: var(--main-contrast-color);">
-                    Auto Generate Password
-                </button>
-            <% } %>
-            </div>
-            <%- userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled) %>
-            <%- userFieldRender("user","name",user.name,userMetadata.name,fieldsEnabled) %>    
-            <%- userFieldRender("user","last_name",user.last_name,userMetadata.last_name,fieldsEnabled) %>         
-        
-            <% if (!accountSettings) { %>
-                <label style='margin-bottom:7px;font-size:17px'>Role</label>
-                <select id="roles" style="width:100%" onchange="app.md.setRole(this)" >
-                    <option value="" >No Role</option>
-                    <% roles.forEach(role => { %>
-                        <option value="<%= role.uuid %>" <% if(user.role_uuid === role.uuid){ %> selected <% } %> ><%= role.name %></option>
-                    <% }) %>
-                </select>
-            <% } %>
+<sl-tab-group id="user_form_tab_group">
+  <sl-tab slot="nav" panel="general">General</sl-tab>
+  <% if (editing && !accountSettings &&
+  UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
+  <sl-tab slot="nav" panel="operations">Operations</sl-tab>
 
-        </sl-tab-panel>
+  <% } %>
 
-        <% if (editing && !accountSettings && UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
-            <sl-tab-panel name="operations">
-                <sl-details summary="Delete">
-                    <button type="button" class="btn btn-outline-danger" onclick="app.confirmDelete('Delete User','Are you sure to delete the user <strong><%= user.name %></strong> ?','app.md.deleteUser(`<%= user.uuid %>`)')"><i class="bi bi-trash-fill"></i> Delete User</button>
-                    <br>
-                </sl-details>
-    
-            </sl-tab-panel>
-         
-        <% } %>
-        
-    </sl-tab-group>
-
-    <div slot="footer" style="padding: 20px;background-color: var(--color-footer-bg);border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-        <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">Close</button>
-        <% if (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write'])){ %>
-            <button type="button" class="btn btn-primary" style="background-color: var(--main-contrast-color);" onclick="app.md.submitUser(this)">Save</sl-button>
-        <% } %>
+  <sl-tab-panel name="general">
+    <% let fieldsEnabled = false; if
+    (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write']))
+    { fieldsEnabled = true }%> <%-
+    userFieldRender("user","email",user.email,userMetadata.email,fieldsEnabled)
+    %>
+    <div style="text-align: right">
+      <% if (fieldsEnabled) { %>
+      <button
+        class="btn btn-primary"
+        onclick="app.md.setGeneratedPassword()"
+        style="
+          --bs-btn-padding-y: 0.25rem;
+          --bs-btn-padding-x: 0.5rem;
+          --bs-btn-font-size: 0.75rem;
+          margin-top: 10px;
+          background-color: var(--main-contrast-color);
+        "
+      >
+        Auto Generate Password
+      </button>
+      <% } %>
     </div>
+    <%-
+    userFieldRender("user","password",passwordValue,userMetadata.password,fieldsEnabled)
+    %> <%-
+    userFieldRender("user","name",user.name,userMetadata.name,fieldsEnabled) %>
+    <%-
+    userFieldRender("user","last_name",user.last_name,userMetadata.last_name,fieldsEnabled)
+    %> <% if (!accountSettings) { %>
+    <label style="margin-bottom: 7px; font-size: 17px">Role</label>
+    <select id="roles" style="width: 100%" onchange="app.md.setRole(this)">
+      <option value="">No Role</option>
+      <% roles.forEach(function(role) { %> <% if (user.role_uuid === role.uuid)
+      { %>
+      <option value="<%= role.uuid %>" selected><%= role.name %></option>
+      <% } else { %>
+      <option value="<%= role.uuid %>"><%= role.name %></option>
+      <% } %> <% }) %>
+    </select>
+    <% } %>
+  </sl-tab-panel>
+
+  <% if (editing && !accountSettings &&
+  UserHasPermissionOnElement(userPermissions,[prefix+'.user'],['write'])) { %>
+  <sl-tab-panel name="operations">
+    <sl-details summary="Delete">
+      <button
+        type="button"
+        class="btn btn-outline-danger"
+        onclick="
+          app.confirmDelete(
+            'Delete User',
+            'Are you sure to delete the user <strong><%= user.name %></strong> ?',
+            'app.md.deleteUser(`<%= user.uuid %>`)',
+          )
+        "
+      >
+        <i class="bi bi-trash-fill"></i> Delete User
+      </button>
+      <br />
+    </sl-details>
+  </sl-tab-panel>
+
+  <% } %>
+</sl-tab-group>
+
+<div
+  slot="footer"
+  style="
+    padding: 20px;
+    background-color: var(--color-footer-bg);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  "
+>
+  <button type="button" class="btn btn-secondary" onclick="app.drawer.hide()">
+    Close
+  </button>
+  <% if
+  (UserHasPermissionOnElement(userPermissions,[prefix+'.user',prefix+'.self_user'],['write'])){
+  %>
+  <button
+    type="button"
+    class="btn btn-primary"
+    style="background-color: var(--main-contrast-color)"
+    onclick="app.md.submitUser(this)"
+  >
+    Save
+  </button>
+  <% } %>
+</div>
 
 <script>
-    document.getElementById('user_form_tab_group').show('general')
+  document.getElementById("user_form_tab_group").show("general");
 
-    $(document).ready(function() {
-        if (app.md.user_form.user.email==="") {
-            setTimeout(()=>{document.getElementById("user_email").focus()},500)        
-        }       
-    });
-
+  $(document).ready(function () {
+    if (app.md.user_form.user.email === "") {
+      setTimeout(() => {
+        document.getElementById("user_email").focus();
+      }, 500);
+    }
+  });
 </script>

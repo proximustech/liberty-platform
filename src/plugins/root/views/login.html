@@ -1,336 +1,387 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <title>Web Console</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">     
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        <link rel="stylesheet" href="static/root/lp.css">
+  <head>
+    <title>Web Console</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="static/root/lp.css" />
 
-        <style>
-          * {
-            box-sizing: border-box;
-          }
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-          body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            padding: 20px;
-          }
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        padding: 20px;
+      }
 
-          .login-container {
-            display: flex;
-            width: 100%;
-            max-width: 1200px;
-            height: auto;
-            min-height: 600px;
-            background: var(--main-bg-color);
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-          }
+      .login-container {
+        display: flex;
+        width: 100%;
+        max-width: 1200px;
+        height: auto;
+        min-height: 600px;
+        background: var(--main-bg-color);
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
 
-          .login-form-section {
-            flex: 1;
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-width: 320px;
-          }
+      .login-form-section {
+        flex: 1;
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 320px;
+      }
 
-          .login-visual-section {
-            flex: 1;
-            background: linear-gradient(135deg, var(--main-contrast-color) 0%, #0a5f96 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            color: white;
-          }
+      .login-visual-section {
+        flex: 1;
+        background: linear-gradient(
+          135deg,
+          var(--main-contrast-color) 0%,
+          #0a5f96 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        color: white;
+      }
 
-          .login-visual-section img {
-            max-width: 90%;
-            max-height: 90%;
-            filter: brightness(0) invert(1);
-          }
+      .login-visual-section img {
+        max-width: 90%;
+        max-height: 90%;
+        filter: brightness(0) invert(1);
+      }
 
-          .login-header {
-            margin-bottom: 40px;
-          }
+      .login-header {
+        margin-bottom: 40px;
+      }
 
-          .login-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-          }
+      .login-header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
 
-          .login-header p {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-          }
+      .login-header p {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+      }
 
-          .form-group {
-            margin-bottom: 20px;
-          }
+      .form-group {
+        margin-bottom: 20px;
+      }
 
-          .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-          .form-control {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px 14px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: var(--main-bg-color);
-          }
+      .form-control {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 12px 14px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: var(--main-bg-color);
+      }
 
-          .form-control:focus {
-            background: white;
-            border-color: var(--main-contrast-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            outline: none;
-          }
+      .form-control:focus {
+        background: white;
+        border-color: var(--main-contrast-color);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+      }
 
-          .form-control::placeholder {
-            color: #999;
-          }
+      .form-control::placeholder {
+        color: #999;
+      }
 
-          .btn-login {
-            background: var(--main-contrast-color);
-            border: none;
-            border-radius: 6px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 500;
-            color: white;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
+      .btn-login {
+        background: var(--main-contrast-color);
+        border: none;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-          .btn-login:hover {
-            opacity: 0.9;
-          }
+      .btn-login:hover {
+        opacity: 0.9;
+      }
 
-          .btn-login:active {
-            opacity: 0.8;
-          }
+      .btn-login:active {
+        opacity: 0.8;
+      }
 
-          .divider {
-            display: flex;
-            align-items: center;
-            margin: 30px 0;
-            color: #999;
-            font-size: 13px;
-          }
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 30px 0;
+        color: #999;
+        font-size: 13px;
+      }
 
-          .divider::before,
-          .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #ddd;
-          }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #ddd;
+      }
 
-          .divider span {
-            padding: 0 12px;
-          }
+      .divider span {
+        padding: 0 12px;
+      }
 
-          .social-login {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-          }
+      .social-login {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
 
-          .btn-social {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background: white;
-            color: #333;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-          }
+      .btn-social {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: white;
+        color: #333;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
 
-          .btn-social:hover {
-            border-color: var(--main-contrast-color);
-            background: var(--main-bg-color);
-            color: var(--main-contrast-color);
-          }
+      .btn-social:hover {
+        border-color: var(--main-contrast-color);
+        background: var(--main-bg-color);
+        color: var(--main-contrast-color);
+      }
 
-          .btn-social img {
-            width: 18px;
-            height: 18px;
-          }
+      .btn-social img {
+        width: 18px;
+        height: 18px;
+      }
 
-          .alert {
-            border-radius: 6px;
-            border: none;
-            margin-bottom: 24px;
-            font-size: 13px;
-          }
+      .alert {
+        border-radius: 6px;
+        border: none;
+        margin-bottom: 24px;
+        font-size: 13px;
+      }
 
-          .alert-danger {
-            background-color: #fee;
-            color: #c33;
-          }
+      .alert-danger {
+        background-color: #fee;
+        color: #c33;
+      }
 
-          .alert-warning {
-            background-color: #fef3cd;
-            color: #856404;
-          }
+      .alert-warning {
+        background-color: #fef3cd;
+        color: #856404;
+      }
 
-          .logo-mobile {
-            display: none;
-            text-align: center;
-            margin-bottom: 40px;
-          }
+      .logo-mobile {
+        display: none;
+        text-align: center;
+        margin-bottom: 40px;
+      }
 
-          .logo-mobile img {
-            max-width: 282px;
-            height: auto;
-            filter: brightness(0) invert(0);
-          }
+      .logo-mobile img {
+        max-width: 282px;
+        height: auto;
+        filter: brightness(0) invert(0);
+      }
 
-          @media (max-width: 768px) {
-            .login-container {
-              flex-direction: column;
-              min-height: auto;
-            }
+      @media (max-width: 768px) {
+        .login-container {
+          flex-direction: column;
+          min-height: auto;
+        }
 
-            .login-visual-section {
-              display: none;
-            }
+        .login-visual-section {
+          display: none;
+        }
 
-            .login-form-section {
-              padding: 40px 24px;
-            }
+        .login-form-section {
+          padding: 40px 24px;
+        }
 
-            .logo-mobile {
-              display: block;
-            }
+        .logo-mobile {
+          display: block;
+        }
 
-            .login-header h1 {
-              font-size: 24px;
-            }
-          }
-        </style>   
-      </head>
-    <body>
-        <div class="login-container">
-            <div class="login-form-section">
-                <div id="message_container" style="display: none;">
-                  <div id="message_container_1" class="alert alert-dismissible fade show" role="alert">
-                    <p id="message" style="margin: 0;"></p>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>        
-                </div>
-
-                <div class="logo-mobile">
-                    <img src="static/platform_images/host.png" alt="Web Console Logo">
-                </div>
-
-                <div class="login-header">
-                    <h1>Web Console</h1>
-                    <p>Sign in to your account to continue</p>
-                </div>
-
-                <form name="login_form" action="/local-login" method="POST">
-                    <div class="form-group">
-                        <label for="user">Email</label>
-                        <input class="form-control" type="email" id="user" name="username" required placeholder="your.email@example.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input class="form-control" type="password" id="password" name="password" required placeholder="••••••••">
-                    </div>
-
-                    <input type="hidden" id="language" name="language" value="english">
-
-                    <button class="btn-login" type="submit" onclick="app.setElementForPendingOperation(this);document.forms['login_form'].submit()">
-                        Sign In
-                    </button>
-                </form>
-
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-
-                <div class="social-login">
-                    <a href="/oidc-login" class="btn-social">
-                        <img src="https://id-frontend.prod-east.frontend.public.atl-paas.net/assets/microsoft-logo.c73d8dca.svg" alt="Microsoft">
-                        <span>Continue with Microsoft</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="login-visual-section">
-                <img src="static/platform_images/host.png" alt="Web Console">
-            </div>
+        .login-header h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-form-section">
+        <div id="message_container" style="display: none">
+          <div
+            id="message_container_1"
+            class="alert alert-dismissible fade show"
+            role="alert"
+          >
+            <p id="message" style="margin: 0"></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script src="static/root/lp.js"></script>        
 
-        <!--
+        <div class="logo-mobile">
+          <img src="static/platform_images/host.png" alt="Web Console Logo" />
+        </div>
+
+        <div class="login-header">
+          <h1>Web Console</h1>
+          <p>Sign in to your account to continue</p>
+        </div>
+
+        <form name="login_form" action="/local-login" method="POST">
+          <div class="form-group">
+            <label for="user">Email</label>
+            <input
+              class="form-control"
+              type="email"
+              id="user"
+              name="username"
+              required
+              placeholder="your.email@example.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              class="form-control"
+              type="password"
+              id="password"
+              name="password"
+              required
+              placeholder="••••••••"
+            />
+          </div>
+
+          <input type="hidden" id="language" name="language" value="english" />
+
+          <button
+            class="btn-login"
+            type="submit"
+            onclick="
+              app.setElementForPendingOperation(this);
+              document.forms['login_form'].submit();
+            "
+          >
+            Sign In
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <div class="social-login">
+          <a href="/oidc-login" class="btn-social">
+            <img
+              src="https://id-frontend.prod-east.frontend.public.atl-paas.net/assets/microsoft-logo.c73d8dca.svg"
+              alt="Microsoft"
+            />
+            <span>Continue with Microsoft</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="login-visual-section">
+        <img src="static/platform_images/host.png" alt="Web Console" />
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="static/root/lp.js"></script>
+
+    <!--
         <script src="static/_lib/bootstrap/bootstrap.bundle.min.js"></script>
         -->
 
-        <script>                           
-          let event=""
-          try {
-            const urlParams = new URLSearchParams(window.location.search);
-            event = urlParams.get('event');
-            
-          } catch (error) {
-            
-          }
-          if (event==="invalid_credentials") {
-            let message_container=document.getElementById("message_container");
-            let message_container_1=document.getElementById("message_container_1")
-            let message=document.getElementById("message")
+    <script>
+      let event = "";
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        event = urlParams.get("event");
+      } catch (error) {}
+      if (event === "invalid_credentials") {
+        let message_container = document.getElementById("message_container");
+        let message_container_1 = document.getElementById(
+          "message_container_1",
+        );
+        let message = document.getElementById("message");
 
-            message_container.style.display="contents"
-            message_container_1.classList.add("alert-danger");
-            message.innerHTML = "Invalid credentials or Invalid Federated User."
-          }
-          else if (event==="logged_out") {
-            let message_container=document.getElementById("message_container")
-            let message_container_1=document.getElementById("message_container_1")
-            let message=document.getElementById("message")
+        message_container.style.display = "contents";
+        message_container_1.classList.add("alert-danger");
+        message.innerHTML = "Invalid credentials or Invalid Federated User.";
+      } else if (event === "logged_out") {
+        let message_container = document.getElementById("message_container");
+        let message_container_1 = document.getElementById(
+          "message_container_1",
+        );
+        let message = document.getElementById("message");
 
-            message_container.style.display="contents"
-            message_container_1.classList.add("alert-warning");
-            message.innerHTML = "Your session became invalid."
-          }          
-          document.getElementById("user").focus()
-        </script>
-    </body>
+        message_container.style.display = "contents";
+        message_container_1.classList.add("alert-warning");
+        message.innerHTML = "Your session became invalid.";
+      }
+      document.getElementById("user").focus();
+    </script>
+  </body>
 </html>

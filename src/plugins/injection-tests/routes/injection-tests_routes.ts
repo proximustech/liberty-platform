@@ -1,26 +1,26 @@
-import 'reflect-metadata'
+import "reflect-metadata";
 import { Context } from "koa";
 import { container } from "tsyringe";
-import Router from "koa-router"
-import { Test } from "../services/injection_service"
+import Router from "koa-router";
+import { Test } from "../services/injection_service";
 
-const testService = container.resolve(Test)
+const testService = container.resolve(Test);
 
 let getRouter = (appViewVars: any) => {
-    const router = new Router();
+  const router = new Router();
 
-    router.get('/injection-tests', async (ctx: Context) => {
-        try {
-            ctx.body = {
-                status: 'success',
-                data: testService.testMethod(),
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    })
+  router.get("/injection-tests", async (ctx: Context) => {
+    try {
+      ctx.body = {
+        status: "success",
+        data: testService.testMethod(),
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
-    return router
-}
+  return router;
+};
 
-export default getRouter
+export default getRouter;

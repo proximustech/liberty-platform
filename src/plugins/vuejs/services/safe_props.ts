@@ -3,4 +3,4 @@
  * Escapes </script> sequences to prevent XSS via early script tag termination.
  */
 export const safeProps = (data: unknown): string =>
-  JSON.stringify(data).replace(/<\//g, '\\u003c/')
+  JSON.stringify(data).replace(/<\//g, "\\u003c/");

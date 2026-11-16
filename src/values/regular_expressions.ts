@@ -1,2 +1,3 @@
-export let IllegalCharacters = String.raw`^.*[\`'&<>'\"\$]+.*$`
-export let IllegalCharactersValidationMessage = "Especial character NOT allowed."
+export let IllegalCharacters = String.raw`^.*[\`'&<>'\"\$]+.*$`;
+export let IllegalCharactersValidationMessage =
+  "Especial character NOT allowed.";

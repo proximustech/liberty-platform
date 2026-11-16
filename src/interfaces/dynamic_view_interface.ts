@@ -1,3 +1,3 @@
-export interface IDynamicView { 
-    getPluginData: (ctx:any,viewVars:any)=> Promise<any> 
- }
+export interface IDynamicView {
+  getPluginData: (ctx: any, viewVars: any) => Promise<any>;
+}

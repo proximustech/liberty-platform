@@ -1,3 +1,3 @@
-export interface ITest { 
-    testMethod: ()=> string 
- }
+export interface ITest {
+  testMethod: () => string;
+}

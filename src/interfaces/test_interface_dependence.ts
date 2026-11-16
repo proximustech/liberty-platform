@@ -1,3 +1,3 @@
-export interface ITestDependence { 
-    data: string
- }
+export interface ITestDependence {
+  data: string;
+}

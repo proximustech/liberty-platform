@@ -1,3 +1,3 @@
-export interface IAuthenticator { 
-    authenticate: ()=> {} 
- }
+export interface IAuthenticator {
+  authenticate: () => {};
+}
